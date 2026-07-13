@@ -25,7 +25,23 @@ class _ListPageState extends State<ListPage> {
         const SizedBox(height: 8),
         ElevatedButton(
           onPressed: () async {
-            await sidebarController.show(Text('This is the sidebar content. You can put any widget here.'));
+            await sidebarController.show(
+              ListView.builder(
+                shrinkWrap: true,
+                itemCount: 30,
+                itemBuilder: (context, index) {
+                  return Material(
+                    child: ListTile(
+                      title: Text('Item $index'),
+                      onTap: () {
+                        debugPrint('Tapped item $index');
+                      },
+                    ),
+                  );
+                },
+              ),
+              canBeResized: true,
+            );
             debugPrint('**********Sidebar closed');
           },
           child: const Text('Show Sidebar'),

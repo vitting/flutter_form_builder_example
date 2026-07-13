@@ -10,7 +10,7 @@ class Menu extends StatefulWidget {
 }
 
 class _MenuState extends State<Menu> {
-  bool _isMenuExpanded = false;
+  bool _isMenuExpanded = true;
 
   static const double _expandedWidth = 300;
   static const double _collapsedWidth = 60;

@@ -20,9 +20,11 @@ class WebScaffold extends StatelessWidget {
             child: Row(
               children: [
                 Menu(),
-                Sidebar(
-                  controller: sidebarController,
-                  child: Column(children: [Expanded(child: content)]),
+                Expanded(
+                  child: Sidebar(
+                    controller: sidebarController,
+                    child: Column(children: [Expanded(child: content)]),
+                  ),
                 ),
               ],
             ),

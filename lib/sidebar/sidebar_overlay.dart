@@ -6,7 +6,8 @@ class SidebarOverlay extends StatelessWidget {
   final VoidCallback onClose;
   final bool canBeResized;
   final Widget? content;
-  const SidebarOverlay({super.key, required this.onClose, this.content, this.canBeResized = false});
+  final bool showSidebar;
+  const SidebarOverlay({super.key, required this.onClose, this.content, this.canBeResized = false, this.showSidebar = false});
 
   final _sidebarWidth = 400.0;
 
