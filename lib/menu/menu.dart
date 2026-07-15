@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_form_builder_example/menu/menu_header.dart';
 import 'package:flutter_form_builder_example/menu/menu_item.dart';
+import 'package:flutter_form_builder_example/menu/menu_item_model.dart';
 
 class Menu extends StatefulWidget {
-  const Menu({super.key});
+  final List<MenuItemModel> menuItems;
+  const Menu({super.key, required this.menuItems});
 
   @override
   State<Menu> createState() => _MenuState();
@@ -14,12 +16,6 @@ class _MenuState extends State<Menu> {
 
   static const double _expandedWidth = 300;
   static const double _collapsedWidth = 60;
-
-  List<Map<String, Object>> get _menuItems => const [
-    {'icon': Icons.home_outlined, 'label': 'Home'},
-    {'icon': Icons.list_alt_outlined, 'label': 'Items'},
-    {'icon': Icons.settings_outlined, 'label': 'Settings'},
-  ];
 
   void _toggleMenu() {
     setState(() {
@@ -53,7 +49,7 @@ class _MenuState extends State<Menu> {
                   fadeProgress: fadeProgress,
                   onToggleMenu: _toggleMenu,
                 ),
-                ..._menuItems.map(
+                ...widget.menuItems.map(
                   (item) =>
                       MenuItem(showLabels: showLabels, showLabelSlot: showLabelSlot, fadeProgress: fadeProgress, item: item),
                 ),

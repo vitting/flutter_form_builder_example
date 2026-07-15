@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_form_builder_example/menu/menu_item_model.dart';
 
 class MenuItem extends StatelessWidget {
   final bool showLabels;
   final bool showLabelSlot;
   final double fadeProgress;
-  final Map<String, Object> item;
+  final MenuItemModel item;
+
   const MenuItem({
     super.key,
     required this.showLabels,
@@ -16,7 +18,7 @@ class MenuItem extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Tooltip(
-      message: item['label'] as String,
+      message: item.label,
       child: InkWell(
         onTap: () {},
         child: SizedBox(
@@ -26,7 +28,7 @@ class MenuItem extends StatelessWidget {
             child: Row(
               mainAxisAlignment: showLabels ? MainAxisAlignment.start : MainAxisAlignment.center,
               children: [
-                Icon(item['icon'] as IconData, color: Colors.white),
+                Icon(item.icon, color: Colors.white),
                 if (showLabelSlot) ...[
                   AnimatedContainer(duration: const Duration(milliseconds: 180), curve: Curves.easeOut, width: 12 * fadeProgress),
                   Expanded(
@@ -34,12 +36,14 @@ class MenuItem extends StatelessWidget {
                       duration: const Duration(milliseconds: 180),
                       curve: Curves.easeOut,
                       opacity: fadeProgress,
-                      child: Text(
-                        item['label'] as String,
-                        maxLines: 1,
-                        overflow: TextOverflow.ellipsis,
-                        style: const TextStyle(color: Colors.white),
-                      ),
+                      child:
+                          item.child ??
+                          Text(
+                            item.label,
+                            maxLines: 1,
+                            overflow: TextOverflow.ellipsis,
+                            style: const TextStyle(color: Colors.white),
+                          ),
                     ),
                   ),
                 ],

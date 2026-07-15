@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_form_builder_example/app_router.dart';
+import 'package:flutter_form_builder_example/router/app_router.dart';
 import 'package:flutter_web_plugins/flutter_web_plugins.dart';
 
 void main() {
