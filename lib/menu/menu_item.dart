@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_form_builder_example/menu/menu_item_model.dart';
+import 'package:flutter_form_builder_example/models/menu_item_model.dart';
 
 class MenuItem extends StatelessWidget {
   final bool showLabels;

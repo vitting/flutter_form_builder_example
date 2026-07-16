@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_form_builder_example/control_types_enum.dart';
-import 'package:flutter_form_builder_example/web_scaffold.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_form_builder_example/blocs/form_builder_bloc/form_builder_bloc.dart';
+import 'package:flutter_form_builder_example/form_builder_render/form_render_builder.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -12,55 +13,22 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
-    return ColoredBox(
-      color: Colors.grey.shade200,
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          DragTarget<ControlTypesEnum>(
-            // onWillAcceptWithDetails: (details) => details.data != caughtColor,
-            onAcceptWithDetails: (details) {
-              debugPrint('Dropped color: ${details.data}');
-              setState(() {
-                // caughtColor = details.data; // Capture payload data on drop
-              });
-            },
-            builder: (context, candidateData, rejectedData) {
-              return Container(
-                color: Colors.red.shade300,
-                width: double.infinity,
-                height: 200,
-                child: const Center(
-                  child: Text('Drop here', style: TextStyle(color: Colors.black, fontSize: 18)),
-                ),
-              );
-            },
+    return BlocProvider(
+      create: (context) => FormBuilderBloc(),
+      child: ColoredBox(
+        color: Colors.grey.shade200,
+        child: Container(
+          margin: EdgeInsets.all(8),
+          padding: EdgeInsets.all(8),
+          decoration: BoxDecoration(
+            border: Border.all(color: Colors.blue),
+            borderRadius: BorderRadius.circular(8),
           ),
-          const SizedBox(height: 8),
-          ElevatedButton(
-            onPressed: () async {
-              await sidebarController.show(
-                ListView.builder(
-                  shrinkWrap: true,
-                  itemCount: 30,
-                  itemBuilder: (context, index) {
-                    return Material(
-                      child: ListTile(
-                        title: Text('Item $index'),
-                        onTap: () {
-                          debugPrint('Tapped item $index');
-                        },
-                      ),
-                    );
-                  },
-                ),
-                canBeResized: true,
-              );
-              debugPrint('**********Sidebar closed');
-            },
-            child: const Text('Show Sidebar'),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [Expanded(child: FormRenderBuilder())],
           ),
-        ],
+        ),
       ),
     );
   }

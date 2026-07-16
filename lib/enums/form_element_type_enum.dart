@@ -1,0 +1,1 @@
+enum FormElementTypeEnum { input, layout }

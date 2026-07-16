@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_form_builder_example/enums/control_types_enum.dart';
+import 'package:flutter_form_builder_example/enums/form_element_type_enum.dart';
+import 'package:flutter_form_builder_example/form_controls/menu_control/menu_text_field_control.dart';
 import 'package:flutter_form_builder_example/menu/menu.dart';
-import 'package:flutter_form_builder_example/menu/menu_item_model.dart';
-import 'package:flutter_form_builder_example/menu_checkbox.dart';
-import 'package:flutter_form_builder_example/menu_text_field.dart';
+import 'package:flutter_form_builder_example/models/menu_item_model.dart';
+import 'package:flutter_form_builder_example/form_controls/menu_checkbox.dart';
 import 'package:flutter_form_builder_example/sidebar/sidebar.dart';
 import 'package:flutter_form_builder_example/sidebar/sidebar_controller.dart';
 import 'package:flutter_form_builder_example/topbar.dart';
@@ -18,12 +20,20 @@ class WebScaffold extends StatelessWidget {
     MenuItemModel(
       icon: Symbols.text_fields,
       label: 'TestField',
-      child: MenuTextField(label: 'TextField'),
+      child: MenuTextFieldControl(
+        label: 'TextField',
+        controlType: ControlTypesEnum.textField,
+        formElementType: FormElementTypeEnum.input,
+      ),
     ),
     MenuItemModel(
       icon: Symbols.onetwothree_rounded,
       label: 'NumberFields',
-      child: MenuTextField(label: 'NumberField'),
+      child: MenuTextFieldControl(
+        label: 'NumberField',
+        controlType: ControlTypesEnum.numberField,
+        formElementType: FormElementTypeEnum.input,
+      ),
     ),
     MenuItemModel(icon: Symbols.check_box, label: 'Checkbox', child: MenuCheckbox()),
   ];
