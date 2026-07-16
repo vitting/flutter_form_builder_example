@@ -12,11 +12,21 @@ class DragControl extends StatelessWidget {
   final FormElementTypeEnum formElementType;
   const DragControl({super.key, required this.child, required this.controlType, required this.formElementType});
 
+  FormBuilderItem get _formBuilderItem => switch (formElementType) {
+    FormElementTypeEnum.input => FormBuilderInputItem(id: '', controlType: controlType),
+    FormElementTypeEnum.layout when controlType == ControlTypesEnum.columns => FormBuilderColumnsItem(
+      id: '',
+      controlType: controlType,
+      columns: {},
+    ),
+    _ => throw UnsupportedError('Unsupported form element type'),
+  };
+
   @override
   Widget build(BuildContext context) {
     final formRenderBuilderRepository = getIt<FormRenderBuilderRepository>();
     return Draggable<FormBuilderItem>(
-      data: FormBuilderItem(id: '', controlType: controlType, formElementType: formElementType),
+      data: _formBuilderItem,
       feedback: DragContainer(isDragging: true, child: child),
       childWhenDragging: DragContainer(isDragging: true, child: child),
       onDragStarted: () {

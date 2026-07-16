@@ -1,10 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_form_builder_example/menu/menu_header.dart';
 import 'package:flutter_form_builder_example/menu/menu_item.dart';
+import 'package:flutter_form_builder_example/menu/menu_item_header.dart';
+import 'package:flutter_form_builder_example/models/menu_item_header_model.dart';
 import 'package:flutter_form_builder_example/models/menu_item_model.dart';
+import 'package:flutter_form_builder_example/models/menu_model.dart';
 
 class Menu extends StatefulWidget {
-  final List<MenuItemModel> menuItems;
+  final List<MenuModel> menuItems;
   const Menu({super.key, required this.menuItems});
 
   @override
@@ -41,6 +44,7 @@ class _MenuState extends State<Menu> {
           return SizedBox(
             height: double.infinity,
             child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 MenuHeader(
                   isExpanded: _isMenuExpanded,
@@ -49,9 +53,27 @@ class _MenuState extends State<Menu> {
                   fadeProgress: fadeProgress,
                   onToggleMenu: _toggleMenu,
                 ),
-                ...widget.menuItems.map(
-                  (item) =>
-                      MenuItem(showLabels: showLabels, showLabelSlot: showLabelSlot, fadeProgress: fadeProgress, item: item),
+                Expanded(
+                  child: ListView.builder(
+                    shrinkWrap: true,
+                    itemCount: widget.menuItems.length,
+                    itemBuilder: (context, index) {
+                      final item = widget.menuItems[index];
+                      switch (item) {
+                        case MenuItemHeaderModel():
+                          return MenuItemHeader(item: item);
+                        case MenuItemModel():
+                          return MenuItem(
+                            showLabels: showLabels,
+                            showLabelSlot: showLabelSlot,
+                            fadeProgress: fadeProgress,
+                            item: item,
+                          );
+                        default:
+                          return SizedBox.shrink();
+                      }
+                    },
+                  ),
                 ),
               ],
             ),

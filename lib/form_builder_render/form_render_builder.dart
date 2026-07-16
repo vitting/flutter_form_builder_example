@@ -17,6 +17,65 @@ class FormRenderBuilder extends StatefulWidget {
 }
 
 class _FormRenderBuilderState extends State<FormRenderBuilder> {
+  Widget _generateInput(FormBuilderInputItem item) {
+    switch (item.controlType) {
+      case ControlTypesEnum.textField:
+        return FormControlManageContainer(
+          onDelete: () {
+            _onDeleteItem(context, item.id);
+          },
+          child: FormTextField(label: ControlTypesEnum.textField.name, isFormRenderControl: true, isEnabled: false),
+        );
+
+      case ControlTypesEnum.numberField:
+        return FormControlManageContainer(
+          onDelete: () {
+            _onDeleteItem(context, item.id);
+          },
+          child: FormTextField(label: ControlTypesEnum.numberField.name, isFormRenderControl: true, isEnabled: false),
+        );
+      case ControlTypesEnum.checkbox:
+        return FormControlManageContainer(
+          onDelete: () {
+            _onDeleteItem(context, item.id);
+          },
+          child: FormCheckbox(label: ControlTypesEnum.checkbox.name, isFormRenderControl: true, isEnabled: false),
+        );
+      default:
+        return SizedBox.shrink();
+    }
+  }
+
+  List<Widget> _generateColumns(FormBuilderColumnsItem item) {
+    final List<Widget> columns = [];
+
+    for (var column in item.columns.entries) {
+      columns.add(
+        Expanded(
+          child: Container(
+            decoration: BoxDecoration(
+              border: Border.all(color: Colors.grey),
+              color: Colors.grey[200],
+            ),
+            child: Column(
+              children: [
+                DropZone(
+                  parentId: item.id,
+                  columnId: column.key,
+                  showExpaned: column.value.isEmpty,
+                  isVisible: column.value.isEmpty,
+                ),
+                ..._buildFormControls(context, column.value),
+              ],
+            ),
+          ),
+        ),
+      );
+    }
+
+    return columns;
+  }
+
   void _onDeleteItem(BuildContext context, String itemId) {
     BlocProvider.of<FormBuilderBloc>(context).add(RemoveFormBuilderItemEvent(itemId: itemId));
   }
@@ -25,32 +84,16 @@ class _FormRenderBuilderState extends State<FormRenderBuilder> {
     final List<Widget> formControls = [];
 
     for (var item in items) {
-      switch (item.controlType) {
-        case ControlTypesEnum.textField:
+      switch (item) {
+        case FormBuilderInputItem():
+          formControls.add(_generateInput(item));
+        case FormBuilderColumnsItem():
           formControls.add(
             FormControlManageContainer(
               onDelete: () {
                 _onDeleteItem(context, item.id);
               },
-              child: FormTextField(label: ControlTypesEnum.textField.name, isFormRenderControl: true, isEnabled: false),
-            ),
-          );
-        case ControlTypesEnum.numberField:
-          formControls.add(
-            FormControlManageContainer(
-              onDelete: () {
-                _onDeleteItem(context, item.id);
-              },
-              child: FormTextField(label: ControlTypesEnum.numberField.name, isFormRenderControl: true, isEnabled: false),
-            ),
-          );
-        case ControlTypesEnum.checkbox:
-          formControls.add(
-            FormControlManageContainer(
-              onDelete: () {
-                _onDeleteItem(context, item.id);
-              },
-              child: FormCheckbox(label: ControlTypesEnum.checkbox.name, isFormRenderControl: true, isEnabled: false),
+              child: Row(children: [..._generateColumns(item)]),
             ),
           );
         default:

@@ -5,17 +5,38 @@ import 'package:flutter_form_builder_example/enums/form_element_type_enum.dart';
 
 part 'form_builder_item.g.dart';
 
-@CopyWith()
-class FormBuilderItem extends Equatable {
+abstract class FormBuilderItem extends Equatable {
   final String id;
   final ControlTypesEnum controlType;
-  final FormElementTypeEnum formElementType;
-  final List<FormBuilderItem> children;
-  const FormBuilderItem({required this.id, required this.controlType, required this.formElementType, this.children = const []});
+  final String? containerId;
+  final String? columnId;
+
+  const FormBuilderItem({required this.id, required this.controlType, this.containerId, this.columnId});
+}
+
+@CopyWith()
+class FormBuilderInputItem extends FormBuilderItem {
+  const FormBuilderInputItem({required super.id, required super.controlType, super.containerId, super.columnId});
 
   @override
-  List<Object?> get props => [id, controlType, formElementType, children];
+  List<Object?> get props => [id, controlType, containerId, columnId];
 
   @override
   bool get stringify => true;
+
+  FormElementTypeEnum get formElementType => FormElementTypeEnum.input;
+}
+
+@CopyWith()
+class FormBuilderColumnsItem extends FormBuilderItem {
+  final Map<String, List<FormBuilderItem>> columns;
+  const FormBuilderColumnsItem({required super.id, required super.controlType, required this.columns});
+
+  @override
+  List<Object?> get props => [id, controlType, formElementType, columns];
+
+  @override
+  bool get stringify => true;
+
+  FormElementTypeEnum get formElementType => FormElementTypeEnum.layout;
 }

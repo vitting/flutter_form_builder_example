@@ -2,9 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter_form_builder_example/enums/control_types_enum.dart';
 import 'package:flutter_form_builder_example/enums/form_element_type_enum.dart';
 import 'package:flutter_form_builder_example/form_controls/menu_control/menu_checkbox_control.dart';
+import 'package:flutter_form_builder_example/form_controls/menu_control/menu_columns_control.dart';
 import 'package:flutter_form_builder_example/form_controls/menu_control/menu_text_field_control.dart';
 import 'package:flutter_form_builder_example/menu/menu.dart';
+import 'package:flutter_form_builder_example/models/menu_item_header_model.dart';
 import 'package:flutter_form_builder_example/models/menu_item_model.dart';
+import 'package:flutter_form_builder_example/models/menu_model.dart';
 import 'package:flutter_form_builder_example/sidebar/sidebar.dart';
 import 'package:flutter_form_builder_example/sidebar/sidebar_controller.dart';
 import 'package:flutter_form_builder_example/topbar.dart';
@@ -16,7 +19,8 @@ class WebScaffold extends StatelessWidget {
   final Widget content;
   const WebScaffold({super.key, required this.content});
 
-  List<MenuItemModel> get _menuItems => [
+  List<MenuModel> get _menuItems => [
+    MenuItemHeaderModel(label: 'Inputs'),
     MenuItemModel(
       icon: Symbols.text_fields,
       label: 'TestField',
@@ -36,6 +40,8 @@ class WebScaffold extends StatelessWidget {
       ),
     ),
     MenuItemModel(icon: Symbols.check_box, label: 'Checkbox', child: MenuCheckboxControl()),
+    MenuItemHeaderModel(label: 'Layouts'),
+    MenuItemModel(icon: Symbols.view_column_2, label: 'Column', child: MenuColumnsControl()),
   ];
 
   @override

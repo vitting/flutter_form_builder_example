@@ -5,9 +5,10 @@ import 'package:flutter_form_builder_example/models/form_builder_item.dart';
 
 class DropZone extends StatefulWidget {
   final String? parentId;
+  final String? columnId;
   final bool showExpaned;
   final bool isVisible;
-  const DropZone({super.key, this.parentId, this.showExpaned = false, this.isVisible = true});
+  const DropZone({super.key, this.parentId, this.showExpaned = false, this.isVisible = true, this.columnId});
 
   @override
   State<DropZone> createState() => _DropZoneState();
