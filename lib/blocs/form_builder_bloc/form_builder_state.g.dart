@@ -9,6 +9,8 @@ part of 'form_builder_state.dart';
 abstract class _$FormBuilderStateCWProxy {
   FormBuilderState items(List<FormBuilderItem> items);
 
+  FormBuilderState showDataZones(bool showDataZones);
+
   /// Creates a new instance with the provided field values.
   /// Passing `null` to a nullable field nullifies it, while `null` for a non-nullable field is ignored. To update a single field use `FormBuilderState(...).copyWith.fieldName(value)`.
   ///
@@ -16,7 +18,7 @@ abstract class _$FormBuilderStateCWProxy {
   /// ```dart
   /// FormBuilderState(...).copyWith(id: 12, name: "My name")
   /// ```
-  FormBuilderState call({List<FormBuilderItem> items});
+  FormBuilderState call({List<FormBuilderItem> items, bool showDataZones});
 }
 
 /// Callable proxy for `copyWith` functionality.
@@ -30,6 +32,10 @@ class _$FormBuilderStateCWProxyImpl implements _$FormBuilderStateCWProxy {
   FormBuilderState items(List<FormBuilderItem> items) => call(items: items);
 
   @override
+  FormBuilderState showDataZones(bool showDataZones) =>
+      call(showDataZones: showDataZones);
+
+  @override
   /// Creates a new instance with the provided field values.
   /// Passing `null` to a nullable field nullifies it, while `null` for a non-nullable field is ignored. To update a single field use `FormBuilderState(...).copyWith.fieldName(value)`.
   ///
@@ -37,12 +43,20 @@ class _$FormBuilderStateCWProxyImpl implements _$FormBuilderStateCWProxy {
   /// ```dart
   /// FormBuilderState(...).copyWith(id: 12, name: "My name")
   /// ```
-  FormBuilderState call({Object? items = const $CopyWithPlaceholder()}) {
+  FormBuilderState call({
+    Object? items = const $CopyWithPlaceholder(),
+    Object? showDataZones = const $CopyWithPlaceholder(),
+  }) {
     return FormBuilderState(
       items: items == const $CopyWithPlaceholder() || items == null
           ? _value.items
           // ignore: cast_nullable_to_non_nullable
           : items as List<FormBuilderItem>,
+      showDataZones:
+          showDataZones == const $CopyWithPlaceholder() || showDataZones == null
+          ? _value.showDataZones
+          // ignore: cast_nullable_to_non_nullable
+          : showDataZones as bool,
     );
   }
 }

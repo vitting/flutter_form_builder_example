@@ -9,7 +9,7 @@ class FormTextField extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Material(
-      color: Colors.transparent,
+      color: const Color.fromARGB(0, 82, 80, 80),
       child: TextField(
         enabled: isEnabled,
         decoration: InputDecoration(

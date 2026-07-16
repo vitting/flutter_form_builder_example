@@ -25,12 +25,16 @@ class _FormControlManageContainerState extends State<FormControlManageContainer>
         });
       },
       child: AnimatedCrossFade(
-        duration: Duration(milliseconds: 200),
+        duration: Duration(milliseconds: 300),
+        firstCurve: Curves.easeOut,
+        secondCurve: Curves.linear,
         crossFadeState: isHovered ? CrossFadeState.showFirst : CrossFadeState.showSecond,
         firstChild: Container(
+          margin: EdgeInsets.symmetric(vertical: 8),
           padding: EdgeInsets.all(8),
           decoration: BoxDecoration(
-            border: Border.all(color: Colors.grey),
+            color: Colors.blue.withAlpha(50),
+            border: Border.all(color: Colors.blue),
             borderRadius: BorderRadius.circular(8),
           ),
           child: Column(
@@ -48,7 +52,7 @@ class _FormControlManageContainerState extends State<FormControlManageContainer>
             ],
           ),
         ),
-        secondChild: widget.child,
+        secondChild: Container(padding: EdgeInsets.all(8), child: widget.child),
       ),
     );
   }

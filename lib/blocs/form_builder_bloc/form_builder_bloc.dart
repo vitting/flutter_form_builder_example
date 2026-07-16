@@ -2,12 +2,14 @@ import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_form_builder_example/blocs/form_builder_bloc/form_builder_state.dart';
 import 'package:flutter_form_builder_example/models/form_builder_item.dart';
+import 'package:flutter_form_builder_example/repositories/form_render_builder_repository.dart';
 import 'package:uuid/uuid.dart';
 
 part 'form_builder_event.dart';
 
 class FormBuilderBloc extends Bloc<FormBuilderEvent, FormBuilderState> {
-  FormBuilderBloc() : super(FormBuilderState(items: [])) {
+  final FormRenderBuilderRepository _formRenderBuilderRepository;
+  FormBuilderBloc(this._formRenderBuilderRepository) : super(FormBuilderState(items: [])) {
     on<AddFormBuilderItemEvent>((event, emit) {
       final item = event.item.copyWith(id: Uuid().v4());
 
@@ -31,7 +33,23 @@ class FormBuilderBloc extends Bloc<FormBuilderEvent, FormBuilderState> {
 
     on<RemoveFormBuilderItemEvent>((event, emit) {
       final updatedItems = List<FormBuilderItem>.from(state.items)..removeWhere((item) => item.id == event.itemId);
-      emit(FormBuilderState(items: updatedItems));
+      emit(state.copyWith(items: updatedItems, showDataZones: false));
+    });
+
+    on<ShowFormBuilderDataZonesEvent>((event, emit) {
+      emit(state.copyWith(showDataZones: true));
+    });
+
+    on<HideFormBuilderDataZonesEvent>((event, emit) {
+      emit(state.copyWith(showDataZones: false));
+    });
+
+    _formRenderBuilderRepository.dataStream.listen((showDataZones) {
+      if (showDataZones) {
+        add(ShowFormBuilderDataZonesEvent());
+      } else {
+        add(HideFormBuilderDataZonesEvent());
+      }
     });
   }
 }

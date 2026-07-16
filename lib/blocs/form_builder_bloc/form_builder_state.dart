@@ -7,9 +7,10 @@ part 'form_builder_state.g.dart';
 @CopyWith()
 final class FormBuilderState extends Equatable {
   final List<FormBuilderItem> items;
+  final bool showDataZones;
 
-  const FormBuilderState({required this.items});
+  const FormBuilderState({required this.items, this.showDataZones = false});
 
   @override
-  List<Object?> get props => [items];
+  List<Object?> get props => [items, showDataZones];
 }

@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_form_builder_example/get_it/injection.dart';
 import 'package:flutter_form_builder_example/router/app_router.dart';
 import 'package:flutter_web_plugins/flutter_web_plugins.dart';
 
 void main() {
   usePathUrlStrategy();
+  setupDependencies();
 
   runApp(const MainApp());
 }

@@ -1,1 +1,1 @@
-enum ControlTypesEnum { textField, numberField, dropDown, checkBox, radioButton }
+enum ControlTypesEnum { textField, numberField, dropDown, checkbox, radioButton }

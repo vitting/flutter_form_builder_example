@@ -20,3 +20,17 @@ final class RemoveFormBuilderItemEvent extends FormBuilderEvent {
   @override
   List<Object?> get props => [itemId];
 }
+
+final class ShowFormBuilderDataZonesEvent extends FormBuilderEvent {
+  ShowFormBuilderDataZonesEvent();
+
+  @override
+  List<Object?> get props => [];
+}
+
+final class HideFormBuilderDataZonesEvent extends FormBuilderEvent {
+  HideFormBuilderDataZonesEvent();
+
+  @override
+  List<Object?> get props => [];
+}
