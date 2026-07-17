@@ -7,11 +7,12 @@ final class AddFormBuilderItemEvent extends FormBuilderEvent {
   final String? parentId;
   final String? parentContainerId;
   final String? columnId;
+  final int? columnIndex;
 
-  AddFormBuilderItemEvent({required this.item, this.parentId, this.parentContainerId, this.columnId});
+  AddFormBuilderItemEvent({required this.item, this.parentId, this.parentContainerId, this.columnId, this.columnIndex});
 
   @override
-  List<Object?> get props => [item, parentId, parentContainerId, columnId];
+  List<Object?> get props => [item, parentId, parentContainerId, columnId, columnIndex];
 }
 
 final class AddFormBuilderInputItemEvent extends FormBuilderEvent {
@@ -19,11 +20,12 @@ final class AddFormBuilderInputItemEvent extends FormBuilderEvent {
   final String? parentId;
   final String? parentContainerId;
   final String? columnId;
+  final int? columnIndex;
 
-  AddFormBuilderInputItemEvent({required this.item, this.parentId, this.parentContainerId, this.columnId});
+  AddFormBuilderInputItemEvent({required this.item, this.parentId, this.parentContainerId, this.columnId, this.columnIndex});
 
   @override
-  List<Object?> get props => [item, parentId, parentContainerId, columnId];
+  List<Object?> get props => [item, parentId, parentContainerId, columnId, columnIndex];
 }
 
 final class AddFormBuilderLayoutItemEvent extends FormBuilderEvent {
@@ -31,11 +33,12 @@ final class AddFormBuilderLayoutItemEvent extends FormBuilderEvent {
   final String? parentId;
   final String? parentContainerId;
   final String? columnId;
+  final int? columnIndex;
 
-  AddFormBuilderLayoutItemEvent({required this.item, this.parentId, this.parentContainerId, this.columnId});
+  AddFormBuilderLayoutItemEvent({required this.item, this.parentId, this.parentContainerId, this.columnId, this.columnIndex});
 
   @override
-  List<Object?> get props => [item, parentId, parentContainerId, columnId];
+  List<Object?> get props => [item, parentId, parentContainerId, columnId, columnIndex];
 }
 
 final class RemoveFormBuilderItemEvent extends FormBuilderEvent {

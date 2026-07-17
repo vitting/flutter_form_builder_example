@@ -2,7 +2,6 @@ import 'package:equatable/equatable.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_form_builder_example/blocs/form_builder_bloc/form_builder_state.dart';
-import 'package:flutter_form_builder_example/enums/form_element_type_enum.dart';
 import 'package:flutter_form_builder_example/models/form_builder_item.dart';
 import 'package:flutter_form_builder_example/repositories/form_render_builder_repository.dart';
 import 'package:uuid/uuid.dart';
@@ -21,6 +20,7 @@ class FormBuilderBloc extends Bloc<FormBuilderEvent, FormBuilderState> {
               parentId: event.parentId,
               parentContainerId: event.parentContainerId,
               columnId: event.columnId,
+              columnIndex: event.columnIndex,
             ),
           );
           break;
@@ -31,6 +31,7 @@ class FormBuilderBloc extends Bloc<FormBuilderEvent, FormBuilderState> {
               parentId: event.parentId,
               parentContainerId: event.parentContainerId,
               columnId: event.columnId,
+              columnIndex: event.columnIndex,
             ),
           );
           break;
@@ -42,7 +43,12 @@ class FormBuilderBloc extends Bloc<FormBuilderEvent, FormBuilderState> {
         'AddFormBuilderInputItemEvent: controlType: ${event.item.controlType.name}, parentId: ${event.parentId}, parentContainerId: ${event.parentContainerId}, columnId: ${event.columnId}',
       );
 
-      final FormBuilderInputItem item = event.item.copyWith(id: Uuid().v4());
+      final FormBuilderInputItem item = event.item.copyWith(
+        id: Uuid().v4(),
+        columnId: event.columnId,
+        columnIndex: event.columnIndex,
+        parentContainerId: event.parentContainerId,
+      );
 
       if (event.parentId == null || event.parentId!.isEmpty) {
         final updatedItems = List<FormBuilderItem>.from(state.items)..insert(0, item);
@@ -51,19 +57,16 @@ class FormBuilderBloc extends Bloc<FormBuilderEvent, FormBuilderState> {
         return;
       }
 
-      final items = List<FormBuilderInputItem>.from(state.items);
-      final parentItem = _findParentItem(items, event.parentId!);
+      List<FormBuilderItem> items = List<FormBuilderItem>.from(state.items);
 
-      // if (parentItem != null && parentItem.formElementType == FormElementTypeEnum.columns) {
-      //   throw Exception('Parent item not found');
-      // }
-
-      final parentIndex = _findParentIndex(items, event.parentId!);
-
-      if (parentIndex == -1) {
-        items.add(item);
+      if (event.parentContainerId != null &&
+          event.parentContainerId!.isNotEmpty &&
+          event.columnId != null &&
+          event.columnId!.isNotEmpty) {
+        items = _addItemToColumn(items, event.parentContainerId!, event.columnId!, item);
       } else {
-        items.insert(parentIndex + 1, item);
+        // If no parentContainerId and columnId are provided, insert the item after the parentId
+        items = _insertItemAfterParent(items, event.parentId!, item);
       }
 
       emit(FormBuilderState(items: items));
@@ -84,11 +87,6 @@ class FormBuilderBloc extends Bloc<FormBuilderEvent, FormBuilderState> {
       }
 
       final items = List<FormBuilderItem>.from(state.items);
-      final parentItem = _findParentItem(items, event.parentId!);
-
-      // if (parentItem != null && parentItem.formElementType == FormElementTypeEnum.columns) {
-      //   throw Exception('Parent item not found');
-      // }
 
       final parentIndex = _findParentIndex(items, event.parentId!);
 
@@ -123,52 +121,52 @@ class FormBuilderBloc extends Bloc<FormBuilderEvent, FormBuilderState> {
     });
   }
 
-  void _addFormBuilderItem(FormBuilderInputItem item, String? parentId) {
-    final items = List<FormBuilderInputItem>.from(state.items);
+  List<FormBuilderItem> _addItemToColumn(
+    List<FormBuilderItem> items,
+    String parentContainerId,
+    String columnId,
+    FormBuilderInputItem newItemToAdd,
+  ) {
+    final localItems = List<FormBuilderItem>.from(items);
+    // Find index of the Column container
+    final columnItemIndex = _findParentIndex(items, parentContainerId);
 
-    if (parentId == null || parentId.isEmpty) {
-      items.add(item);
-    } else {
-      final parentIndex = _findParentIndex(items, parentId);
-      if (parentIndex == -1) {
-        items.add(item);
-      } else {
-        items.insert(parentIndex + 1, item);
-      }
+    if (columnItemIndex == -1) {
+      return items;
     }
 
-    emit(FormBuilderState(items: items));
-  }
+    // Get the Column item
+    final parentContainerItem = items[columnItemIndex] as FormBuilderColumnsItem;
+    // Get the list of items in the specified column
+    final columnItems = parentContainerItem.columns[columnId] ?? [];
 
-  FormBuilderItem? _findParentItem(List<FormBuilderItem> items, String parentId) {
-    for (var item in items) {
-      if (item.id == parentId) {
-        return item;
-        //   } else if (item.children.isNotEmpty) {
-        //     final foundItem = _findParentItem(item.children, parentId);
-        //     if (foundItem != null) {
-        //       return foundItem;
-        //     }
-        //   }
-        // }
-        // throw Exception('Parent item not found');
-      }
-    }
+    columnItems.add(newItemToAdd);
 
-    return null;
+    final updatedParentContainerItem = parentContainerItem.copyWith(
+      columns: {...parentContainerItem.columns, columnId: columnItems},
+    );
+    localItems[columnItemIndex] = updatedParentContainerItem;
+
+    return localItems;
   }
 
   int _findParentIndex(List<FormBuilderItem> items, String parentId) {
     for (var i = 0; i < items.length; i++) {
       if (items[i].id == parentId) {
         return i;
-        // } else if (items[i].children.isNotEmpty) {
-        //   final foundIndex = _findParentIndex(items[i].children, parentId);
-        //   if (foundIndex != -1) {
-        //     return foundIndex;
-        //   }
       }
     }
     return -1;
+  }
+
+  List<FormBuilderItem> _insertItemAfterParent(List<FormBuilderItem> items, String parentId, FormBuilderItem newItem) {
+    final parentIndex = _findParentIndex(items, parentId);
+    if (parentIndex != -1) {
+      items.insert(parentIndex + 1, newItem);
+    } else {
+      items.add(newItem);
+    }
+
+    return items;
   }
 }

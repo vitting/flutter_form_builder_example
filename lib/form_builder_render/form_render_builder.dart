@@ -5,6 +5,7 @@ import 'package:flutter_form_builder_example/blocs/form_builder_bloc/form_builde
 import 'package:flutter_form_builder_example/drop_zone/drop_zone.dart';
 import 'package:flutter_form_builder_example/enums/control_types_enum.dart';
 import 'package:flutter_form_builder_example/form_builder_render/form_control_manage_container.dart';
+import 'package:flutter_form_builder_example/form_builder_render/form_render_builder_columns.dart';
 import 'package:flutter_form_builder_example/form_controls/form_checkbox.dart';
 import 'package:flutter_form_builder_example/form_controls/form_text_field.dart';
 import 'package:flutter_form_builder_example/models/form_builder_item.dart';
@@ -46,63 +47,52 @@ class _FormRenderBuilderState extends State<FormRenderBuilder> {
     }
   }
 
-  List<Widget> _generateColumns(FormBuilderColumnsItem item) {
-    final List<Widget> columns = [];
-
-    for (var column in item.columns.entries) {
-      columns.add(
-        Expanded(
-          child: Container(
-            decoration: BoxDecoration(
-              border: Border.all(color: Colors.grey),
-              color: Colors.grey[200],
-            ),
-            child: Column(
-              children: [
-                DropZone(
-                  parentContainerItem: item,
-                  parentId: item.id,
-                  parentContainerId: item.id,
-                  columnId: column.key,
-                  showExpaned: column.value.isEmpty,
-                  isVisible: column.value.isEmpty,
-                ),
-                ..._buildFormControls(context, column.value),
-              ],
-            ),
-          ),
-        ),
-      );
-    }
-
-    return columns;
-  }
-
   void _onDeleteItem(BuildContext context, String itemId) {
     BlocProvider.of<FormBuilderBloc>(context).add(RemoveFormBuilderItemEvent(itemId: itemId));
   }
 
-  List<Widget> _buildFormControls(BuildContext context, List<FormBuilderItem> items, {bool showDataZones = false}) {
+  List<Widget> _buildFormControls(BuildContext context, {required List<FormBuilderItem> items, bool showDataZones = false}) {
     final List<Widget> formControls = [];
 
     for (var item in items) {
       switch (item) {
         case FormBuilderInputItem():
           formControls.add(_generateInput(item));
-        case FormBuilderColumnsItem():
           formControls.add(
-            FormControlManageContainer(
-              onDelete: () {
-                _onDeleteItem(context, item.id);
-              },
-              child: Row(children: [..._generateColumns(item)]),
+            DropZone(
+              parentId: item.id,
+              isVisible: showDataZones,
+              parentContainerId: item.parentContainerId,
+              columnId: item.columnId,
             ),
           );
+        case FormBuilderColumnsItem():
+          formControls.add(
+            FormRenderBuilderColumns(
+              parentContainerItem: item,
+              buildFormControls: (columnId) {
+                final columnItems = item.columns[columnId] ?? [];
+                return _buildFormControls(context, items: columnItems, showDataZones: showDataZones);
+              },
+              onDelete: (itemIdToDelete) {
+                _onDeleteItem(context, itemIdToDelete);
+              },
+            ),
+          );
+
         default:
           break;
       }
 
-      formControls.add(DropZone(parentId: item.id, isVisible: showDataZones));
+      formControls.add(
+        DropZone(
+          parentId: item.id,
+          isVisible: showDataZones,
+          parentContainerId: item.parentContainerId,
+          columnId: item.columnId,
+          columnIndex: item.columnIndex,
+        ),
+      );
     }
 
     return formControls;
@@ -118,7 +108,7 @@ class _FormRenderBuilderState extends State<FormRenderBuilder> {
           child: Column(
             children: [
               DropZone(showExpaned: items.isEmpty, isVisible: items.isEmpty || state.showDataZones),
-              ..._buildFormControls(context, items, showDataZones: state.showDataZones),
+              ..._buildFormControls(context, items: items, showDataZones: state.showDataZones),
             ],
           ),
         );

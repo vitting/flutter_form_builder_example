@@ -15,6 +15,8 @@ abstract class _$FormBuilderInputItemCWProxy {
 
   FormBuilderInputItem columnId(String? columnId);
 
+  FormBuilderInputItem columnIndex(int? columnIndex);
+
   /// Creates a new instance with the provided field values.
   /// Passing `null` to a nullable field nullifies it, while `null` for a non-nullable field is ignored. To update a single field use `FormBuilderInputItem(...).copyWith.fieldName(value)`.
   ///
@@ -27,6 +29,7 @@ abstract class _$FormBuilderInputItemCWProxy {
     ControlTypesEnum controlType,
     String? parentContainerId,
     String? columnId,
+    int? columnIndex,
   });
 }
 
@@ -53,6 +56,10 @@ class _$FormBuilderInputItemCWProxyImpl
   FormBuilderInputItem columnId(String? columnId) => call(columnId: columnId);
 
   @override
+  FormBuilderInputItem columnIndex(int? columnIndex) =>
+      call(columnIndex: columnIndex);
+
+  @override
   /// Creates a new instance with the provided field values.
   /// Passing `null` to a nullable field nullifies it, while `null` for a non-nullable field is ignored. To update a single field use `FormBuilderInputItem(...).copyWith.fieldName(value)`.
   ///
@@ -65,6 +72,7 @@ class _$FormBuilderInputItemCWProxyImpl
     Object? controlType = const $CopyWithPlaceholder(),
     Object? parentContainerId = const $CopyWithPlaceholder(),
     Object? columnId = const $CopyWithPlaceholder(),
+    Object? columnIndex = const $CopyWithPlaceholder(),
   }) {
     return FormBuilderInputItem(
       id: id == const $CopyWithPlaceholder() || id == null
@@ -84,6 +92,10 @@ class _$FormBuilderInputItemCWProxyImpl
           ? _value.columnId
           // ignore: cast_nullable_to_non_nullable
           : columnId as String?,
+      columnIndex: columnIndex == const $CopyWithPlaceholder()
+          ? _value.columnIndex
+          // ignore: cast_nullable_to_non_nullable
+          : columnIndex as int?,
     );
   }
 }
@@ -103,6 +115,12 @@ abstract class _$FormBuilderColumnsItemCWProxy {
 
   FormBuilderColumnsItem columns(Map<String, List<FormBuilderItem>> columns);
 
+  FormBuilderColumnsItem parentContainerId(String? parentContainerId);
+
+  FormBuilderColumnsItem columnId(String? columnId);
+
+  FormBuilderColumnsItem columnIndex(int? columnIndex);
+
   /// Creates a new instance with the provided field values.
   /// Passing `null` to a nullable field nullifies it, while `null` for a non-nullable field is ignored. To update a single field use `FormBuilderColumnsItem(...).copyWith.fieldName(value)`.
   ///
@@ -114,6 +132,9 @@ abstract class _$FormBuilderColumnsItemCWProxy {
     String id,
     ControlTypesEnum controlType,
     Map<String, List<FormBuilderItem>> columns,
+    String? parentContainerId,
+    String? columnId,
+    int? columnIndex,
   });
 }
 
@@ -137,6 +158,17 @@ class _$FormBuilderColumnsItemCWProxyImpl
       call(columns: columns);
 
   @override
+  FormBuilderColumnsItem parentContainerId(String? parentContainerId) =>
+      call(parentContainerId: parentContainerId);
+
+  @override
+  FormBuilderColumnsItem columnId(String? columnId) => call(columnId: columnId);
+
+  @override
+  FormBuilderColumnsItem columnIndex(int? columnIndex) =>
+      call(columnIndex: columnIndex);
+
+  @override
   /// Creates a new instance with the provided field values.
   /// Passing `null` to a nullable field nullifies it, while `null` for a non-nullable field is ignored. To update a single field use `FormBuilderColumnsItem(...).copyWith.fieldName(value)`.
   ///
@@ -148,6 +180,9 @@ class _$FormBuilderColumnsItemCWProxyImpl
     Object? id = const $CopyWithPlaceholder(),
     Object? controlType = const $CopyWithPlaceholder(),
     Object? columns = const $CopyWithPlaceholder(),
+    Object? parentContainerId = const $CopyWithPlaceholder(),
+    Object? columnId = const $CopyWithPlaceholder(),
+    Object? columnIndex = const $CopyWithPlaceholder(),
   }) {
     return FormBuilderColumnsItem(
       id: id == const $CopyWithPlaceholder() || id == null
@@ -163,6 +198,18 @@ class _$FormBuilderColumnsItemCWProxyImpl
           ? _value.columns
           // ignore: cast_nullable_to_non_nullable
           : columns as Map<String, List<FormBuilderItem>>,
+      parentContainerId: parentContainerId == const $CopyWithPlaceholder()
+          ? _value.parentContainerId
+          // ignore: cast_nullable_to_non_nullable
+          : parentContainerId as String?,
+      columnId: columnId == const $CopyWithPlaceholder()
+          ? _value.columnId
+          // ignore: cast_nullable_to_non_nullable
+          : columnId as String?,
+      columnIndex: columnIndex == const $CopyWithPlaceholder()
+          ? _value.columnIndex
+          // ignore: cast_nullable_to_non_nullable
+          : columnIndex as int?,
     );
   }
 }

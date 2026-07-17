@@ -6,10 +6,12 @@ import 'package:flutter_form_builder_example/models/form_builder_item.dart';
 class DropZone extends StatefulWidget {
   final String? parentId;
   final String? columnId;
+  final int? columnIndex;
   final String? parentContainerId;
   final FormBuilderItem? parentContainerItem;
   final bool showExpaned;
   final bool isVisible;
+
   const DropZone({
     super.key,
     this.parentId,
@@ -18,6 +20,7 @@ class DropZone extends StatefulWidget {
     this.columnId,
     this.parentContainerId,
     this.parentContainerItem,
+    this.columnIndex,
   });
 
   @override
@@ -37,6 +40,16 @@ class _DropZoneState extends State<DropZone> {
       return Colors.blue;
     } else {
       return Colors.grey.shade100;
+    }
+  }
+
+  String get _getText {
+    if (_isRejected) {
+      return 'Cannot drop here';
+    } else if (widget.columnIndex != null) {
+      return 'Drop Control here in Column ${widget.columnIndex}';
+    } else {
+      return 'Drop Control here';
     }
   }
 
@@ -67,6 +80,7 @@ class _DropZoneState extends State<DropZone> {
                 parentId: widget.parentId,
                 parentContainerId: widget.parentContainerId,
                 columnId: widget.columnId,
+                columnIndex: widget.columnIndex,
               ),
             );
             _isObjectOver = false;
@@ -103,7 +117,7 @@ class _DropZoneState extends State<DropZone> {
                   duration: Duration(milliseconds: 200),
                   curve: Curves.easeIn,
                   style: TextStyle(color: Colors.white, fontSize: _isObjectOver || widget.showExpaned ? 18 : 5),
-                  child: Text('Drop Control here'),
+                  child: Text(_getText),
                 ),
               ),
             ),
