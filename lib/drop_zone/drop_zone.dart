@@ -6,9 +6,19 @@ import 'package:flutter_form_builder_example/models/form_builder_item.dart';
 class DropZone extends StatefulWidget {
   final String? parentId;
   final String? columnId;
+  final String? parentContainerId;
+  final FormBuilderItem? parentContainerItem;
   final bool showExpaned;
   final bool isVisible;
-  const DropZone({super.key, this.parentId, this.showExpaned = false, this.isVisible = true, this.columnId});
+  const DropZone({
+    super.key,
+    this.parentId,
+    this.showExpaned = false,
+    this.isVisible = true,
+    this.columnId,
+    this.parentContainerId,
+    this.parentContainerItem,
+  });
 
   @override
   State<DropZone> createState() => _DropZoneState();
@@ -16,6 +26,20 @@ class DropZone extends StatefulWidget {
 
 class _DropZoneState extends State<DropZone> {
   bool _isObjectOver = false;
+  bool _isRejected = false;
+
+  Color get _getBackgroundColor {
+    if (_isRejected) {
+      return Colors.red.shade300;
+    } else if (_isObjectOver) {
+      return Colors.blue.shade800;
+    } else if (widget.showExpaned) {
+      return Colors.blue;
+    } else {
+      return Colors.grey.shade100;
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return AnimatedCrossFade(
@@ -23,9 +47,28 @@ class _DropZoneState extends State<DropZone> {
       duration: Duration(milliseconds: 200),
       firstCurve: Curves.easeIn,
       firstChild: DragTarget<FormBuilderItem>(
+        onWillAcceptWithDetails: (details) {
+          bool isValid = true;
+          if (details.data is FormBuilderColumnsItem && widget.parentContainerItem is FormBuilderColumnsItem) {
+            isValid = false;
+          }
+
+          setState(() {
+            _isRejected = !isValid;
+          });
+
+          return isValid;
+        },
         onAcceptWithDetails: (details) {
           setState(() {
-            BlocProvider.of<FormBuilderBloc>(context).add(AddFormBuilderItemEvent(item: details.data, parentId: widget.parentId));
+            BlocProvider.of<FormBuilderBloc>(context).add(
+              AddFormBuilderItemEvent(
+                item: details.data,
+                parentId: widget.parentId,
+                parentContainerId: widget.parentContainerId,
+                columnId: widget.columnId,
+              ),
+            );
             _isObjectOver = false;
           });
         },
@@ -37,31 +80,31 @@ class _DropZoneState extends State<DropZone> {
         onLeave: (details) {
           setState(() {
             _isObjectOver = false;
+            _isRejected = false;
           });
         },
         builder: (context, candidateData, rejectedData) {
-          return AnimatedContainer(
-            height: _isObjectOver || widget.showExpaned ? 60 : 10,
-            duration: Duration(milliseconds: 200),
-            curve: Curves.easeIn,
-            decoration: BoxDecoration(
-              color: _isObjectOver
-                  ? Colors.blue.shade800
-                  : widget.showExpaned
-                  ? Colors.blue
-                  : Colors.blue.shade100,
-              border: Border.all(color: _isObjectOver ? Colors.blue.shade900 : Colors.blue),
-              borderRadius: BorderRadius.circular(8),
-            ),
+          return MouseRegion(
+            cursor: _isRejected ? SystemMouseCursors.noDrop : SystemMouseCursors.click,
+            child: AnimatedContainer(
+              height: _isObjectOver || widget.showExpaned ? 60 : 10,
+              duration: Duration(milliseconds: 200),
+              curve: Curves.easeIn,
+              decoration: BoxDecoration(
+                color: _getBackgroundColor,
+                border: Border.all(color: _isObjectOver ? Colors.blue.shade900 : Colors.blue),
+                borderRadius: BorderRadius.circular(8),
+              ),
 
-            width: double.infinity,
+              width: double.infinity,
 
-            child: Center(
-              child: AnimatedDefaultTextStyle(
-                duration: Duration(milliseconds: 200),
-                curve: Curves.easeIn,
-                style: TextStyle(color: Colors.white, fontSize: _isObjectOver || widget.showExpaned ? 18 : 5),
-                child: Text('Drop Control here'),
+              child: Center(
+                child: AnimatedDefaultTextStyle(
+                  duration: Duration(milliseconds: 200),
+                  curve: Curves.easeIn,
+                  style: TextStyle(color: Colors.white, fontSize: _isObjectOver || widget.showExpaned ? 18 : 5),
+                  child: Text('Drop Control here'),
+                ),
               ),
             ),
           );

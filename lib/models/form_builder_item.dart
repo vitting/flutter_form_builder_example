@@ -8,18 +8,19 @@ part 'form_builder_item.g.dart';
 abstract class FormBuilderItem extends Equatable {
   final String id;
   final ControlTypesEnum controlType;
-  final String? containerId;
+  // Optional fields for parent container (ex. Columns) and column IDs
+  final String? parentContainerId;
   final String? columnId;
 
-  const FormBuilderItem({required this.id, required this.controlType, this.containerId, this.columnId});
+  const FormBuilderItem({required this.id, required this.controlType, this.parentContainerId, this.columnId});
 }
 
 @CopyWith()
 class FormBuilderInputItem extends FormBuilderItem {
-  const FormBuilderInputItem({required super.id, required super.controlType, super.containerId, super.columnId});
+  const FormBuilderInputItem({required super.id, required super.controlType, super.parentContainerId, super.columnId});
 
   @override
-  List<Object?> get props => [id, controlType, containerId, columnId];
+  List<Object?> get props => [id, controlType, parentContainerId, columnId];
 
   @override
   bool get stringify => true;

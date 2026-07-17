@@ -5,11 +5,37 @@ sealed class FormBuilderEvent extends Equatable {}
 final class AddFormBuilderItemEvent extends FormBuilderEvent {
   final FormBuilderItem item;
   final String? parentId;
+  final String? parentContainerId;
+  final String? columnId;
 
-  AddFormBuilderItemEvent({required this.item, this.parentId});
+  AddFormBuilderItemEvent({required this.item, this.parentId, this.parentContainerId, this.columnId});
 
   @override
-  List<Object?> get props => [item, parentId];
+  List<Object?> get props => [item, parentId, parentContainerId, columnId];
+}
+
+final class AddFormBuilderInputItemEvent extends FormBuilderEvent {
+  final FormBuilderInputItem item;
+  final String? parentId;
+  final String? parentContainerId;
+  final String? columnId;
+
+  AddFormBuilderInputItemEvent({required this.item, this.parentId, this.parentContainerId, this.columnId});
+
+  @override
+  List<Object?> get props => [item, parentId, parentContainerId, columnId];
+}
+
+final class AddFormBuilderLayoutItemEvent extends FormBuilderEvent {
+  final FormBuilderItem item;
+  final String? parentId;
+  final String? parentContainerId;
+  final String? columnId;
+
+  AddFormBuilderLayoutItemEvent({required this.item, this.parentId, this.parentContainerId, this.columnId});
+
+  @override
+  List<Object?> get props => [item, parentId, parentContainerId, columnId];
 }
 
 final class RemoveFormBuilderItemEvent extends FormBuilderEvent {

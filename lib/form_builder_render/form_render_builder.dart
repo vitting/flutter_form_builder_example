@@ -60,7 +60,9 @@ class _FormRenderBuilderState extends State<FormRenderBuilder> {
             child: Column(
               children: [
                 DropZone(
+                  parentContainerItem: item,
                   parentId: item.id,
+                  parentContainerId: item.id,
                   columnId: column.key,
                   showExpaned: column.value.isEmpty,
                   isVisible: column.value.isEmpty,

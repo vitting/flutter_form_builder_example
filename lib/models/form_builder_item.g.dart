@@ -11,7 +11,7 @@ abstract class _$FormBuilderInputItemCWProxy {
 
   FormBuilderInputItem controlType(ControlTypesEnum controlType);
 
-  FormBuilderInputItem containerId(String? containerId);
+  FormBuilderInputItem parentContainerId(String? parentContainerId);
 
   FormBuilderInputItem columnId(String? columnId);
 
@@ -25,7 +25,7 @@ abstract class _$FormBuilderInputItemCWProxy {
   FormBuilderInputItem call({
     String id,
     ControlTypesEnum controlType,
-    String? containerId,
+    String? parentContainerId,
     String? columnId,
   });
 }
@@ -46,8 +46,8 @@ class _$FormBuilderInputItemCWProxyImpl
       call(controlType: controlType);
 
   @override
-  FormBuilderInputItem containerId(String? containerId) =>
-      call(containerId: containerId);
+  FormBuilderInputItem parentContainerId(String? parentContainerId) =>
+      call(parentContainerId: parentContainerId);
 
   @override
   FormBuilderInputItem columnId(String? columnId) => call(columnId: columnId);
@@ -63,7 +63,7 @@ class _$FormBuilderInputItemCWProxyImpl
   FormBuilderInputItem call({
     Object? id = const $CopyWithPlaceholder(),
     Object? controlType = const $CopyWithPlaceholder(),
-    Object? containerId = const $CopyWithPlaceholder(),
+    Object? parentContainerId = const $CopyWithPlaceholder(),
     Object? columnId = const $CopyWithPlaceholder(),
   }) {
     return FormBuilderInputItem(
@@ -76,10 +76,10 @@ class _$FormBuilderInputItemCWProxyImpl
           ? _value.controlType
           // ignore: cast_nullable_to_non_nullable
           : controlType as ControlTypesEnum,
-      containerId: containerId == const $CopyWithPlaceholder()
-          ? _value.containerId
+      parentContainerId: parentContainerId == const $CopyWithPlaceholder()
+          ? _value.parentContainerId
           // ignore: cast_nullable_to_non_nullable
-          : containerId as String?,
+          : parentContainerId as String?,
       columnId: columnId == const $CopyWithPlaceholder()
           ? _value.columnId
           // ignore: cast_nullable_to_non_nullable
