@@ -33,7 +33,7 @@ class _FormControlManageContainerState extends State<FormControlManageContainer>
           margin: EdgeInsets.symmetric(vertical: 8),
           padding: EdgeInsets.all(8),
           decoration: BoxDecoration(
-            color: Colors.blue.withAlpha(50),
+            color: Colors.grey.shade300,
             border: Border.all(color: Colors.blue),
             borderRadius: BorderRadius.circular(8),
           ),

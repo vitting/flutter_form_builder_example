@@ -7,14 +7,14 @@ class FormRenderBuilderColumns extends StatelessWidget {
   final FormBuilderColumnsItem parentContainerItem;
   final List<Widget> Function(String columnId) buildFormControls;
   final void Function(String itemIdToDelete) onDelete;
-  final void Function(int columnIndex, String columnId)? onColumnGeneration;
+  final bool showDataZones;
 
   const FormRenderBuilderColumns({
     super.key,
     required this.buildFormControls,
     required this.parentContainerItem,
     required this.onDelete,
-    this.onColumnGeneration,
+    this.showDataZones = false,
   });
 
   List<Widget> _generateColumns(FormBuilderColumnsItem item) {
@@ -24,10 +24,10 @@ class FormRenderBuilderColumns extends StatelessWidget {
     for (final column in item.columns.entries) {
       final formControls = buildFormControls(column.key);
       index++;
-      onColumnGeneration?.call(index, column.key);
       columns.add(
         Expanded(
           child: Container(
+            padding: EdgeInsets.all(8.0),
             decoration: BoxDecoration(
               border: Border.all(color: Colors.grey),
               color: Colors.grey[200],
@@ -37,11 +37,10 @@ class FormRenderBuilderColumns extends StatelessWidget {
                 DropZone(
                   columnIndex: index,
                   parentContainerItem: parentContainerItem,
-                  parentId: parentContainerItem.id,
                   parentContainerId: parentContainerItem.id,
                   columnId: column.key,
                   showExpaned: column.value.isEmpty,
-                  isVisible: column.value.isEmpty,
+                  isVisible: column.value.isEmpty || showDataZones,
                 ),
                 ...formControls,
               ],
@@ -60,7 +59,7 @@ class FormRenderBuilderColumns extends StatelessWidget {
       onDelete: () {
         onDelete(parentContainerItem.id);
       },
-      child: Row(children: [..._generateColumns(parentContainerItem)]),
+      child: Row(crossAxisAlignment: CrossAxisAlignment.start, children: [..._generateColumns(parentContainerItem)]),
     );
   }
 }

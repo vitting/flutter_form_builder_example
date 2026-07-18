@@ -58,17 +58,10 @@ class _FormRenderBuilderState extends State<FormRenderBuilder> {
       switch (item) {
         case FormBuilderInputItem():
           formControls.add(_generateInput(item));
-          formControls.add(
-            DropZone(
-              parentId: item.id,
-              isVisible: showDataZones,
-              parentContainerId: item.parentContainerId,
-              columnId: item.columnId,
-            ),
-          );
         case FormBuilderColumnsItem():
           formControls.add(
             FormRenderBuilderColumns(
+              showDataZones: showDataZones,
               parentContainerItem: item,
               buildFormControls: (columnId) {
                 final columnItems = item.columns[columnId] ?? [];
