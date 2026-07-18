@@ -44,17 +44,33 @@ final class AddFormBuilderInputItemIntoColumnEvent extends FormBuilderEvent {
   List<Object?> get props => [item, parentId, parentContainerId, columnId, columnIndex];
 }
 
-final class AddFormBuilderLayoutItemEvent extends FormBuilderEvent {
-  final FormBuilderItem item;
+final class AddFormBuilderLayoutColumnItemEvent extends FormBuilderEvent {
+  final FormBuilderColumnsItem item;
   final String? parentId;
   final String? parentContainerId;
   final String? columnId;
   final int? columnIndex;
 
-  AddFormBuilderLayoutItemEvent({required this.item, this.parentId, this.parentContainerId, this.columnId, this.columnIndex});
+  AddFormBuilderLayoutColumnItemEvent({
+    required this.item,
+    this.parentId,
+    this.parentContainerId,
+    this.columnId,
+    this.columnIndex,
+  });
 
   @override
   List<Object?> get props => [item, parentId, parentContainerId, columnId, columnIndex];
+}
+
+final class AddFormBuilderLayoutHeadingItemEvent extends FormBuilderEvent {
+  final FormBuilderHeadingItem item;
+  final String? parentId;
+
+  AddFormBuilderLayoutHeadingItemEvent({required this.item, this.parentId});
+
+  @override
+  List<Object?> get props => [item, parentId];
 }
 
 final class RemoveFormBuilderItemEvent extends FormBuilderEvent {

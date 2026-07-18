@@ -221,3 +221,116 @@ extension $FormBuilderColumnsItemCopyWith on FormBuilderColumnsItem {
   _$FormBuilderColumnsItemCWProxy get copyWith =>
       _$FormBuilderColumnsItemCWProxyImpl(this);
 }
+
+abstract class _$FormBuilderHeadingItemCWProxy {
+  FormBuilderHeadingItem id(String id);
+
+  FormBuilderHeadingItem controlType(ControlTypesEnum controlType);
+
+  FormBuilderHeadingItem parentContainerId(String? parentContainerId);
+
+  FormBuilderHeadingItem columnId(String? columnId);
+
+  FormBuilderHeadingItem columnIndex(int? columnIndex);
+
+  FormBuilderHeadingItem text(String text);
+
+  /// Creates a new instance with the provided field values.
+  /// Passing `null` to a nullable field nullifies it, while `null` for a non-nullable field is ignored. To update a single field use `FormBuilderHeadingItem(...).copyWith.fieldName(value)`.
+  ///
+  /// Example:
+  /// ```dart
+  /// FormBuilderHeadingItem(...).copyWith(id: 12, name: "My name")
+  /// ```
+  FormBuilderHeadingItem call({
+    String id,
+    ControlTypesEnum controlType,
+    String? parentContainerId,
+    String? columnId,
+    int? columnIndex,
+    String text,
+  });
+}
+
+/// Callable proxy for `copyWith` functionality.
+/// Use as `instanceOfFormBuilderHeadingItem.copyWith(...)` or call `instanceOfFormBuilderHeadingItem.copyWith.fieldName(value)` for a single field.
+class _$FormBuilderHeadingItemCWProxyImpl
+    implements _$FormBuilderHeadingItemCWProxy {
+  const _$FormBuilderHeadingItemCWProxyImpl(this._value);
+
+  final FormBuilderHeadingItem _value;
+
+  @override
+  FormBuilderHeadingItem id(String id) => call(id: id);
+
+  @override
+  FormBuilderHeadingItem controlType(ControlTypesEnum controlType) =>
+      call(controlType: controlType);
+
+  @override
+  FormBuilderHeadingItem parentContainerId(String? parentContainerId) =>
+      call(parentContainerId: parentContainerId);
+
+  @override
+  FormBuilderHeadingItem columnId(String? columnId) => call(columnId: columnId);
+
+  @override
+  FormBuilderHeadingItem columnIndex(int? columnIndex) =>
+      call(columnIndex: columnIndex);
+
+  @override
+  FormBuilderHeadingItem text(String text) => call(text: text);
+
+  @override
+  /// Creates a new instance with the provided field values.
+  /// Passing `null` to a nullable field nullifies it, while `null` for a non-nullable field is ignored. To update a single field use `FormBuilderHeadingItem(...).copyWith.fieldName(value)`.
+  ///
+  /// Example:
+  /// ```dart
+  /// FormBuilderHeadingItem(...).copyWith(id: 12, name: "My name")
+  /// ```
+  FormBuilderHeadingItem call({
+    Object? id = const $CopyWithPlaceholder(),
+    Object? controlType = const $CopyWithPlaceholder(),
+    Object? parentContainerId = const $CopyWithPlaceholder(),
+    Object? columnId = const $CopyWithPlaceholder(),
+    Object? columnIndex = const $CopyWithPlaceholder(),
+    Object? text = const $CopyWithPlaceholder(),
+  }) {
+    return FormBuilderHeadingItem(
+      id: id == const $CopyWithPlaceholder() || id == null
+          ? _value.id
+          // ignore: cast_nullable_to_non_nullable
+          : id as String,
+      controlType:
+          controlType == const $CopyWithPlaceholder() || controlType == null
+          ? _value.controlType
+          // ignore: cast_nullable_to_non_nullable
+          : controlType as ControlTypesEnum,
+      parentContainerId: parentContainerId == const $CopyWithPlaceholder()
+          ? _value.parentContainerId
+          // ignore: cast_nullable_to_non_nullable
+          : parentContainerId as String?,
+      columnId: columnId == const $CopyWithPlaceholder()
+          ? _value.columnId
+          // ignore: cast_nullable_to_non_nullable
+          : columnId as String?,
+      columnIndex: columnIndex == const $CopyWithPlaceholder()
+          ? _value.columnIndex
+          // ignore: cast_nullable_to_non_nullable
+          : columnIndex as int?,
+      text: text == const $CopyWithPlaceholder() || text == null
+          ? _value.text
+          // ignore: cast_nullable_to_non_nullable
+          : text as String,
+    );
+  }
+}
+
+extension $FormBuilderHeadingItemCopyWith on FormBuilderHeadingItem {
+  /// Returns a callable class used to build a new instance with modified fields.
+  /// Example: `instanceOfFormBuilderHeadingItem.copyWith(...)` or `instanceOfFormBuilderHeadingItem.copyWith.fieldName(...)`.
+  // ignore: library_private_types_in_public_api
+  _$FormBuilderHeadingItemCWProxy get copyWith =>
+      _$FormBuilderHeadingItemCWProxyImpl(this);
+}

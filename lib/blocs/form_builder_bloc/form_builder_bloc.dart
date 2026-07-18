@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:equatable/equatable.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -10,126 +12,161 @@ part 'form_builder_event.dart';
 
 class FormBuilderBloc extends Bloc<FormBuilderEvent, FormBuilderState> {
   final FormRenderBuilderRepository _formRenderBuilderRepository;
+  late final StreamSubscription<bool> _formRenderBuilderRepositoryStream;
   FormBuilderBloc(this._formRenderBuilderRepository) : super(FormBuilderState(items: [])) {
-    on<AddFormBuilderItemEvent>((event, emit) {
-      switch (event.item) {
-        case final FormBuilderInputItem item:
-          if (event.parentContainerId != null &&
-              event.parentContainerId!.isNotEmpty &&
-              event.columnId != null &&
-              event.columnId!.isNotEmpty) {
-            add(
-              AddFormBuilderInputItemIntoColumnEvent(
-                item: item,
-                parentId: event.parentId,
-                parentContainerId: event.parentContainerId!,
-                columnId: event.columnId!,
-                columnIndex: event.columnIndex,
-              ),
-            );
-          } else {
-            add(AddFormBuilderInputItemEvent(item: item, parentId: event.parentId));
-          }
+    on<AddFormBuilderItemEvent>(_onAddFormBuilderItemEventEvent);
+    on<AddFormBuilderInputItemEvent>(_onAddFormBuilderInputItemEvent);
+    on<AddFormBuilderInputItemIntoColumnEvent>(_onAddFormBuilderInputItemIntoColumnEvent);
+    on<AddFormBuilderLayoutHeadingItemEvent>(_onAddFormBuilderLayoutHeadingItemEvent);
+    on<AddFormBuilderLayoutColumnItemEvent>(_onAddFormBuilderLayoutColumnItemEvent);
+    on<RemoveFormBuilderItemEvent>(_onRemoveFormBuilderItemEvent);
+    on<ShowFormBuilderDataZonesEvent>(_showFormBuilderDataZonesEvent);
+    on<HideFormBuilderDataZonesEvent>(_hideFormBuilderDataZonesEvent);
 
-          break;
-        case final FormBuilderColumnsItem item:
-          add(
-            AddFormBuilderLayoutItemEvent(
-              item: item,
-              parentId: event.parentId,
-              parentContainerId: event.parentContainerId,
-              columnId: event.columnId,
-              columnIndex: event.columnIndex,
-            ),
-          );
-          break;
-      }
-    });
-
-    on<AddFormBuilderInputItemEvent>((event, emit) {
-      debugPrint('AddFormBuilderInputItemEvent: controlType: ${event.item.controlType.name}, parentId: ${event.parentId}');
-
-      final FormBuilderInputItem item = event.item.copyWith(id: Uuid().v4());
-
-      List<FormBuilderItem> items = List<FormBuilderItem>.from(state.items);
-
-      items = _insertItemIntoList(items: items, parentId: event.parentId, newItem: item);
-
-      emit(FormBuilderState(items: items));
-    });
-
-    on<AddFormBuilderInputItemIntoColumnEvent>((event, emit) {
-      debugPrint(
-        'AddFormBuilderInputItemIntoColumnEvent: controlType: ${event.item.controlType.name}, parentId: ${event.parentId}, parentContainerId: ${event.parentContainerId}, columnId: ${event.columnId}',
-      );
-
-      final FormBuilderInputItem item = event.item.copyWith(
-        id: Uuid().v4(),
-        columnId: event.columnId,
-        columnIndex: event.columnIndex,
-        parentContainerId: event.parentContainerId,
-      );
-
-      List<FormBuilderItem> items = List<FormBuilderItem>.from(state.items);
-
-      items = _addItemToColumn(
-        items: items,
-        columnContainerId: event.parentContainerId,
-        columnId: event.columnId,
-        newItemToAdd: item,
-        parentId: event.parentId,
-      );
-
-      emit(FormBuilderState(items: items));
-    });
-
-    on<AddFormBuilderLayoutItemEvent>((event, emit) {
-      debugPrint(
-        'AddFormBuilderLayoutItemEvent: controlType: ${event.item.controlType.name}, parentId: ${event.parentId}, parentContainerId: ${event.parentContainerId}, columnId: ${event.columnId}',
-      );
-      final FormBuilderColumnsItem itemAsColumn = event.item as FormBuilderColumnsItem;
-      final FormBuilderColumnsItem item = itemAsColumn.copyWith(id: Uuid().v4(), columns: {'column1': [], 'column2': []});
-
-      if (event.parentId == null || event.parentId!.isEmpty) {
-        final updatedItems = List<FormBuilderItem>.from(state.items)..insert(0, item);
-
-        emit(FormBuilderState(items: updatedItems));
-        return;
-      }
-
-      final items = List<FormBuilderItem>.from(state.items);
-
-      final parentIndex = _findParentIndex(items, event.parentId!);
-
-      if (parentIndex == -1) {
-        items.add(item);
-      } else {
-        items.insert(parentIndex + 1, item);
-      }
-
-      emit(FormBuilderState(items: items));
-    });
-
-    on<RemoveFormBuilderItemEvent>((event, emit) {
-      final updatedItems = List<FormBuilderItem>.from(state.items)..removeWhere((item) => item.id == event.itemId);
-      emit(state.copyWith(items: updatedItems, showDataZones: false));
-    });
-
-    on<ShowFormBuilderDataZonesEvent>((event, emit) {
-      emit(state.copyWith(showDataZones: true));
-    });
-
-    on<HideFormBuilderDataZonesEvent>((event, emit) {
-      emit(state.copyWith(showDataZones: false));
-    });
-
-    _formRenderBuilderRepository.dataStream.listen((showDataZones) {
+    _formRenderBuilderRepositoryStream = _formRenderBuilderRepository.dataStream.listen((showDataZones) {
       if (showDataZones) {
         add(ShowFormBuilderDataZonesEvent());
       } else {
         add(HideFormBuilderDataZonesEvent());
       }
     });
+  }
+
+  FutureOr<void> _onAddFormBuilderItemEventEvent(AddFormBuilderItemEvent event, Emitter<FormBuilderState> emit) {
+    switch (event.item) {
+      case final FormBuilderInputItem item:
+        if (event.parentContainerId != null &&
+            event.parentContainerId!.isNotEmpty &&
+            event.columnId != null &&
+            event.columnId!.isNotEmpty) {
+          add(
+            AddFormBuilderInputItemIntoColumnEvent(
+              item: item,
+              parentId: event.parentId,
+              parentContainerId: event.parentContainerId!,
+              columnId: event.columnId!,
+              columnIndex: event.columnIndex,
+            ),
+          );
+        } else {
+          add(AddFormBuilderInputItemEvent(item: item, parentId: event.parentId));
+        }
+
+        break;
+      case final FormBuilderColumnsItem item:
+        add(
+          AddFormBuilderLayoutColumnItemEvent(
+            item: item,
+            parentId: event.parentId,
+            parentContainerId: event.parentContainerId,
+            columnId: event.columnId,
+            columnIndex: event.columnIndex,
+          ),
+        );
+        break;
+      case final FormBuilderHeadingItem item:
+        add(AddFormBuilderLayoutHeadingItemEvent(item: item));
+        break;
+    }
+  }
+
+  // TODO: ER I GANG MED AT IMPLEMENTERE HEADING
+  FutureOr<void> _onAddFormBuilderLayoutHeadingItemEvent(
+    AddFormBuilderLayoutHeadingItemEvent event,
+    Emitter<FormBuilderState> emit,
+  ) {
+    debugPrint('AddFormBuilderLayoutHeadingItem: controlType: ${event.item.controlType.name}, parentId: ${event.parentId}');
+
+    final FormBuilderHeadingItem item = event.item.copyWith(id: Uuid().v4());
+
+    List<FormBuilderItem> items = List<FormBuilderItem>.from(state.items);
+
+    items = _insertItemIntoList(items: items, parentId: event.parentId, newItem: item);
+
+    emit(FormBuilderState(items: items));
+  }
+
+  FutureOr<void> _onAddFormBuilderInputItemEvent(AddFormBuilderInputItemEvent event, Emitter<FormBuilderState> emit) {
+    debugPrint('AddFormBuilderInputItemEvent: controlType: ${event.item.controlType.name}, parentId: ${event.parentId}');
+
+    final FormBuilderInputItem item = event.item.copyWith(id: Uuid().v4());
+
+    List<FormBuilderItem> items = List<FormBuilderItem>.from(state.items);
+
+    items = _insertItemIntoList(items: items, parentId: event.parentId, newItem: item);
+
+    emit(FormBuilderState(items: items));
+  }
+
+  FutureOr<void> _onAddFormBuilderInputItemIntoColumnEvent(
+    AddFormBuilderInputItemIntoColumnEvent event,
+    Emitter<FormBuilderState> emit,
+  ) {
+    debugPrint(
+      'AddFormBuilderInputItemIntoColumnEvent: controlType: ${event.item.controlType.name}, parentId: ${event.parentId}, parentContainerId: ${event.parentContainerId}, columnId: ${event.columnId}',
+    );
+
+    final FormBuilderInputItem item = event.item.copyWith(
+      id: Uuid().v4(),
+      columnId: event.columnId,
+      columnIndex: event.columnIndex,
+      parentContainerId: event.parentContainerId,
+    );
+
+    List<FormBuilderItem> items = List<FormBuilderItem>.from(state.items);
+
+    items = _addItemToColumn(
+      items: items,
+      columnContainerId: event.parentContainerId,
+      columnId: event.columnId,
+      newItemToAdd: item,
+      parentId: event.parentId,
+    );
+
+    emit(FormBuilderState(items: items));
+  }
+
+  FutureOr<void> _onAddFormBuilderLayoutColumnItemEvent(
+    AddFormBuilderLayoutColumnItemEvent event,
+    Emitter<FormBuilderState> emit,
+  ) {
+    debugPrint(
+      'AddFormBuilderLayoutItemEvent: controlType: ${event.item.controlType.name}, parentId: ${event.parentId}, parentContainerId: ${event.parentContainerId}, columnId: ${event.columnId}',
+    );
+    final FormBuilderColumnsItem itemAsColumn = event.item;
+    final FormBuilderColumnsItem item = itemAsColumn.copyWith(id: Uuid().v4(), columns: {'column1': [], 'column2': []});
+
+    if (event.parentId == null || event.parentId!.isEmpty) {
+      final updatedItems = List<FormBuilderItem>.from(state.items)..insert(0, item);
+
+      emit(FormBuilderState(items: updatedItems));
+      return null;
+    }
+
+    final items = List<FormBuilderItem>.from(state.items);
+
+    final parentIndex = _findParentIndex(items, event.parentId!);
+
+    if (parentIndex == -1) {
+      items.add(item);
+    } else {
+      items.insert(parentIndex + 1, item);
+    }
+
+    emit(FormBuilderState(items: items));
+  }
+
+  FutureOr<void> _onRemoveFormBuilderItemEvent(RemoveFormBuilderItemEvent event, Emitter<FormBuilderState> emit) {
+    final updatedItems = List<FormBuilderItem>.from(state.items)..removeWhere((item) => item.id == event.itemId);
+    emit(state.copyWith(items: updatedItems, showDataZones: false));
+  }
+
+  FutureOr<void> _showFormBuilderDataZonesEvent(ShowFormBuilderDataZonesEvent event, Emitter<FormBuilderState> emit) {
+    emit(state.copyWith(showDataZones: true));
+  }
+
+  FutureOr<void> _hideFormBuilderDataZonesEvent(HideFormBuilderDataZonesEvent event, Emitter<FormBuilderState> emit) {
+    emit(state.copyWith(showDataZones: false));
   }
 
   List<FormBuilderItem> _addItemToColumn({
@@ -195,5 +232,11 @@ class FormBuilderBloc extends Bloc<FormBuilderEvent, FormBuilderState> {
     }
 
     return items;
+  }
+
+  @override
+  Future<void> close() {
+    _formRenderBuilderRepositoryStream.cancel();
+    return super.close();
   }
 }

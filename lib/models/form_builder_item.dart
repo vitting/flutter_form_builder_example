@@ -15,6 +15,9 @@ abstract class FormBuilderItem extends Equatable {
   final int? columnIndex;
 
   const FormBuilderItem({required this.id, required this.controlType, this.parentContainerId, this.columnId, this.columnIndex});
+
+  @override
+  List<Object?> get props => [id, controlType, parentContainerId, columnId, columnIndex];
 }
 
 @CopyWith()
@@ -50,6 +53,27 @@ class FormBuilderColumnsItem extends FormBuilderItem {
 
   @override
   List<Object?> get props => [id, controlType, formElementType, columns, parentContainerId, columnId, columnIndex];
+
+  @override
+  bool get stringify => true;
+
+  FormElementTypeEnum get formElementType => FormElementTypeEnum.layout;
+}
+
+@CopyWith()
+class FormBuilderHeadingItem extends FormBuilderItem {
+  final String text;
+  const FormBuilderHeadingItem({
+    required super.id,
+    required super.controlType,
+    super.parentContainerId,
+    super.columnId,
+    super.columnIndex,
+    required this.text,
+  });
+
+  @override
+  List<Object?> get props => [id, controlType, formElementType, text, parentContainerId, columnId, columnIndex];
 
   @override
   bool get stringify => true;

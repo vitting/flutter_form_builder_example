@@ -19,6 +19,11 @@ class DragControl extends StatelessWidget {
       controlType: controlType,
       columns: {},
     ),
+    FormElementTypeEnum.layout when controlType == ControlTypesEnum.heading => FormBuilderHeadingItem(
+      id: '',
+      controlType: controlType,
+      text: 'Overskrift',
+    ),
     _ => throw UnsupportedError('Unsupported form element type'),
   };
 

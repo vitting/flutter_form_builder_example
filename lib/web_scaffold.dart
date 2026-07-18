@@ -3,6 +3,7 @@ import 'package:flutter_form_builder_example/enums/control_types_enum.dart';
 import 'package:flutter_form_builder_example/enums/form_element_type_enum.dart';
 import 'package:flutter_form_builder_example/form_controls/menu_control/menu_checkbox_control.dart';
 import 'package:flutter_form_builder_example/form_controls/menu_control/menu_columns_control.dart';
+import 'package:flutter_form_builder_example/form_controls/menu_control/menu_heading_control.dart';
 import 'package:flutter_form_builder_example/form_controls/menu_control/menu_text_field_control.dart';
 import 'package:flutter_form_builder_example/menu/menu.dart';
 import 'package:flutter_form_builder_example/models/menu_item_header_model.dart';
@@ -42,6 +43,7 @@ class WebScaffold extends StatelessWidget {
     MenuItemModel(icon: Symbols.check_box, label: 'Checkbox', child: MenuCheckboxControl()),
     MenuItemHeaderModel(label: 'Layouts'),
     MenuItemModel(icon: Symbols.view_column_2, label: 'Column', child: MenuColumnsControl()),
+    MenuItemModel(icon: Symbols.format_h1, label: 'Overskrift', child: MenuHeadingControl()),
   ];
 
   @override
