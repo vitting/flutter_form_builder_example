@@ -34,23 +34,7 @@ class FormBuilderBloc extends Bloc<FormBuilderEvent, FormBuilderState> {
   FutureOr<void> _onAddFormBuilderItemEventEvent(AddFormBuilderItemEvent event, Emitter<FormBuilderState> emit) {
     switch (event.item) {
       case final FormBuilderInputItem item:
-        if (event.parentContainerId != null &&
-            event.parentContainerId!.isNotEmpty &&
-            event.columnId != null &&
-            event.columnId!.isNotEmpty) {
-          add(
-            AddSimpleFormBuilderItemIntoColumnEvent<FormBuilderInputItem>(
-              item: item,
-              parentId: event.parentId,
-              parentContainerId: event.parentContainerId!,
-              columnId: event.columnId!,
-              columnIndex: event.columnIndex,
-            ),
-          );
-        } else {
-          add(AddSimpleFormBuilderItemEvent<FormBuilderInputItem>(item: item, parentId: event.parentId));
-        }
-
+        _addSimpleFormBuilderItem<FormBuilderInputItem>(event, item);
         break;
       case final FormBuilderColumnsItem item:
         add(
@@ -64,15 +48,34 @@ class FormBuilderBloc extends Bloc<FormBuilderEvent, FormBuilderState> {
         );
         break;
       case final FormBuilderHeadingItem item:
-        add(AddSimpleFormBuilderItemEvent<FormBuilderHeadingItem>(item: item, parentId: event.parentId));
+        _addSimpleFormBuilderItem<FormBuilderHeadingItem>(event, item);
         break;
+    }
+  }
+
+  void _addSimpleFormBuilderItem<T>(AddFormBuilderItemEvent event, T item) {
+    if (event.parentContainerId != null &&
+        event.parentContainerId!.isNotEmpty &&
+        event.columnId != null &&
+        event.columnId!.isNotEmpty) {
+      add(
+        AddSimpleFormBuilderItemIntoColumnEvent<T>(
+          item: item,
+          parentId: event.parentId,
+          parentContainerId: event.parentContainerId!,
+          columnId: event.columnId!,
+          columnIndex: event.columnIndex,
+        ),
+      );
+    } else {
+      add(AddSimpleFormBuilderItemEvent<T>(item: item, parentId: event.parentId));
     }
   }
 
   FutureOr<void> _onAddSimpleFormBuilderItemEvent(AddSimpleFormBuilderItemEvent event, Emitter<FormBuilderState> emit) {
     debugPrint('AddSimpleFormBuilderItemEvent: controlType: ${event.item.controlType}, parentId: ${event.parentId}');
 
-    final FormBuilderItem item = _addParamsToFormBuilderItem(event.item);
+    final FormBuilderItem item = event.item.copyWithBaseFields(id: Uuid().v4());
 
     List<FormBuilderItem> items = List<FormBuilderItem>.from(state.items);
 
@@ -86,11 +89,11 @@ class FormBuilderBloc extends Bloc<FormBuilderEvent, FormBuilderState> {
     Emitter<FormBuilderState> emit,
   ) {
     debugPrint(
-      'AddSimpleFormBuilderItemIntoColumnEvent: controlType: ${event.item.controlType.name}, parentId: ${event.parentId}, parentContainerId: ${event.parentContainerId}, columnId: ${event.columnId}',
+      'AddSimpleFormBuilderItemIntoColumnEvent: controlType: ${event.item.controlType}, parentId: ${event.parentId}, parentContainerId: ${event.parentContainerId}, columnId: ${event.columnId}',
     );
 
-    final FormBuilderItem item = _addParamsToFormBuilderItem(
-      event.item,
+    final FormBuilderItem item = event.item.copyWithBaseFields(
+      id: Uuid().v4(),
       parentContainerId: event.parentContainerId,
       columnId: event.columnId,
       columnIndex: event.columnIndex,
@@ -114,7 +117,7 @@ class FormBuilderBloc extends Bloc<FormBuilderEvent, FormBuilderState> {
     Emitter<FormBuilderState> emit,
   ) {
     debugPrint(
-      'AddFormBuilderLayoutItemEvent: controlType: ${event.item.controlType.name}, parentId: ${event.parentId}, parentContainerId: ${event.parentContainerId}, columnId: ${event.columnId}',
+      'AddFormBuilderLayoutItemEvent: controlType: ${event.item.controlType}, parentId: ${event.parentId}, parentContainerId: ${event.parentContainerId}, columnId: ${event.columnId}',
     );
     final FormBuilderColumnsItem itemAsColumn = event.item;
     final FormBuilderColumnsItem item = itemAsColumn.copyWith(id: Uuid().v4(), columns: {'column1': [], 'column2': []});
@@ -215,35 +218,6 @@ class FormBuilderBloc extends Bloc<FormBuilderEvent, FormBuilderState> {
     }
 
     return items;
-  }
-
-  FormBuilderItem _addParamsToFormBuilderItem(
-    FormBuilderItem item, {
-    String? parentContainerId,
-    String? columnId,
-    int? columnIndex,
-  }) {
-    return switch (item) {
-      FormBuilderInputItem inputItem => inputItem.copyWith(
-        id: Uuid().v4(),
-        columnId: columnId,
-        columnIndex: columnIndex,
-        parentContainerId: parentContainerId,
-      ),
-      FormBuilderColumnsItem columnsItem => columnsItem.copyWith(
-        id: Uuid().v4(),
-        columnId: columnId,
-        columnIndex: columnIndex,
-        parentContainerId: parentContainerId,
-      ),
-      FormBuilderHeadingItem headingItem => headingItem.copyWith(
-        id: Uuid().v4(),
-        columnId: columnId,
-        columnIndex: columnIndex,
-        parentContainerId: parentContainerId,
-      ),
-      FormBuilderItem() => throw UnimplementedError(),
-    };
   }
 
   @override

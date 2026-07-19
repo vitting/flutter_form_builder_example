@@ -1,15 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_form_builder_example/drop_zone/drop_zone.dart';
-import 'package:flutter_form_builder_example/form_builder_render/form_control_manage_container.dart';
+import 'package:flutter_form_builder_example/form_builder/form_control_manage_container.dart';
 import 'package:flutter_form_builder_example/models/form_builder_item.dart';
 
-class FormRenderBuilderColumns extends StatelessWidget {
+class FormBuilderColumns extends StatelessWidget {
   final FormBuilderColumnsItem parentContainerItem;
   final List<Widget> Function(String columnId) buildFormControls;
   final void Function(String itemIdToDelete) onDelete;
   final bool showDataZones;
 
-  const FormRenderBuilderColumns({
+  const FormBuilderColumns({
     super.key,
     required this.buildFormControls,
     required this.parentContainerItem,
@@ -33,6 +33,7 @@ class FormRenderBuilderColumns extends StatelessWidget {
               color: Colors.grey[200],
             ),
             child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 DropZone(
                   columnIndex: index,

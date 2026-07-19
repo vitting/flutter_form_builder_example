@@ -16,6 +16,8 @@ abstract class FormBuilderItem extends Equatable {
 
   const FormBuilderItem({required this.id, required this.controlType, this.parentContainerId, this.columnId, this.columnIndex});
 
+  FormBuilderItem copyWithBaseFields({required String id, String? parentContainerId, String? columnId, int? columnIndex});
+
   @override
   List<Object?> get props => [id, controlType, parentContainerId, columnId, columnIndex];
 }
@@ -37,6 +39,11 @@ final class FormBuilderInputItem extends FormBuilderItem {
   bool get stringify => true;
 
   FormElementTypeEnum get formElementType => FormElementTypeEnum.input;
+
+  @override
+  FormBuilderInputItem copyWithBaseFields({required String id, String? parentContainerId, String? columnId, int? columnIndex}) {
+    return copyWith(id: id, parentContainerId: parentContainerId, columnId: columnId, columnIndex: columnIndex);
+  }
 }
 
 @CopyWith()
@@ -58,6 +65,11 @@ final class FormBuilderColumnsItem extends FormBuilderItem {
   bool get stringify => true;
 
   FormElementTypeEnum get formElementType => FormElementTypeEnum.layout;
+
+  @override
+  FormBuilderColumnsItem copyWithBaseFields({required String id, String? parentContainerId, String? columnId, int? columnIndex}) {
+    return copyWith(id: id, parentContainerId: parentContainerId, columnId: columnId, columnIndex: columnIndex);
+  }
 }
 
 @CopyWith()
@@ -79,4 +91,9 @@ final class FormBuilderHeadingItem extends FormBuilderItem {
   bool get stringify => true;
 
   FormElementTypeEnum get formElementType => FormElementTypeEnum.layout;
+
+  @override
+  FormBuilderHeadingItem copyWithBaseFields({required String id, String? parentContainerId, String? columnId, int? columnIndex}) {
+    return copyWith(id: id, parentContainerId: parentContainerId, columnId: columnId, columnIndex: columnIndex);
+  }
 }

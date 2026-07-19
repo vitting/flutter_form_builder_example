@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_form_builder_example/blocs/form_builder_bloc/form_builder_bloc.dart';
-import 'package:flutter_form_builder_example/form_builder_render/form_render_builder.dart';
+import 'package:flutter_form_builder_example/form_builder/form_builder.dart';
 import 'package:flutter_form_builder_example/get_it/injection.dart';
 import 'package:flutter_form_builder_example/repositories/form_render_builder_repository.dart';
 
@@ -28,7 +28,7 @@ class _HomePageState extends State<HomePage> {
           ),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
-            children: [Expanded(child: FormRenderBuilder())],
+            children: [Expanded(child: FormBuilder())],
           ),
         ),
       ),
