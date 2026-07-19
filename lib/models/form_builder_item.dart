@@ -21,7 +21,7 @@ abstract class FormBuilderItem extends Equatable {
 }
 
 @CopyWith()
-class FormBuilderInputItem extends FormBuilderItem {
+final class FormBuilderInputItem extends FormBuilderItem {
   const FormBuilderInputItem({
     required super.id,
     required super.controlType,
@@ -40,7 +40,7 @@ class FormBuilderInputItem extends FormBuilderItem {
 }
 
 @CopyWith()
-class FormBuilderColumnsItem extends FormBuilderItem {
+final class FormBuilderColumnsItem extends FormBuilderItem {
   final Map<String, List<FormBuilderItem>> columns;
   const FormBuilderColumnsItem({
     required super.id,
@@ -61,7 +61,7 @@ class FormBuilderColumnsItem extends FormBuilderItem {
 }
 
 @CopyWith()
-class FormBuilderHeadingItem extends FormBuilderItem {
+final class FormBuilderHeadingItem extends FormBuilderItem {
   final String text;
   const FormBuilderHeadingItem({
     required super.id,

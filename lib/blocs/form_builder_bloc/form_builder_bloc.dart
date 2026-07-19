@@ -15,9 +15,8 @@ class FormBuilderBloc extends Bloc<FormBuilderEvent, FormBuilderState> {
   late final StreamSubscription<bool> _formRenderBuilderRepositoryStream;
   FormBuilderBloc(this._formRenderBuilderRepository) : super(FormBuilderState(items: [])) {
     on<AddFormBuilderItemEvent>(_onAddFormBuilderItemEventEvent);
-    on<AddFormBuilderInputItemEvent>(_onAddFormBuilderInputItemEvent);
-    on<AddFormBuilderInputItemIntoColumnEvent>(_onAddFormBuilderInputItemIntoColumnEvent);
-    on<AddFormBuilderLayoutHeadingItemEvent>(_onAddFormBuilderLayoutHeadingItemEvent);
+    on<AddSimpleFormBuilderItemEvent>(_onAddSimpleFormBuilderItemEvent);
+    on<AddSimpleFormBuilderItemIntoColumnEvent>(_onAddSimpleFormBuilderItemIntoColumnEvent);
     on<AddFormBuilderLayoutColumnItemEvent>(_onAddFormBuilderLayoutColumnItemEvent);
     on<RemoveFormBuilderItemEvent>(_onRemoveFormBuilderItemEvent);
     on<ShowFormBuilderDataZonesEvent>(_showFormBuilderDataZonesEvent);
@@ -40,7 +39,7 @@ class FormBuilderBloc extends Bloc<FormBuilderEvent, FormBuilderState> {
             event.columnId != null &&
             event.columnId!.isNotEmpty) {
           add(
-            AddFormBuilderInputItemIntoColumnEvent(
+            AddSimpleFormBuilderItemIntoColumnEvent<FormBuilderInputItem>(
               item: item,
               parentId: event.parentId,
               parentContainerId: event.parentContainerId!,
@@ -49,7 +48,7 @@ class FormBuilderBloc extends Bloc<FormBuilderEvent, FormBuilderState> {
             ),
           );
         } else {
-          add(AddFormBuilderInputItemEvent(item: item, parentId: event.parentId));
+          add(AddSimpleFormBuilderItemEvent<FormBuilderInputItem>(item: item, parentId: event.parentId));
         }
 
         break;
@@ -65,19 +64,15 @@ class FormBuilderBloc extends Bloc<FormBuilderEvent, FormBuilderState> {
         );
         break;
       case final FormBuilderHeadingItem item:
-        add(AddFormBuilderLayoutHeadingItemEvent(item: item));
+        add(AddSimpleFormBuilderItemEvent<FormBuilderHeadingItem>(item: item, parentId: event.parentId));
         break;
     }
   }
 
-  // TODO: ER I GANG MED AT IMPLEMENTERE HEADING
-  FutureOr<void> _onAddFormBuilderLayoutHeadingItemEvent(
-    AddFormBuilderLayoutHeadingItemEvent event,
-    Emitter<FormBuilderState> emit,
-  ) {
-    debugPrint('AddFormBuilderLayoutHeadingItem: controlType: ${event.item.controlType.name}, parentId: ${event.parentId}');
+  FutureOr<void> _onAddSimpleFormBuilderItemEvent(AddSimpleFormBuilderItemEvent event, Emitter<FormBuilderState> emit) {
+    debugPrint('AddSimpleFormBuilderItemEvent: controlType: ${event.item.controlType}, parentId: ${event.parentId}');
 
-    final FormBuilderHeadingItem item = event.item.copyWith(id: Uuid().v4());
+    final FormBuilderItem item = _addParamsToFormBuilderItem(event.item);
 
     List<FormBuilderItem> items = List<FormBuilderItem>.from(state.items);
 
@@ -86,31 +81,19 @@ class FormBuilderBloc extends Bloc<FormBuilderEvent, FormBuilderState> {
     emit(FormBuilderState(items: items));
   }
 
-  FutureOr<void> _onAddFormBuilderInputItemEvent(AddFormBuilderInputItemEvent event, Emitter<FormBuilderState> emit) {
-    debugPrint('AddFormBuilderInputItemEvent: controlType: ${event.item.controlType.name}, parentId: ${event.parentId}');
-
-    final FormBuilderInputItem item = event.item.copyWith(id: Uuid().v4());
-
-    List<FormBuilderItem> items = List<FormBuilderItem>.from(state.items);
-
-    items = _insertItemIntoList(items: items, parentId: event.parentId, newItem: item);
-
-    emit(FormBuilderState(items: items));
-  }
-
-  FutureOr<void> _onAddFormBuilderInputItemIntoColumnEvent(
-    AddFormBuilderInputItemIntoColumnEvent event,
+  FutureOr<void> _onAddSimpleFormBuilderItemIntoColumnEvent(
+    AddSimpleFormBuilderItemIntoColumnEvent event,
     Emitter<FormBuilderState> emit,
   ) {
     debugPrint(
-      'AddFormBuilderInputItemIntoColumnEvent: controlType: ${event.item.controlType.name}, parentId: ${event.parentId}, parentContainerId: ${event.parentContainerId}, columnId: ${event.columnId}',
+      'AddSimpleFormBuilderItemIntoColumnEvent: controlType: ${event.item.controlType.name}, parentId: ${event.parentId}, parentContainerId: ${event.parentContainerId}, columnId: ${event.columnId}',
     );
 
-    final FormBuilderInputItem item = event.item.copyWith(
-      id: Uuid().v4(),
+    final FormBuilderItem item = _addParamsToFormBuilderItem(
+      event.item,
+      parentContainerId: event.parentContainerId,
       columnId: event.columnId,
       columnIndex: event.columnIndex,
-      parentContainerId: event.parentContainerId,
     );
 
     List<FormBuilderItem> items = List<FormBuilderItem>.from(state.items);
@@ -173,7 +156,7 @@ class FormBuilderBloc extends Bloc<FormBuilderEvent, FormBuilderState> {
     required List<FormBuilderItem> items,
     required String columnContainerId,
     required String columnId,
-    required FormBuilderInputItem newItemToAdd,
+    required FormBuilderItem newItemToAdd,
     required String? parentId,
   }) {
     // Make a copy of the items list to avoid modifying the original list
@@ -232,6 +215,35 @@ class FormBuilderBloc extends Bloc<FormBuilderEvent, FormBuilderState> {
     }
 
     return items;
+  }
+
+  FormBuilderItem _addParamsToFormBuilderItem(
+    FormBuilderItem item, {
+    String? parentContainerId,
+    String? columnId,
+    int? columnIndex,
+  }) {
+    return switch (item) {
+      FormBuilderInputItem inputItem => inputItem.copyWith(
+        id: Uuid().v4(),
+        columnId: columnId,
+        columnIndex: columnIndex,
+        parentContainerId: parentContainerId,
+      ),
+      FormBuilderColumnsItem columnsItem => columnsItem.copyWith(
+        id: Uuid().v4(),
+        columnId: columnId,
+        columnIndex: columnIndex,
+        parentContainerId: parentContainerId,
+      ),
+      FormBuilderHeadingItem headingItem => headingItem.copyWith(
+        id: Uuid().v4(),
+        columnId: columnId,
+        columnIndex: columnIndex,
+        parentContainerId: parentContainerId,
+      ),
+      FormBuilderItem() => throw UnimplementedError(),
+    };
   }
 
   @override
