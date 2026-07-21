@@ -85,3 +85,14 @@ final class HideFormBuilderDataZonesEvent extends FormBuilderEvent {
   @override
   List<Object?> get props => [];
 }
+
+final class ReorderFormBuilderItemEvent extends FormBuilderEvent {
+  final int oldIndex;
+  final int newIndex;
+  final FormBuilderItem item;
+
+  ReorderFormBuilderItemEvent({required this.oldIndex, required this.newIndex, required this.item});
+
+  @override
+  List<Object?> get props => [oldIndex, newIndex, item];
+}

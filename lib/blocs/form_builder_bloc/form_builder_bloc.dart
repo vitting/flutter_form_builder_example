@@ -19,8 +19,9 @@ class FormBuilderBloc extends Bloc<FormBuilderEvent, FormBuilderState> {
     on<AddSimpleFormBuilderItemIntoColumnEvent>(_onAddSimpleFormBuilderItemIntoColumnEvent);
     on<AddFormBuilderLayoutColumnItemEvent>(_onAddFormBuilderLayoutColumnItemEvent);
     on<RemoveFormBuilderItemEvent>(_onRemoveFormBuilderItemEvent);
-    on<ShowFormBuilderDataZonesEvent>(_showFormBuilderDataZonesEvent);
-    on<HideFormBuilderDataZonesEvent>(_hideFormBuilderDataZonesEvent);
+    on<ShowFormBuilderDataZonesEvent>(_onShowFormBuilderDataZonesEvent);
+    on<HideFormBuilderDataZonesEvent>(_onHideFormBuilderDataZonesEvent);
+    on<ReorderFormBuilderItemEvent>(_onReorderFormBuilderItemEvent);
 
     _formRenderBuilderRepositoryStream = _formRenderBuilderRepository.dataStream.listen((showDataZones) {
       if (showDataZones) {
@@ -54,10 +55,7 @@ class FormBuilderBloc extends Bloc<FormBuilderEvent, FormBuilderState> {
   }
 
   void _addSimpleFormBuilderItem<T>(AddFormBuilderItemEvent event, T item) {
-    if (event.parentContainerId != null &&
-        event.parentContainerId!.isNotEmpty &&
-        event.columnId != null &&
-        event.columnId!.isNotEmpty) {
+    if (_checkIfParametersForColumnIsValud(event.parentContainerId, event.columnId)) {
       add(
         AddSimpleFormBuilderItemIntoColumnEvent<T>(
           item: item,
@@ -147,12 +145,39 @@ class FormBuilderBloc extends Bloc<FormBuilderEvent, FormBuilderState> {
     emit(state.copyWith(items: updatedItems, showDataZones: false));
   }
 
-  FutureOr<void> _showFormBuilderDataZonesEvent(ShowFormBuilderDataZonesEvent event, Emitter<FormBuilderState> emit) {
+  FutureOr<void> _onShowFormBuilderDataZonesEvent(ShowFormBuilderDataZonesEvent event, Emitter<FormBuilderState> emit) {
     emit(state.copyWith(showDataZones: true));
   }
 
-  FutureOr<void> _hideFormBuilderDataZonesEvent(HideFormBuilderDataZonesEvent event, Emitter<FormBuilderState> emit) {
+  FutureOr<void> _onHideFormBuilderDataZonesEvent(HideFormBuilderDataZonesEvent event, Emitter<FormBuilderState> emit) {
     emit(state.copyWith(showDataZones: false));
+  }
+
+  FutureOr<void> _onReorderFormBuilderItemEvent(ReorderFormBuilderItemEvent event, Emitter<FormBuilderState> emit) {
+    final items = List<FormBuilderItem>.from(state.items);
+
+    if (_checkIfParametersForColumnIsValud(event.item.parentContainerId, event.item.columnId)) {
+      final parentContainerIndex = _findParentIndex(items, event.item.parentContainerId!);
+      if (parentContainerIndex != -1) {
+        final parentContainerItem = items[parentContainerIndex] as FormBuilderColumnsItem;
+        final columnItems = parentContainerItem.columns[event.item.columnId!] ?? [];
+
+        final itemToMove = columnItems.removeAt(event.oldIndex);
+        columnItems.insert(event.newIndex, itemToMove);
+
+        final updatedParentContainerItem = parentContainerItem.copyWith(
+          columns: {...parentContainerItem.columns, event.item.columnId!: columnItems},
+        );
+        items[parentContainerIndex] = updatedParentContainerItem;
+
+        emit(state.copyWith(items: items));
+      }
+    } else {
+      final itemToMove = items.removeAt(event.oldIndex);
+      items.insert(event.newIndex, itemToMove);
+
+      emit(state.copyWith(items: items));
+    }
   }
 
   List<FormBuilderItem> _addItemToColumn({
@@ -218,6 +243,10 @@ class FormBuilderBloc extends Bloc<FormBuilderEvent, FormBuilderState> {
     }
 
     return items;
+  }
+
+  bool _checkIfParametersForColumnIsValud(String? parentContainerId, String? columnId) {
+    return parentContainerId != null && parentContainerId.isNotEmpty && columnId != null && columnId.isNotEmpty;
   }
 
   @override

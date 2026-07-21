@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_form_builder_example/blocs/form_builder_reorder_cubit/form_builder_reorder_cubit.dart';
 import 'package:flutter_form_builder_example/enums/control_types_enum.dart';
 import 'package:flutter_form_builder_example/enums/form_element_type_enum.dart';
 import 'package:flutter_form_builder_example/form_controls/menu_control/drag_container.dart';
@@ -30,17 +32,24 @@ class DragControl extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final formRenderBuilderRepository = getIt<FormRenderBuilderRepository>();
-    return Draggable<FormBuilderItem>(
-      data: _formBuilderItem,
-      feedback: DragContainer(isDragging: true, child: child),
-      childWhenDragging: DragContainer(isDragging: true, child: child),
-      onDragStarted: () {
-        formRenderBuilderRepository.updateData(true);
+    return BlocBuilder<FormBuilderReorderCubit, bool>(
+      builder: (context, state) {
+        return IgnorePointer(
+          ignoring: state,
+          child: Draggable<FormBuilderItem>(
+            data: _formBuilderItem,
+            feedback: DragContainer(isDragging: true, child: child),
+            childWhenDragging: DragContainer(isDragging: true, child: child),
+            onDragStarted: () {
+              formRenderBuilderRepository.updateData(true);
+            },
+            onDragEnd: (_) {
+              formRenderBuilderRepository.updateData(false);
+            },
+            child: child,
+          ),
+        );
       },
-      onDragEnd: (_) {
-        formRenderBuilderRepository.updateData(false);
-      },
-      child: child,
     );
   }
 }

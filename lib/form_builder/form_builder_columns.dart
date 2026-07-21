@@ -5,9 +5,10 @@ import 'package:flutter_form_builder_example/models/form_builder_item.dart';
 
 class FormBuilderColumns extends StatelessWidget {
   final FormBuilderColumnsItem parentContainerItem;
-  final List<Widget> Function(String columnId) buildFormControls;
+  final Widget Function(String columnId) buildFormControls;
   final void Function(String itemIdToDelete) onDelete;
   final bool showDataZones;
+  final int index;
 
   const FormBuilderColumns({
     super.key,
@@ -15,7 +16,17 @@ class FormBuilderColumns extends StatelessWidget {
     required this.parentContainerItem,
     required this.onDelete,
     this.showDataZones = false,
+    required this.index,
   });
+
+  BorderRadiusGeometry? _getBorderRadius(bool isFirst, bool isLast) {
+    // if (isFirst) {
+    //   return BorderRadius.only(topLeft: Radius.circular(8), bottomLeft: Radius.circular(8));
+    // } else if (isLast) {
+    //   return BorderRadius.only(topRight: Radius.circular(8), bottomRight: Radius.circular(8));
+    // }
+    return BorderRadius.circular(8);
+  }
 
   List<Widget> _generateColumns(FormBuilderColumnsItem item) {
     final List<Widget> columns = [];
@@ -24,12 +35,17 @@ class FormBuilderColumns extends StatelessWidget {
     for (final column in item.columns.entries) {
       final formControls = buildFormControls(column.key);
       index++;
+      bool isColumnFirst = index == 1;
+      bool isColumnLast = index == item.columns.length;
+
       columns.add(
         Expanded(
           child: Container(
             padding: EdgeInsets.all(8.0),
             decoration: BoxDecoration(
               border: Border.all(color: Colors.grey),
+
+              borderRadius: _getBorderRadius(isColumnFirst, isColumnLast),
               color: Colors.grey[200],
             ),
             child: Column(
@@ -43,12 +59,16 @@ class FormBuilderColumns extends StatelessWidget {
                   showExpaned: column.value.isEmpty,
                   isVisible: column.value.isEmpty || showDataZones,
                 ),
-                ...formControls,
+                formControls,
               ],
             ),
           ),
         ),
       );
+
+      if (isColumnLast == false) {
+        columns.add(SizedBox(width: 4.0)); // Add spacing between columns
+      }
     }
 
     return columns;
@@ -57,6 +77,7 @@ class FormBuilderColumns extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return FormControlManageContainer(
+      dragHandlerReOrderListIndex: index,
       onDelete: () {
         onDelete(parentContainerItem.id);
       },

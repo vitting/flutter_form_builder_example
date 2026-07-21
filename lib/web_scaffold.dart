@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_form_builder_example/blocs/form_builder_reorder_cubit/form_builder_reorder_cubit.dart';
 import 'package:flutter_form_builder_example/enums/control_types_enum.dart';
 import 'package:flutter_form_builder_example/enums/form_element_type_enum.dart';
 import 'package:flutter_form_builder_example/form_controls/menu_control/menu_checkbox_control.dart';
@@ -48,24 +50,27 @@ class WebScaffold extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: Column(
-        children: [
-          Topbar(),
-          Expanded(
-            child: Row(
-              children: [
-                Menu(menuItems: _menuItems),
-                Expanded(
-                  child: Sidebar(
-                    controller: sidebarController,
-                    child: Column(children: [Expanded(child: content)]),
+    return BlocProvider(
+      create: (context) => FormBuilderReorderCubit(),
+      child: Scaffold(
+        body: Column(
+          children: [
+            Topbar(),
+            Expanded(
+              child: Row(
+                children: [
+                  Menu(menuItems: _menuItems),
+                  Expanded(
+                    child: Sidebar(
+                      controller: sidebarController,
+                      child: Column(children: [Expanded(child: content)]),
+                    ),
                   ),
-                ),
-              ],
+                ],
+              ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }
