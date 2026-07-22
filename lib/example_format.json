@@ -1,0 +1,79 @@
+{
+  "id": "27bc2fa7-6a48-4dd5-bcd2-1f51dd611e5012345",
+  "name": "Sample Form",
+  "fields": [
+    {
+      "id": "bf8ad757-7ea0-4355-ab7b-5203a51c0e2b",
+      "label": "First Name",
+      "controlType": "textField",
+      "parentContainerId": null,
+      "columnId": null,
+      "columnIndex": null,
+      "additionalProperties": {
+        "required": false,
+        "placeholder": null,
+        "defaultValue": null,
+        "columns": null
+      }
+    },
+    {
+      "id": "5f5a5d64-83cf-41bc-b13a-4b2a1a4453e1",
+      "label": "Age",
+      "controlType": "numberField",
+      "parentContainerId": null,
+      "columnId": null,
+      "columnIndex": null,
+      "additionalProperties": {
+        "required": false,
+        "placeholder": null,
+        "defaultValue": null,
+        "columns": null
+      }
+    },
+    {
+      "id": "8e10b2d1-cf44-461d-a770-7122f31834b3",
+      "label": "Is 18",
+      "controlType": "checkbox",
+      "parentContainerId": null,
+      "columnId": null,
+      "columnIndex": null,
+      "additionalProperties": {
+        "required": false,
+        "placeholder": null,
+        "defaultValue": false,
+        "columns": null
+      }
+    },
+    {
+      "id": "6d786647-0afe-4cf8-9c5d-7288a9ec1a7a",
+      "label": null,
+      "controlType": "columns",
+      "parentContainerId": null,
+      "columnId": null,
+      "columnIndex": null,
+      "additionalProperties": {
+        "required": false,
+        "placeholder": null,
+        "defaultValue": null,
+        "columns": {
+          "91133877-e6b4-4c66-8f4c-262df4765903": [
+            {
+              "id": "a9f65d40-93cc-45bb-9680-a85aabdb5e45",
+              "label": "Name",
+              "controlType": "textField",
+              "parentContainerId": "6d786647-0afe-4cf8-9c5d-7288a9ec1a7a",
+              "columnId": "91133877-e6b4-4c66-8f4c-262df4765903",
+              "columnIndex": 1,
+              "additionalProperties": {
+                "required": false,
+                "placeholder": null,
+                "defaultValue": null,
+                "columns": null
+              }
+            }
+          ]
+        }
+      }
+    }
+  ]
+}

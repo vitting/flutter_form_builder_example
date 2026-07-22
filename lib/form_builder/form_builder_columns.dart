@@ -77,10 +77,8 @@ class FormBuilderColumns extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return FormControlManageContainer(
+      item: parentContainerItem,
       dragHandlerReOrderListIndex: index,
-      onDelete: () {
-        onDelete(parentContainerItem.id);
-      },
       child: Row(crossAxisAlignment: CrossAxisAlignment.start, children: [..._generateColumns(parentContainerItem)]),
     );
   }

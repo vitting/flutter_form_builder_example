@@ -3,6 +3,8 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_form_builder_example/blocs/form_builder_bloc/form_builder_bloc.dart';
 import 'package:flutter_form_builder_example/blocs/form_builder_bloc/form_builder_state.dart';
 import 'package:flutter_form_builder_example/blocs/form_builder_reorder_cubit/form_builder_reorder_cubit.dart';
+import 'package:flutter_form_builder_example/converter/converter_from_form_builder_items.dart';
+import 'package:flutter_form_builder_example/converter/form_api_example.dart';
 import 'package:flutter_form_builder_example/drop_zone/drop_zone.dart';
 import 'package:flutter_form_builder_example/enums/control_types_enum.dart';
 import 'package:flutter_form_builder_example/form_builder/form_control_manage_container.dart';
@@ -12,6 +14,7 @@ import 'package:flutter_form_builder_example/form_controls/form_checkbox.dart';
 import 'package:flutter_form_builder_example/form_controls/form_heading.dart';
 import 'package:flutter_form_builder_example/form_controls/form_text_field.dart';
 import 'package:flutter_form_builder_example/models/form_builder_item.dart';
+import 'package:flutter_json/flutter_json.dart';
 
 class FormBuilder extends StatefulWidget {
   const FormBuilder({super.key});
@@ -21,35 +24,30 @@ class FormBuilder extends StatefulWidget {
 }
 
 class _FormBuilderState extends State<FormBuilder> {
+  Map<String, dynamic>? json;
+  bool showJson = false;
+
   Widget _generateInput(FormBuilderItem item, int index) {
     return switch (item.controlType) {
       ControlTypesEnum.textField => FormControlManageContainer(
+        item: item,
         dragHandlerReOrderListIndex: index,
-        onDelete: () {
-          _onDeleteItem(context, item.id);
-        },
         child: FormTextField(label: ControlTypesEnum.textField.name, isFormRenderControl: true, isEnabled: false),
       ),
 
       ControlTypesEnum.numberField => FormControlManageContainer(
+        item: item,
         dragHandlerReOrderListIndex: index,
-        onDelete: () {
-          _onDeleteItem(context, item.id);
-        },
         child: FormTextField(label: ControlTypesEnum.numberField.name, isFormRenderControl: true, isEnabled: false),
       ),
       ControlTypesEnum.checkbox => FormControlManageContainer(
+        item: item,
         dragHandlerReOrderListIndex: index,
-        onDelete: () {
-          _onDeleteItem(context, item.id);
-        },
         child: FormCheckbox(label: ControlTypesEnum.checkbox.name, isFormRenderControl: true, isEnabled: false),
       ),
       ControlTypesEnum.heading => FormControlManageContainer(
+        item: item,
         dragHandlerReOrderListIndex: index,
-        onDelete: () {
-          _onDeleteItem(context, item.id);
-        },
         child: FormHeading(text: 'Hello'),
       ),
       _ => SizedBox.shrink(),
@@ -121,14 +119,45 @@ class _FormBuilderState extends State<FormBuilder> {
     return BlocBuilder<FormBuilderBloc, FormBuilderState>(
       builder: (context, state) {
         final items = state.items;
+        debugPrint('***************FormBuilderState items: }');
 
         return SingleChildScrollView(
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
+              if (showJson) SizedBox(height: 600, child: JsonWidget(json: json ?? {"test": "Hello", "test2": "Hello2"})),
               Row(
                 mainAxisAlignment: MainAxisAlignment.end,
                 children: [
+                  ElevatedButton(
+                    onPressed: () {
+                      BlocProvider.of<FormBuilderBloc>(context).add(FetchFormApiModelEvent());
+                      json = formApiExample.toJson();
+                    },
+                    child: Text('Load JSON Example'),
+                  ),
+                  ElevatedButton(
+                    onPressed: () {
+                      setState(() {
+                        showJson = !showJson;
+                      });
+                    },
+                    child: Text(showJson ? 'Hide JSON' : 'Show JSON'),
+                  ),
+                  ElevatedButton(
+                    onPressed: () {
+                      final result = ConverterFromFormBuilderItems.convert(
+                        '8620301b-0e90-4a3e-acd6-7873866b7f9d',
+                        'Test Form',
+                        state.items,
+                      );
+                      debugPrint('Converted FormApiModel: ${result.toJson()}');
+                      setState(() {
+                        json = result.toJson();
+                      });
+                    },
+                    child: Text('Convert to FormApiModel'),
+                  ),
                   ReorderButton(
                     onPressed: () {
                       BlocProvider.of<FormBuilderReorderCubit>(context).toggleReorderMode();

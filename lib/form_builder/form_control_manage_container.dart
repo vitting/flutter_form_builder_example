@@ -1,12 +1,19 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_form_builder_example/blocs/form_builder_bloc/form_builder_bloc.dart';
 import 'package:flutter_form_builder_example/blocs/form_builder_reorder_cubit/form_builder_reorder_cubit.dart';
+import 'package:flutter_form_builder_example/models/form_builder_item.dart';
 
 class FormControlManageContainer extends StatefulWidget {
+  final FormBuilderItem item;
   final Widget child;
-  final VoidCallback? onDelete;
   final int dragHandlerReOrderListIndex;
-  const FormControlManageContainer({super.key, required this.child, this.onDelete, required this.dragHandlerReOrderListIndex});
+  const FormControlManageContainer({
+    super.key,
+    required this.child,
+    required this.dragHandlerReOrderListIndex,
+    required this.item,
+  });
 
   @override
   State<FormControlManageContainer> createState() => _FormControlManageContainerState();
@@ -52,7 +59,15 @@ class _FormControlManageContainerState extends State<FormControlManageContainer>
                     children: [
                       IconButton(
                         icon: Icon(Icons.delete, color: Colors.black),
-                        onPressed: widget.onDelete,
+                        onPressed: () {
+                          BlocProvider.of<FormBuilderBloc>(context).add(
+                            RemoveFormBuilderItemEvent(
+                              itemId: widget.item.id,
+                              parentContainerId: widget.item.parentContainerId,
+                              columnId: widget.item.columnId,
+                            ),
+                          );
+                        },
                       ),
                     ],
                   ),

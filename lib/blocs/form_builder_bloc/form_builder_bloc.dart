@@ -4,6 +4,8 @@ import 'package:equatable/equatable.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_form_builder_example/blocs/form_builder_bloc/form_builder_state.dart';
+import 'package:flutter_form_builder_example/converter/converter_to_form_builder_items.dart';
+import 'package:flutter_form_builder_example/converter/form_api_example.dart';
 import 'package:flutter_form_builder_example/models/form_builder_item.dart';
 import 'package:flutter_form_builder_example/repositories/form_render_builder_repository.dart';
 import 'package:uuid/uuid.dart';
@@ -22,6 +24,7 @@ class FormBuilderBloc extends Bloc<FormBuilderEvent, FormBuilderState> {
     on<ShowFormBuilderDataZonesEvent>(_onShowFormBuilderDataZonesEvent);
     on<HideFormBuilderDataZonesEvent>(_onHideFormBuilderDataZonesEvent);
     on<ReorderFormBuilderItemEvent>(_onReorderFormBuilderItemEvent);
+    on<FetchFormApiModelEvent>(_onFetchFormApiModelEvent);
 
     _formRenderBuilderRepositoryStream = _formRenderBuilderRepository.dataStream.listen((showDataZones) {
       if (showDataZones) {
@@ -55,7 +58,7 @@ class FormBuilderBloc extends Bloc<FormBuilderEvent, FormBuilderState> {
   }
 
   void _addSimpleFormBuilderItem<T>(AddFormBuilderItemEvent event, T item) {
-    if (_checkIfParametersForColumnIsValud(event.parentContainerId, event.columnId)) {
+    if (_checkIfParametersForColumnIsValid(event.parentContainerId, event.columnId)) {
       add(
         AddSimpleFormBuilderItemIntoColumnEvent<T>(
           item: item,
@@ -141,8 +144,33 @@ class FormBuilderBloc extends Bloc<FormBuilderEvent, FormBuilderState> {
   }
 
   FutureOr<void> _onRemoveFormBuilderItemEvent(RemoveFormBuilderItemEvent event, Emitter<FormBuilderState> emit) {
-    final updatedItems = List<FormBuilderItem>.from(state.items)..removeWhere((item) => item.id == event.itemId);
-    emit(state.copyWith(items: updatedItems, showDataZones: false));
+    debugPrint(
+      '***************RemoveFormBuilderItemEvent: itemId: ${event.itemId} parentContainerId: ${event.parentContainerId} columnId: ${event.columnId}',
+    );
+
+    if (_checkIfParametersForColumnIsValid(event.parentContainerId, event.columnId)) {
+      debugPrint('*******Removing item from column: parentContainerId: ${event.parentContainerId}, columnId: ${event.columnId}');
+      final items = List<FormBuilderItem>.from(state.items);
+
+      final parentContainerIndex = _findParentIndex(items, event.parentContainerId!);
+      if (parentContainerIndex != -1) {
+        final parentContainerItem = items[parentContainerIndex] as FormBuilderColumnsItem;
+        final columnItems = List<FormBuilderItem>.from(parentContainerItem.columns[event.columnId!] ?? const []);
+
+        columnItems.removeWhere((item) => item.id == event.itemId);
+
+        final updatedParentContainerItem = parentContainerItem.copyWith(
+          columns: {...parentContainerItem.columns, event.columnId!: columnItems},
+        );
+        items[parentContainerIndex] = updatedParentContainerItem;
+
+        emit(state.copyWith(items: items, showDataZones: false));
+      }
+    } else {
+      final updatedItems = List<FormBuilderItem>.from(state.items)..removeWhere((item) => item.id == event.itemId);
+
+      emit(state.copyWith(items: updatedItems, showDataZones: false));
+    }
   }
 
   FutureOr<void> _onShowFormBuilderDataZonesEvent(ShowFormBuilderDataZonesEvent event, Emitter<FormBuilderState> emit) {
@@ -156,11 +184,11 @@ class FormBuilderBloc extends Bloc<FormBuilderEvent, FormBuilderState> {
   FutureOr<void> _onReorderFormBuilderItemEvent(ReorderFormBuilderItemEvent event, Emitter<FormBuilderState> emit) {
     final items = List<FormBuilderItem>.from(state.items);
 
-    if (_checkIfParametersForColumnIsValud(event.item.parentContainerId, event.item.columnId)) {
+    if (_checkIfParametersForColumnIsValid(event.item.parentContainerId, event.item.columnId)) {
       final parentContainerIndex = _findParentIndex(items, event.item.parentContainerId!);
       if (parentContainerIndex != -1) {
         final parentContainerItem = items[parentContainerIndex] as FormBuilderColumnsItem;
-        final columnItems = parentContainerItem.columns[event.item.columnId!] ?? [];
+        final columnItems = List<FormBuilderItem>.from(parentContainerItem.columns[event.item.columnId!] ?? const []);
 
         final itemToMove = columnItems.removeAt(event.oldIndex);
         columnItems.insert(event.newIndex, itemToMove);
@@ -178,6 +206,12 @@ class FormBuilderBloc extends Bloc<FormBuilderEvent, FormBuilderState> {
 
       emit(state.copyWith(items: items));
     }
+  }
+
+  FutureOr<void> _onFetchFormApiModelEvent(FetchFormApiModelEvent event, Emitter<FormBuilderState> emit) {
+    final result = ConverterToFormBuilderItems.convert(formApiExample.fields);
+
+    emit(FormBuilderState(items: result.toList()));
   }
 
   List<FormBuilderItem> _addItemToColumn({
@@ -200,7 +234,7 @@ class FormBuilderBloc extends Bloc<FormBuilderEvent, FormBuilderState> {
     // Get the Column item
     final parentContainerItem = items[columnItemIndex] as FormBuilderColumnsItem;
     // Get the list of items in the specified column
-    List<FormBuilderItem> columnItems = parentContainerItem.columns[columnId] ?? [];
+    List<FormBuilderItem> columnItems = List<FormBuilderItem>.from(parentContainerItem.columns[columnId] ?? const []);
     columnItems = _insertItemIntoList(items: columnItems, parentId: parentId ?? '', newItem: newItemToAdd);
 
     // columnItems.add(newItemToAdd);
@@ -245,7 +279,7 @@ class FormBuilderBloc extends Bloc<FormBuilderEvent, FormBuilderState> {
     return items;
   }
 
-  bool _checkIfParametersForColumnIsValud(String? parentContainerId, String? columnId) {
+  bool _checkIfParametersForColumnIsValid(String? parentContainerId, String? columnId) {
     return parentContainerId != null && parentContainerId.isNotEmpty && columnId != null && columnId.isNotEmpty;
   }
 

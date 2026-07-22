@@ -65,11 +65,13 @@ final class AddFormBuilderLayoutColumnItemEvent extends FormBuilderEvent {
 
 final class RemoveFormBuilderItemEvent extends FormBuilderEvent {
   final String itemId;
+  final String? parentContainerId;
+  final String? columnId;
 
-  RemoveFormBuilderItemEvent({required this.itemId});
+  RemoveFormBuilderItemEvent({required this.itemId, this.parentContainerId, this.columnId});
 
   @override
-  List<Object?> get props => [itemId];
+  List<Object?> get props => [itemId, parentContainerId, columnId];
 }
 
 final class ShowFormBuilderDataZonesEvent extends FormBuilderEvent {
@@ -95,4 +97,11 @@ final class ReorderFormBuilderItemEvent extends FormBuilderEvent {
 
   @override
   List<Object?> get props => [oldIndex, newIndex, item];
+}
+
+final class FetchFormApiModelEvent extends FormBuilderEvent {
+  FetchFormApiModelEvent();
+
+  @override
+  List<Object?> get props => [];
 }
