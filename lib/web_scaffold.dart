@@ -8,6 +8,8 @@ import 'package:flutter_form_builder_example/form_controls/menu_control/menu_col
 import 'package:flutter_form_builder_example/form_controls/menu_control/menu_heading_control.dart';
 import 'package:flutter_form_builder_example/form_controls/menu_control/menu_text_field_control.dart';
 import 'package:flutter_form_builder_example/menu/menu.dart';
+import 'package:flutter_form_builder_example/meta_sidebar/meta_sidebar.dart';
+import 'package:flutter_form_builder_example/meta_sidebar/meta_sidebar_controller.dart';
 import 'package:flutter_form_builder_example/models/menu_item_header_model.dart';
 import 'package:flutter_form_builder_example/models/menu_item_model.dart';
 import 'package:flutter_form_builder_example/models/menu_model.dart';
@@ -17,6 +19,7 @@ import 'package:flutter_form_builder_example/topbar.dart';
 import 'package:material_symbols_icons/symbols.dart';
 
 final sidebarController = SidebarController();
+final metaSidebarController = MetaSidebarController();
 
 class WebScaffold extends StatelessWidget {
   final Widget content;
@@ -61,11 +64,9 @@ class WebScaffold extends StatelessWidget {
                 children: [
                   Menu(menuItems: _menuItems),
                   Expanded(
-                    child: Sidebar(
-                      controller: sidebarController,
-                      child: Column(children: [Expanded(child: content)]),
-                    ),
+                    child: Sidebar(controller: sidebarController, child: content),
                   ),
+                  MetaSidebar(controller: metaSidebarController),
                 ],
               ),
             ),

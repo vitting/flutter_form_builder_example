@@ -126,8 +126,8 @@ class _FormBuilderState extends State<FormBuilder> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               if (showJson) SizedBox(height: 600, child: JsonWidget(json: json ?? {"test": "Hello", "test2": "Hello2"})),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.end,
+              Wrap(
+                // mainAxisAlignment: MainAxisAlignment.end,
                 children: [
                   ElevatedButton(
                     onPressed: () {
