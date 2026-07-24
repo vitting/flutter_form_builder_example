@@ -7,14 +7,17 @@ class MetaSidebarController extends ChangeNotifier {
   bool get isOpen => _isOpen;
   bool _canBeResized = false;
   bool get canBeResized => _canBeResized;
+  String? _title;
+  String? get title => _title;
 
   Widget? content;
   Completer<void>? _closeCompleter;
 
-  Future<void> show(Widget content, {bool canBeResized = false, bool showFullPageOverlay = true}) {
+  Future<void> show(Widget content, {bool canBeResized = false, String? title}) {
     _closeCompleter = Completer<void>();
     _isOpen = true;
     _canBeResized = canBeResized;
+    _title = title;
     this.content = content;
     notifyListeners();
 

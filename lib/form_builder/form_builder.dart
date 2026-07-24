@@ -13,7 +13,9 @@ import 'package:flutter_form_builder_example/form_builder/reorder_button.dart';
 import 'package:flutter_form_builder_example/form_controls/form_checkbox.dart';
 import 'package:flutter_form_builder_example/form_controls/form_heading.dart';
 import 'package:flutter_form_builder_example/form_controls/form_text_field.dart';
+import 'package:flutter_form_builder_example/meta_sidebar/meta_sidebar_scaffold.dart';
 import 'package:flutter_form_builder_example/models/form_builder_item.dart';
+import 'package:flutter_form_builder_example/web_scaffold.dart';
 import 'package:flutter_json/flutter_json.dart';
 
 class FormBuilder extends StatefulWidget {
@@ -27,35 +29,73 @@ class _FormBuilderState extends State<FormBuilder> {
   Map<String, dynamic>? json;
   bool showJson = false;
 
-  Widget _generateInput(FormBuilderItem item, int index) {
-    return switch (item.controlType) {
-      ControlTypesEnum.textField => FormControlManageContainer(
-        item: item,
-        dragHandlerReOrderListIndex: index,
-        child: FormTextField(label: ControlTypesEnum.textField.name, isFormRenderControl: true, isEnabled: false),
-      ),
+  void _onDeleteItem(BuildContext context, FormBuilderItem? item) {
+    if (item == null) return;
 
-      ControlTypesEnum.numberField => FormControlManageContainer(
-        item: item,
-        dragHandlerReOrderListIndex: index,
-        child: FormTextField(label: ControlTypesEnum.numberField.name, isFormRenderControl: true, isEnabled: false),
-      ),
-      ControlTypesEnum.checkbox => FormControlManageContainer(
-        item: item,
-        dragHandlerReOrderListIndex: index,
-        child: FormCheckbox(label: ControlTypesEnum.checkbox.name, isFormRenderControl: true, isEnabled: false),
-      ),
-      ControlTypesEnum.heading => FormControlManageContainer(
-        item: item,
-        dragHandlerReOrderListIndex: index,
-        child: FormHeading(text: 'Hello'),
-      ),
-      _ => SizedBox.shrink(),
-    };
+    metaSidebarController.close();
+    BlocProvider.of<FormBuilderBloc>(
+      context,
+    ).add(RemoveFormBuilderItemEvent(itemId: item.id, parentContainerId: item.parentContainerId, columnId: item.columnId));
   }
 
-  void _onDeleteItem(BuildContext context, String itemId) {
-    BlocProvider.of<FormBuilderBloc>(context).add(RemoveFormBuilderItemEvent(itemId: itemId));
+  void _onSelectedItem(FormBuilderItem? item) async {
+    debugPrint('Selected Item: ${item?.id ?? 'None'}');
+    if (item == null) {
+      metaSidebarController.close();
+      return;
+    }
+
+    await metaSidebarController.show(
+      MetaSidebarScaffold(
+        item: item,
+        onDelete: (item) {
+          _onDeleteItem(context, item);
+        },
+      ),
+      title: 'Selected Item',
+    );
+
+    formControlManageContainerController.setCurrentActiveControlId(null);
+  }
+
+  Widget _generateInput(FormBuilderItem item, int index) {
+    switch (item.controlType) {
+      case ControlTypesEnum.textField:
+        final inputItem = item as FormBuilderInputItem;
+        return FormControlManageContainer(
+          item: item,
+          dragHandlerReOrderListIndex: index,
+          onSelected: _onSelectedItem,
+          child: FormTextField(label: inputItem.label ?? '', isFormRenderControl: true, isEnabled: false),
+        );
+
+      case ControlTypesEnum.numberField:
+        final inputItem = item as FormBuilderInputItem;
+        return FormControlManageContainer(
+          item: item,
+          dragHandlerReOrderListIndex: index,
+          onSelected: _onSelectedItem,
+          child: FormTextField(label: inputItem.label ?? '', isFormRenderControl: true, isEnabled: false),
+        );
+      case ControlTypesEnum.checkbox:
+        final inputItem = item as FormBuilderInputItem;
+        return FormControlManageContainer(
+          item: item,
+          dragHandlerReOrderListIndex: index,
+          onSelected: _onSelectedItem,
+          child: FormCheckbox(label: inputItem.label ?? '', isFormRenderControl: true, isEnabled: false),
+        );
+      case ControlTypesEnum.heading:
+        final headerItem = item as FormBuilderHeadingItem;
+        debugPrint('**************Generating heading control for item: ${headerItem.id}, text: ${headerItem.text}');
+        return FormControlManageContainer(
+          item: item,
+          dragHandlerReOrderListIndex: index,
+          child: FormHeading(text: headerItem.text),
+        );
+      default:
+        return SizedBox.shrink();
+    }
   }
 
   Widget _getControl(FormBuilderItem item, int index, {bool showDataZones = false}) {
@@ -66,12 +106,10 @@ class _FormBuilderState extends State<FormBuilder> {
         index: index,
         showDataZones: showDataZones,
         parentContainerItem: item,
+        onSelected: _onSelectedItem,
         buildFormControls: (columnId) {
           final columnItems = item.columns[columnId] ?? [];
           return _buildFormControls(context, items: columnItems, showDataZones: showDataZones);
-        },
-        onDelete: (itemIdToDelete) {
-          _onDeleteItem(context, itemIdToDelete);
         },
       ),
       FormBuilderItem() => throw UnimplementedError(),

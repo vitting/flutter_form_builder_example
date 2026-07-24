@@ -1,14 +1,15 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_form_builder_example/models/form_builder_item.dart';
 
 class FormControlManageContainerController extends ChangeNotifier {
-  String? _currentActiveControlId = '';
-  String? get currentActiveControlId => _currentActiveControlId;
+  FormBuilderItem? _currentActiveControl;
+  FormBuilderItem? get currentActiveControl => _currentActiveControl;
 
-  void setCurrentActiveControlId(String? controlId) {
-    if (_currentActiveControlId == controlId) {
-      _currentActiveControlId = null;
+  void setCurrentActiveControlId(FormBuilderItem? controlItem) {
+    if (_currentActiveControl == controlItem) {
+      _currentActiveControl = null;
     } else {
-      _currentActiveControlId = controlId;
+      _currentActiveControl = controlItem;
     }
 
     notifyListeners();

@@ -17,6 +17,12 @@ abstract class _$FormBuilderInputItemCWProxy {
 
   FormBuilderInputItem columnIndex(int? columnIndex);
 
+  FormBuilderInputItem label(String? label);
+
+  FormBuilderInputItem hintText(String? hintText);
+
+  FormBuilderInputItem defaultValue(String? defaultValue);
+
   /// Creates a new instance with the provided field values.
   /// Passing `null` to a nullable field nullifies it, while `null` for a non-nullable field is ignored. To update a single field use `FormBuilderInputItem(...).copyWith.fieldName(value)`.
   ///
@@ -30,6 +36,9 @@ abstract class _$FormBuilderInputItemCWProxy {
     String? parentContainerId,
     String? columnId,
     int? columnIndex,
+    String? label,
+    String? hintText,
+    String? defaultValue,
   });
 }
 
@@ -60,6 +69,16 @@ class _$FormBuilderInputItemCWProxyImpl
       call(columnIndex: columnIndex);
 
   @override
+  FormBuilderInputItem label(String? label) => call(label: label);
+
+  @override
+  FormBuilderInputItem hintText(String? hintText) => call(hintText: hintText);
+
+  @override
+  FormBuilderInputItem defaultValue(String? defaultValue) =>
+      call(defaultValue: defaultValue);
+
+  @override
   /// Creates a new instance with the provided field values.
   /// Passing `null` to a nullable field nullifies it, while `null` for a non-nullable field is ignored. To update a single field use `FormBuilderInputItem(...).copyWith.fieldName(value)`.
   ///
@@ -73,6 +92,9 @@ class _$FormBuilderInputItemCWProxyImpl
     Object? parentContainerId = const $CopyWithPlaceholder(),
     Object? columnId = const $CopyWithPlaceholder(),
     Object? columnIndex = const $CopyWithPlaceholder(),
+    Object? label = const $CopyWithPlaceholder(),
+    Object? hintText = const $CopyWithPlaceholder(),
+    Object? defaultValue = const $CopyWithPlaceholder(),
   }) {
     return FormBuilderInputItem(
       id: id == const $CopyWithPlaceholder() || id == null
@@ -96,6 +118,18 @@ class _$FormBuilderInputItemCWProxyImpl
           ? _value.columnIndex
           // ignore: cast_nullable_to_non_nullable
           : columnIndex as int?,
+      label: label == const $CopyWithPlaceholder()
+          ? _value.label
+          // ignore: cast_nullable_to_non_nullable
+          : label as String?,
+      hintText: hintText == const $CopyWithPlaceholder()
+          ? _value.hintText
+          // ignore: cast_nullable_to_non_nullable
+          : hintText as String?,
+      defaultValue: defaultValue == const $CopyWithPlaceholder()
+          ? _value.defaultValue
+          // ignore: cast_nullable_to_non_nullable
+          : defaultValue as String?,
     );
   }
 }

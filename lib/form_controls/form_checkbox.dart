@@ -11,7 +11,7 @@ class FormCheckbox extends StatelessWidget {
     return Material(
       color: Colors.transparent,
       child: CheckboxListTile(
-        title: Text('Checkbox', style: TextStyle(color: isFormRenderControl ? Colors.black : Colors.white)),
+        title: Text(label, style: TextStyle(color: isFormRenderControl ? Colors.black : Colors.white)),
         enabled: isEnabled,
         value: !isFormRenderControl,
         onChanged: (value) {},

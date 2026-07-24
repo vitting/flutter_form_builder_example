@@ -29,6 +29,7 @@ class ConverterToFormBuilderItems {
       parentContainerId: formApiItem.parentContainerId,
       columnId: formApiItem.columnId,
       columnIndex: formApiItem.columnIndex,
+      label: formApiItem.additionalProperties?.label,
     );
   }
 

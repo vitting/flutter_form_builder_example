@@ -32,7 +32,7 @@ class MetaSidebar extends StatelessWidget {
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
                       Expanded(
-                        child: Text('Meta information', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+                        child: Text(controller.title ?? '', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
                       ),
                       IconButton(
                         icon: Icon(Symbols.close),

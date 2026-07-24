@@ -24,16 +24,23 @@ abstract class FormBuilderItem extends Equatable {
 
 @CopyWith()
 final class FormBuilderInputItem extends FormBuilderItem {
+  final String? label;
+  final String? hintText;
+  final String? defaultValue;
+
   const FormBuilderInputItem({
     required super.id,
     required super.controlType,
     super.parentContainerId,
     super.columnId,
     super.columnIndex,
+    this.label,
+    this.hintText,
+    this.defaultValue,
   });
 
   @override
-  List<Object?> get props => [id, controlType, parentContainerId, columnId, columnIndex];
+  List<Object?> get props => [id, controlType, parentContainerId, columnId, columnIndex, label, hintText, defaultValue];
 
   @override
   bool get stringify => true;

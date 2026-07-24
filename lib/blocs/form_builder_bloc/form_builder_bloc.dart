@@ -58,6 +58,7 @@ class FormBuilderBloc extends Bloc<FormBuilderEvent, FormBuilderState> {
   }
 
   void _addSimpleFormBuilderItem<T>(AddFormBuilderItemEvent event, T item) {
+    // Add input item to column if parentContainerId and columnId are provided, otherwise add to root
     if (_checkIfParametersForColumnIsValid(event.parentContainerId, event.columnId)) {
       add(
         AddSimpleFormBuilderItemIntoColumnEvent<T>(
@@ -76,7 +77,8 @@ class FormBuilderBloc extends Bloc<FormBuilderEvent, FormBuilderState> {
   FutureOr<void> _onAddSimpleFormBuilderItemEvent(AddSimpleFormBuilderItemEvent event, Emitter<FormBuilderState> emit) {
     debugPrint('AddSimpleFormBuilderItemEvent: controlType: ${event.item.controlType}, parentId: ${event.parentId}');
 
-    final FormBuilderItem item = event.item.copyWithBaseFields(id: Uuid().v4());
+    FormBuilderItem item = event.item.copyWithBaseFields(id: Uuid().v4());
+    item = _addMetaDataToItem(item);
 
     List<FormBuilderItem> items = List<FormBuilderItem>.from(state.items);
 
@@ -93,12 +95,14 @@ class FormBuilderBloc extends Bloc<FormBuilderEvent, FormBuilderState> {
       'AddSimpleFormBuilderItemIntoColumnEvent: controlType: ${event.item.controlType}, parentId: ${event.parentId}, parentContainerId: ${event.parentContainerId}, columnId: ${event.columnId}',
     );
 
-    final FormBuilderItem item = event.item.copyWithBaseFields(
+    FormBuilderItem item = event.item.copyWithBaseFields(
       id: Uuid().v4(),
       parentContainerId: event.parentContainerId,
       columnId: event.columnId,
       columnIndex: event.columnIndex,
     );
+
+    item = _addMetaDataToItem(item);
 
     List<FormBuilderItem> items = List<FormBuilderItem>.from(state.items);
 
@@ -212,6 +216,24 @@ class FormBuilderBloc extends Bloc<FormBuilderEvent, FormBuilderState> {
     final result = ConverterToFormBuilderItems.convert(formApiExample.fields);
 
     emit(FormBuilderState(items: result.toList()));
+  }
+
+  FormBuilderItem _addMetaDataToItem(FormBuilderItem item) {
+    return switch (item) {
+      FormBuilderInputItem() => item.copyWith(label: _generateLabelForItem(item)),
+      FormBuilderColumnsItem() => item,
+      FormBuilderHeadingItem() => item.copyWith(text: _generateLabelForItem(item)),
+      _ => throw UnsupportedError('Unsupported form element type'),
+    };
+  }
+
+  String _generateLabelForItem(FormBuilderItem item) {
+    return switch (item) {
+      FormBuilderInputItem() => 'Input',
+      FormBuilderColumnsItem() => 'Columns',
+      FormBuilderHeadingItem() => 'Heading',
+      _ => throw UnsupportedError('Unsupported form element type'),
+    };
   }
 
   List<FormBuilderItem> _addItemToColumn({

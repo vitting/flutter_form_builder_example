@@ -12,9 +12,21 @@ FormApiModel formApiExample = FormApiModel(
       controlType: ControlTypesEnum.heading,
       additionalProperties: FormApiItemAdditionalPropertiesModel(label: 'Heading 1'),
     ),
-    FormApiItemModel(id: 'db0c951c-26c7-4a60-abfb-d64215cb3c30', controlType: ControlTypesEnum.textField),
-    FormApiItemModel(id: '03219d56-9be5-4838-b9cc-7415e80360e9', controlType: ControlTypesEnum.numberField),
-    FormApiItemModel(id: 'c4b087c6-2673-4fb1-9a68-790cbd0c432b', controlType: ControlTypesEnum.checkbox),
+    FormApiItemModel(
+      id: 'db0c951c-26c7-4a60-abfb-d64215cb3c30',
+      controlType: ControlTypesEnum.textField,
+      additionalProperties: FormApiItemAdditionalPropertiesModel(label: 'Text Field 1'),
+    ),
+    FormApiItemModel(
+      id: '03219d56-9be5-4838-b9cc-7415e80360e9',
+      controlType: ControlTypesEnum.numberField,
+      additionalProperties: FormApiItemAdditionalPropertiesModel(label: 'Number Field 1'),
+    ),
+    FormApiItemModel(
+      id: 'c4b087c6-2673-4fb1-9a68-790cbd0c432b',
+      controlType: ControlTypesEnum.checkbox,
+      additionalProperties: FormApiItemAdditionalPropertiesModel(label: 'Checkbox Field 1'),
+    ),
     FormApiItemModel(
       id: 'c6361353-836a-4081-8579-08fca1369e5b',
       controlType: ControlTypesEnum.columns,
@@ -27,6 +39,7 @@ FormApiModel formApiExample = FormApiModel(
               parentContainerId: 'c6361353-836a-4081-8579-08fca1369e5b',
               columnId: 'column1',
               columnIndex: 1,
+              additionalProperties: FormApiItemAdditionalPropertiesModel(label: 'Text Field 2'),
             ),
             FormApiItemModel(
               id: '85370b30-00ce-4c2e-912c-659f2501eb20',
@@ -42,6 +55,7 @@ FormApiModel formApiExample = FormApiModel(
               parentContainerId: 'c6361353-836a-4081-8579-08fca1369e5b',
               columnId: 'column1',
               columnIndex: 1,
+              additionalProperties: FormApiItemAdditionalPropertiesModel(label: 'Checkbox Field 2'),
             ),
             FormApiItemModel(
               id: 'baec00c1-e6e6-4e46-8f35-a0ea70a04731',
@@ -49,6 +63,7 @@ FormApiModel formApiExample = FormApiModel(
               parentContainerId: 'c6361353-836a-4081-8579-08fca1369e5b',
               columnId: 'column1',
               columnIndex: 1,
+              additionalProperties: FormApiItemAdditionalPropertiesModel(label: 'Number Field 2'),
             ),
           ],
           'column2': [
@@ -58,6 +73,7 @@ FormApiModel formApiExample = FormApiModel(
               parentContainerId: 'c6361353-836a-4081-8579-08fca1369e5b',
               columnId: 'column1',
               columnIndex: 1,
+              additionalProperties: FormApiItemAdditionalPropertiesModel(label: 'Checkbox Field 3'),
             ),
             FormApiItemModel(
               id: 'e4c1a500-0cda-4f04-acd6-85419b84d37e',
@@ -65,6 +81,7 @@ FormApiModel formApiExample = FormApiModel(
               parentContainerId: 'c6361353-836a-4081-8579-08fca1369e5b',
               columnId: 'column2',
               columnIndex: 2,
+              additionalProperties: FormApiItemAdditionalPropertiesModel(label: 'Number Field 3'),
             ),
             FormApiItemModel(
               id: 'f5f16b68-942d-44df-938c-2df3a3ea9477',
@@ -72,6 +89,7 @@ FormApiModel formApiExample = FormApiModel(
               parentContainerId: 'c6361353-836a-4081-8579-08fca1369e5b',
               columnId: 'column1',
               columnIndex: 1,
+              additionalProperties: FormApiItemAdditionalPropertiesModel(label: 'Number Field 4'),
             ),
             FormApiItemModel(
               id: '77d4b8ab-6e7c-44fb-b828-812676ccd5db',

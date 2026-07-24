@@ -6,17 +6,17 @@ import 'package:flutter_form_builder_example/models/form_builder_item.dart';
 class FormBuilderColumns extends StatelessWidget {
   final FormBuilderColumnsItem parentContainerItem;
   final Widget Function(String columnId) buildFormControls;
-  final void Function(String itemIdToDelete) onDelete;
   final bool showDataZones;
   final int index;
+  final void Function(FormBuilderItem? item)? onSelected;
 
   const FormBuilderColumns({
     super.key,
     required this.buildFormControls,
     required this.parentContainerItem,
-    required this.onDelete,
     this.showDataZones = false,
     required this.index,
+    this.onSelected,
   });
 
   List<Widget> _generateColumns(FormBuilderColumnsItem item) {
@@ -68,6 +68,7 @@ class FormBuilderColumns extends StatelessWidget {
     return FormControlManageContainer(
       item: parentContainerItem,
       dragHandlerReOrderListIndex: index,
+      onSelected: onSelected,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
