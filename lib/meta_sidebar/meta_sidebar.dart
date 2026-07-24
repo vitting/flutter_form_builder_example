@@ -1,85 +1,53 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_form_builder_example/meta_sidebar/meta_sidebar_controller.dart';
-import 'package:shared_preferences/shared_preferences.dart';
+import 'package:material_symbols_icons/symbols.dart';
 
-class MetaSidebar extends StatefulWidget {
+class MetaSidebar extends StatelessWidget {
   final MetaSidebarController controller;
   const MetaSidebar({super.key, required this.controller});
 
   @override
-  State<MetaSidebar> createState() => _MetaSidebarState();
-}
-
-class _MetaSidebarState extends State<MetaSidebar> {
-  static const double _handleWidth = 8;
-  static const double _minWidth = 280;
-  double _width = 400;
-  final _asyncPrefs = SharedPreferencesAsync();
-
-  @override
-  void initState() {
-    super.initState();
-    _asyncPrefs.getDouble('sidebarWidth').then((value) {
-      if (value != null) {
-        setState(() {
-          _width = value;
-        });
-      }
-    });
-
-    // _width = widget.initialSidebarWidth;
-  }
-
-  void _updateWidth(DragUpdateDetails details, double maxWidth) {
-    final nextWidth = (_width - details.delta.dx).clamp(_minWidth, maxWidth);
-    if (nextWidth == _width) {
-      return;
-    }
-    setState(() {
-      _width = nextWidth;
-      _asyncPrefs.setDouble('sidebarWidth', _width);
-    });
-  }
-
-  @override
   Widget build(BuildContext context) {
     return ListenableBuilder(
-      listenable: widget.controller,
+      listenable: controller,
       builder: (context, child) {
         return AnimatedContainer(
           duration: Duration(milliseconds: 280),
-          width: widget.controller.isOpen ? 500 : 0,
+          padding: EdgeInsets.all(8),
+          decoration: BoxDecoration(
+            color: Colors.grey.shade100,
+            border: Border.all(color: Colors.blue),
+          ),
+          width: controller.isOpen ? 500 : 0,
           height: double.infinity,
-          color: Colors.yellow,
-          child: Column(
-            children: [
-              Text('Sidebar'),
-              ElevatedButton(
-                onPressed: () {
-                  widget.controller.close();
-                },
-                child: Text('Toggle Sidebar'),
-              ),
-              Expanded(
-                child: SingleChildScrollView(
-                  child: Column(
+          child: LayoutBuilder(
+            builder: (context, constraints) {
+              final bool showContent = constraints.maxWidth >= 200;
+              if (!showContent) {
+                return SizedBox.shrink();
+              }
+              return Column(
+                children: [
+                  Row(
+                    crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
-                      Text(
-                        'This is a long text for the sidebar and it will continue for a while to test the scrolling behavior of the sidebar.',
+                      Expanded(
+                        child: Text('Meta information', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
                       ),
-                      ...List.generate(
-                        30,
-                        (index) => ListTile(
-                          title: Text(
-                            'This is a long text for Item $index and it will continue for a while to test the scrolling behavior of the sidebar.',
-                          ),
-                        ),
+                      IconButton(
+                        icon: Icon(Symbols.close),
+                        onPressed: () {
+                          controller.close();
+                        },
                       ),
                     ],
                   ),
-                ),
-              ),
-            ],
+                  Expanded(
+                    child: SingleChildScrollView(child: Column(children: [if (controller.content != null) controller.content!])),
+                  ),
+                ],
+              );
+            },
           ),
         );
       },
