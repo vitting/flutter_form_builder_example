@@ -79,7 +79,14 @@ class FormBuilderColumns extends StatelessWidget {
     return FormControlManageContainer(
       item: parentContainerItem,
       dragHandlerReOrderListIndex: index,
-      child: Row(crossAxisAlignment: CrossAxisAlignment.start, children: [..._generateColumns(parentContainerItem)]),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text('Columns', style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
+          SizedBox(height: 8.0),
+          Row(crossAxisAlignment: CrossAxisAlignment.start, children: [..._generateColumns(parentContainerItem)]),
+        ],
+      ),
     );
   }
 }
