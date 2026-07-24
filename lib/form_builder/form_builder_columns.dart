@@ -19,15 +19,6 @@ class FormBuilderColumns extends StatelessWidget {
     required this.index,
   });
 
-  BorderRadiusGeometry? _getBorderRadius(bool isFirst, bool isLast) {
-    // if (isFirst) {
-    //   return BorderRadius.only(topLeft: Radius.circular(8), bottomLeft: Radius.circular(8));
-    // } else if (isLast) {
-    //   return BorderRadius.only(topRight: Radius.circular(8), bottomRight: Radius.circular(8));
-    // }
-    return BorderRadius.circular(8);
-  }
-
   List<Widget> _generateColumns(FormBuilderColumnsItem item) {
     final List<Widget> columns = [];
     int index = 0;
@@ -35,18 +26,16 @@ class FormBuilderColumns extends StatelessWidget {
     for (final column in item.columns.entries) {
       final formControls = buildFormControls(column.key);
       index++;
-      bool isColumnFirst = index == 1;
       bool isColumnLast = index == item.columns.length;
 
       columns.add(
         Expanded(
           child: Container(
-            padding: EdgeInsets.all(8.0),
             decoration: BoxDecoration(
               border: Border.all(color: Colors.grey),
 
-              borderRadius: _getBorderRadius(isColumnFirst, isColumnLast),
-              color: Colors.grey[200],
+              borderRadius: BorderRadius.circular(8),
+              color: Colors.white,
             ),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,

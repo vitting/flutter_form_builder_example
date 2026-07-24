@@ -19,10 +19,9 @@ class _HomePageState extends State<HomePage> {
     return BlocProvider(
       create: (context) => FormBuilderBloc(getIt<FormRenderBuilderRepository>()),
       child: ColoredBox(
-        color: Colors.grey.shade200,
+        color: Colors.white,
         child: Container(
           margin: EdgeInsets.all(8),
-          padding: EdgeInsets.all(8),
           decoration: BoxDecoration(
             border: Border.all(color: Colors.blue),
             borderRadius: BorderRadius.circular(8),

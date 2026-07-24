@@ -103,7 +103,16 @@ class _FormControlManageContainerState extends State<FormControlManageContainer>
                           secondChild: SizedBox.shrink(),
                         ),
                         Expanded(
-                          child: Container(color: isHovered ? Colors.grey.shade300 : Colors.transparent, child: widget.child),
+                          child: Container(
+                            padding: EdgeInsets.all(8),
+                            decoration: BoxDecoration(
+                              border: isHovered && state == false ? Border.all(color: Colors.grey) : null,
+                              borderRadius: BorderRadius.circular(8),
+                              color: isHovered && state == false ? Colors.grey.shade300 : Colors.transparent,
+                            ),
+
+                            child: widget.child,
+                          ),
                         ),
                       ],
                     ),

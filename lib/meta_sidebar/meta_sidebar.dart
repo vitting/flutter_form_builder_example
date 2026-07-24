@@ -16,7 +16,7 @@ class MetaSidebar extends StatelessWidget {
           padding: EdgeInsets.all(8),
           decoration: BoxDecoration(
             color: Colors.grey.shade100,
-            border: Border.all(color: Colors.blue),
+            border: Border(left: BorderSide(color: Colors.grey.shade700, width: 1)),
           ),
           width: controller.isOpen ? 500 : 0,
           height: double.infinity,

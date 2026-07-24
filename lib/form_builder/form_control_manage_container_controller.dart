@@ -5,7 +5,12 @@ class FormControlManageContainerController extends ChangeNotifier {
   String? get currentActiveControlId => _currentActiveControlId;
 
   void setCurrentActiveControlId(String? controlId) {
-    _currentActiveControlId = controlId;
+    if (_currentActiveControlId == controlId) {
+      _currentActiveControlId = null;
+    } else {
+      _currentActiveControlId = controlId;
+    }
+
     notifyListeners();
   }
 }
