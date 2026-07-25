@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_form_builder_example/blocs/form_builder_bloc/form_builder_bloc.dart';
 import 'package:flutter_form_builder_example/form_controls/form_text_field.dart';
+import 'package:flutter_form_builder_example/meta_sidebar/meta_sidebar_results_model.dart';
 import 'package:flutter_form_builder_example/models/form_builder_item.dart';
 
 typedef MetaSidebarScaffoldFieldsToShow = ({
@@ -37,32 +40,96 @@ class MetaSidebarScaffold extends StatelessWidget {
         ),
         if (fieldsToShow.showHeading) ...[
           SizedBox(height: 12),
-          FormTextField(label: 'Heading', isFormRenderControl: true, isEnabled: true, onChanged: (value) {}),
+          FormTextField(
+            label: 'Heading',
+            isFormRenderControl: true,
+            isEnabled: true,
+            onChanged: (value) {
+              BlocProvider.of<FormBuilderBloc>(context).add(
+                UpdateFormItemValuesEvent(
+                  values: MetaSidebarResultsModel(item: item, heading: value),
+                ),
+              );
+            },
+          ),
         ],
         if (fieldsToShow.showLabel) ...[
           SizedBox(height: 12),
-          FormTextField(label: 'Label', isFormRenderControl: true, isEnabled: true, onChanged: (value) {}),
+          FormTextField(
+            label: 'Label',
+            isFormRenderControl: true,
+            isEnabled: true,
+            onChanged: (value) {
+              BlocProvider.of<FormBuilderBloc>(context).add(
+                UpdateFormItemValuesEvent(
+                  values: MetaSidebarResultsModel(item: item, label: value),
+                ),
+              );
+            },
+          ),
         ],
         if (fieldsToShow.showHintText) ...[
           SizedBox(height: 12),
-          FormTextField(label: 'Hint text', isFormRenderControl: true, isEnabled: true, onChanged: (value) {}),
+          FormTextField(
+            label: 'Hint text',
+            isFormRenderControl: true,
+            isEnabled: true,
+            onChanged: (value) {
+              BlocProvider.of<FormBuilderBloc>(context).add(
+                UpdateFormItemValuesEvent(
+                  values: MetaSidebarResultsModel(item: item, hintText: value),
+                ),
+              );
+            },
+          ),
         ],
         if (fieldsToShow.showDefaultValue) ...[
           SizedBox(height: 12),
-          FormTextField(label: 'Default value', isFormRenderControl: true, isEnabled: true, onChanged: (value) {}),
+          FormTextField(
+            label: 'Default value',
+            isFormRenderControl: true,
+            isEnabled: true,
+            onChanged: (value) {
+              BlocProvider.of<FormBuilderBloc>(context).add(
+                UpdateFormItemValuesEvent(
+                  values: MetaSidebarResultsModel(item: item, defaultValue: value),
+                ),
+              );
+            },
+          ),
         ],
         if (fieldsToShow.showDefaultValueTrueFalse) ...[
           SizedBox(height: 12),
           Material(
             color: Colors.transparent,
-            child: CheckboxListTile(title: Text('Default value'), value: false, onChanged: (value) {}),
+            child: CheckboxListTile(
+              title: Text('Default value'),
+              value: false,
+              onChanged: (value) {
+                BlocProvider.of<FormBuilderBloc>(context).add(
+                  UpdateFormItemValuesEvent(
+                    values: MetaSidebarResultsModel(item: item, defaultValueTrueFalse: value),
+                  ),
+                );
+              },
+            ),
           ),
         ],
         if (fieldsToShow.showRequired) ...[
           SizedBox(height: 12),
           Material(
             color: Colors.transparent,
-            child: CheckboxListTile(title: Text('Required'), value: false, onChanged: (value) {}),
+            child: CheckboxListTile(
+              title: Text('Required'),
+              value: false,
+              onChanged: (value) {
+                BlocProvider.of<FormBuilderBloc>(context).add(
+                  UpdateFormItemValuesEvent(
+                    values: MetaSidebarResultsModel(item: item, required: value),
+                  ),
+                );
+              },
+            ),
           ),
         ],
       ],

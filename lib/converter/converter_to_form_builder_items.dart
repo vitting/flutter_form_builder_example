@@ -40,7 +40,7 @@ class ConverterToFormBuilderItems {
       parentContainerId: formApiItem.parentContainerId,
       columnId: formApiItem.columnId,
       columnIndex: formApiItem.columnIndex,
-      text: formApiItem.additionalProperties?.label ?? '',
+      heading: formApiItem.additionalProperties?.label ?? '',
     );
   }
 }

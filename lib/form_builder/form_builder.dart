@@ -62,7 +62,7 @@ class _FormBuilderState extends State<FormBuilder> {
   Widget _generateInput(FormBuilderItem item, int index) {
     switch (item.controlType) {
       case ControlTypesEnum.textField:
-        final inputItem = item as FormBuilderInputItem;
+        final inputItem = item.getAsType<FormBuilderInputItem>();
         return FormControlManageContainer(
           item: item,
           dragHandlerReOrderListIndex: index,
@@ -71,7 +71,7 @@ class _FormBuilderState extends State<FormBuilder> {
         );
 
       case ControlTypesEnum.numberField:
-        final inputItem = item as FormBuilderInputItem;
+        final inputItem = item.getAsType<FormBuilderInputItem>();
         return FormControlManageContainer(
           item: item,
           dragHandlerReOrderListIndex: index,
@@ -79,7 +79,7 @@ class _FormBuilderState extends State<FormBuilder> {
           child: FormTextField(label: inputItem.label ?? '', isFormRenderControl: true, isEnabled: false),
         );
       case ControlTypesEnum.checkbox:
-        final inputItem = item as FormBuilderInputItem;
+        final inputItem = item.getAsType<FormBuilderInputItem>();
         return FormControlManageContainer(
           item: item,
           dragHandlerReOrderListIndex: index,
@@ -87,13 +87,12 @@ class _FormBuilderState extends State<FormBuilder> {
           child: FormCheckbox(label: inputItem.label ?? '', isFormRenderControl: true, isEnabled: false),
         );
       case ControlTypesEnum.heading:
-        final headerItem = item as FormBuilderHeadingItem;
-        debugPrint('**************Generating heading control for item: ${headerItem.id}, text: ${headerItem.text}');
+        final headerItem = item.getAsType<FormBuilderHeadingItem>();
         return FormControlManageContainer(
           item: item,
           dragHandlerReOrderListIndex: index,
           onSelected: _onSelectedItem,
-          child: FormHeading(text: headerItem.text),
+          child: FormHeading(text: headerItem.heading),
         );
       default:
         return SizedBox.shrink();

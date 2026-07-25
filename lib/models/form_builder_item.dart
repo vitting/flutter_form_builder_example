@@ -41,6 +41,8 @@ abstract class FormBuilderItem extends Equatable {
 
   /// Returns as FormBuilderHeadingItem if this is a heading, otherwise null
   FormBuilderHeadingItem? asHeadingItem() => this is FormBuilderHeadingItem ? this as FormBuilderHeadingItem : null;
+
+  FormElementTypeEnum get formElementType;
 }
 
 @CopyWith()
@@ -66,6 +68,7 @@ final class FormBuilderInputItem extends FormBuilderItem {
   @override
   bool get stringify => true;
 
+  @override
   FormElementTypeEnum get formElementType => FormElementTypeEnum.input;
 
   @override
@@ -120,6 +123,7 @@ final class FormBuilderColumnsItem extends FormBuilderItem {
   @override
   bool get stringify => true;
 
+  @override
   FormElementTypeEnum get formElementType => FormElementTypeEnum.layout;
 
   @override
@@ -140,22 +144,23 @@ final class FormBuilderColumnsItem extends FormBuilderItem {
 
 @CopyWith()
 final class FormBuilderHeadingItem extends FormBuilderItem {
-  final String text;
+  final String heading;
   const FormBuilderHeadingItem({
     required super.id,
     required super.controlType,
     super.parentContainerId,
     super.columnId,
     super.columnIndex,
-    required this.text,
+    required this.heading,
   });
 
   @override
-  List<Object?> get props => [id, controlType, formElementType, text, parentContainerId, columnId, columnIndex];
+  List<Object?> get props => [id, controlType, formElementType, heading, parentContainerId, columnId, columnIndex];
 
   @override
   bool get stringify => true;
 
+  @override
   FormElementTypeEnum get formElementType => FormElementTypeEnum.layout;
 
   @override

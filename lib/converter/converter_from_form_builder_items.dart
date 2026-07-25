@@ -49,7 +49,7 @@ class ConverterFromFormBuilderItems {
       parentContainerId: headingItem.parentContainerId,
       columnId: headingItem.columnId,
       columnIndex: headingItem.columnIndex,
-      additionalProperties: FormApiItemAdditionalPropertiesModel(label: headingItem.text),
+      additionalProperties: FormApiItemAdditionalPropertiesModel(label: headingItem.heading),
     );
   }
 }

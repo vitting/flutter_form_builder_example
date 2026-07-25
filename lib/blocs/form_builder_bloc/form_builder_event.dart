@@ -105,3 +105,12 @@ final class FetchFormApiModelEvent extends FormBuilderEvent {
   @override
   List<Object?> get props => [];
 }
+
+final class UpdateFormItemValuesEvent extends FormBuilderEvent {
+  final MetaSidebarResultsModel values;
+
+  UpdateFormItemValuesEvent({required this.values});
+
+  @override
+  List<Object?> get props => [values];
+}

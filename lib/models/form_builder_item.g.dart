@@ -267,7 +267,7 @@ abstract class _$FormBuilderHeadingItemCWProxy {
 
   FormBuilderHeadingItem columnIndex(int? columnIndex);
 
-  FormBuilderHeadingItem text(String text);
+  FormBuilderHeadingItem heading(String heading);
 
   /// Creates a new instance with the provided field values.
   /// Passing `null` to a nullable field nullifies it, while `null` for a non-nullable field is ignored. To update a single field use `FormBuilderHeadingItem(...).copyWith.fieldName(value)`.
@@ -282,7 +282,7 @@ abstract class _$FormBuilderHeadingItemCWProxy {
     String? parentContainerId,
     String? columnId,
     int? columnIndex,
-    String text,
+    String heading,
   });
 }
 
@@ -313,7 +313,7 @@ class _$FormBuilderHeadingItemCWProxyImpl
       call(columnIndex: columnIndex);
 
   @override
-  FormBuilderHeadingItem text(String text) => call(text: text);
+  FormBuilderHeadingItem heading(String heading) => call(heading: heading);
 
   @override
   /// Creates a new instance with the provided field values.
@@ -329,7 +329,7 @@ class _$FormBuilderHeadingItemCWProxyImpl
     Object? parentContainerId = const $CopyWithPlaceholder(),
     Object? columnId = const $CopyWithPlaceholder(),
     Object? columnIndex = const $CopyWithPlaceholder(),
-    Object? text = const $CopyWithPlaceholder(),
+    Object? heading = const $CopyWithPlaceholder(),
   }) {
     return FormBuilderHeadingItem(
       id: id == const $CopyWithPlaceholder() || id == null
@@ -353,10 +353,10 @@ class _$FormBuilderHeadingItemCWProxyImpl
           ? _value.columnIndex
           // ignore: cast_nullable_to_non_nullable
           : columnIndex as int?,
-      text: text == const $CopyWithPlaceholder() || text == null
-          ? _value.text
+      heading: heading == const $CopyWithPlaceholder() || heading == null
+          ? _value.heading
           // ignore: cast_nullable_to_non_nullable
-          : text as String,
+          : heading as String,
     );
   }
 }

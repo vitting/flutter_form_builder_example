@@ -6,6 +6,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_form_builder_example/blocs/form_builder_bloc/form_builder_state.dart';
 import 'package:flutter_form_builder_example/converter/converter_to_form_builder_items.dart';
 import 'package:flutter_form_builder_example/converter/form_api_example.dart';
+import 'package:flutter_form_builder_example/meta_sidebar/meta_sidebar_results_model.dart';
 import 'package:flutter_form_builder_example/models/form_builder_item.dart';
 import 'package:flutter_form_builder_example/repositories/form_render_builder_repository.dart';
 import 'package:uuid/uuid.dart';
@@ -25,6 +26,7 @@ class FormBuilderBloc extends Bloc<FormBuilderEvent, FormBuilderState> {
     on<HideFormBuilderDataZonesEvent>(_onHideFormBuilderDataZonesEvent);
     on<ReorderFormBuilderItemEvent>(_onReorderFormBuilderItemEvent);
     on<FetchFormApiModelEvent>(_onFetchFormApiModelEvent);
+    on<UpdateFormItemValuesEvent>(_onUpdateFormItemValuesEvent);
 
     _formRenderBuilderRepositoryStream = _formRenderBuilderRepository.dataStream.listen((showDataZones) {
       if (showDataZones) {
@@ -222,9 +224,39 @@ class FormBuilderBloc extends Bloc<FormBuilderEvent, FormBuilderState> {
     return switch (item) {
       FormBuilderInputItem() => item.copyWith(label: _generateLabelForItem(item)),
       FormBuilderColumnsItem() => item,
-      FormBuilderHeadingItem() => item.copyWith(text: _generateLabelForItem(item)),
+      FormBuilderHeadingItem() => item.copyWith(heading: _generateLabelForItem(item)),
       _ => throw UnsupportedError('Unsupported form element type'),
     };
+  }
+
+  FutureOr<void> _onUpdateFormItemValuesEvent(UpdateFormItemValuesEvent event, Emitter<FormBuilderState> emit) {
+    final updatedItem = _updateItemValuesBasedOnType(event.values);
+
+    final updatedItems = state.items.map((item) => item.id == updatedItem.id ? updatedItem : item).toList();
+    emit(state.copyWith(items: updatedItems));
+  }
+
+  FormBuilderItem _updateItemValuesBasedOnType(MetaSidebarResultsModel values) {
+    FormBuilderItem item = values.item;
+    switch (values.item) {
+      case FormBuilderInputItem inputItem:
+        item = inputItem.copyWith(
+          label: values.label ?? inputItem.label,
+          hintText: values.hintText ?? inputItem.hintText,
+          defaultValue: values.defaultValue ?? inputItem.defaultValue,
+        );
+        break;
+      case FormBuilderHeadingItem headingItem:
+        item = headingItem.copyWith(heading: values.heading ?? headingItem.heading);
+        break;
+      case FormBuilderColumnsItem columnsItem:
+        // Columns item does not have label, hintText, defaultValue, or heading, so we don't need to update anything for this type
+        break;
+      default:
+        throw UnsupportedError('Unsupported form element type');
+    }
+
+    return item;
   }
 
   String _generateLabelForItem(FormBuilderItem item) {
