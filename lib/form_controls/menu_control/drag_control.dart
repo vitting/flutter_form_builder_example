@@ -16,16 +16,16 @@ class DragControl extends StatelessWidget {
   const DragControl({super.key, required this.child, required this.controlType, required this.formElementType});
 
   FormBuilderItem get _formBuilderItem => switch (formElementType) {
-    FormElementTypeEnum.input => FormBuilderInputItem(id: '', controlType: controlType),
-    FormElementTypeEnum.layout when controlType == ControlTypesEnum.columns => FormBuilderColumnsItem(
+    FormElementTypeEnum.simple => FormBuilderItem(id: '', controlType: controlType),
+    FormElementTypeEnum.column when controlType == ControlTypesEnum.columns => FormBuilderItem(
       id: '',
       controlType: controlType,
-      columns: {},
+      properties: FormBuilderItemPropertiesColumns(columns: {}),
     ),
-    FormElementTypeEnum.layout when controlType == ControlTypesEnum.heading => FormBuilderHeadingItem(
+    FormElementTypeEnum.column when controlType == ControlTypesEnum.heading => FormBuilderItem(
       id: '',
       controlType: controlType,
-      heading: 'Heading',
+      properties: FormBuilderItemPropertiesHeader(header: 'Heading'),
     ),
     _ => throw UnsupportedError('Unsupported form element type'),
   };

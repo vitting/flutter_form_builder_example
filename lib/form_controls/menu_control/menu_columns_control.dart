@@ -10,7 +10,7 @@ class MenuColumnsControl extends StatelessWidget {
   Widget build(BuildContext context) {
     return DragControl(
       controlType: ControlTypesEnum.columns,
-      formElementType: FormElementTypeEnum.layout,
+      formElementType: FormElementTypeEnum.column,
       child: Material(
         color: Colors.transparent,
         child: Row(

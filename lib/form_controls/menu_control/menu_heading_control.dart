@@ -11,7 +11,7 @@ class MenuHeadingControl extends StatelessWidget {
   Widget build(BuildContext context) {
     return DragControl(
       controlType: ControlTypesEnum.heading,
-      formElementType: FormElementTypeEnum.layout,
+      formElementType: FormElementTypeEnum.column,
       child: Material(
         color: Colors.transparent,
         child: SizedBox(

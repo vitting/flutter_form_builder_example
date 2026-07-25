@@ -6,7 +6,8 @@ import 'package:flutter_form_builder_example/meta_sidebar/meta_sidebar_scaffold.
 
 part 'form_builder_item.g.dart';
 
-abstract class FormBuilderItem extends Equatable {
+@CopyWith()
+final class FormBuilderItem<T extends FormBuilderItemProperties> extends Equatable {
   final String id;
   final ControlTypesEnum controlType;
   // Optional fields for parent container (ex. Columns) and column IDs
@@ -14,69 +15,24 @@ abstract class FormBuilderItem extends Equatable {
   // Optional field for column ID (used when the item is inside a column)
   final String? columnId;
   final int? columnIndex;
+  final T? properties;
 
-  const FormBuilderItem({required this.id, required this.controlType, this.parentContainerId, this.columnId, this.columnIndex});
-
-  FormBuilderItem copyWithBaseFields({required String id, String? parentContainerId, String? columnId, int? columnIndex});
-
-  @override
-  List<Object?> get props => [id, controlType, parentContainerId, columnId, columnIndex];
-
-  MetaSidebarScaffoldFieldsToShow get metaSidebarScaffoldFieldsToShow;
-
-  /// Returns the correct subtype of FormBuilderItem
-  T getAsType<T extends FormBuilderItem>() {
-    if (this is! T) {
-      throw Exception('FormBuilderItem is not of type $T');
-    }
-
-    return this as T;
-  }
-
-  /// Returns as FormBuilderInputItem if this is an input, otherwise null
-  FormBuilderInputItem? asInputItem() => this is FormBuilderInputItem ? this as FormBuilderInputItem : null;
-
-  /// Returns as FormBuilderColumnsItem if this is a columns layout, otherwise null
-  FormBuilderColumnsItem? asColumnsItem() => this is FormBuilderColumnsItem ? this as FormBuilderColumnsItem : null;
-
-  /// Returns as FormBuilderHeadingItem if this is a heading, otherwise null
-  FormBuilderHeadingItem? asHeadingItem() => this is FormBuilderHeadingItem ? this as FormBuilderHeadingItem : null;
-
-  FormElementTypeEnum get formElementType;
-}
-
-@CopyWith()
-final class FormBuilderInputItem extends FormBuilderItem {
-  final String? label;
-  final String? hintText;
-  final String? defaultValue;
-
-  const FormBuilderInputItem({
-    required super.id,
-    required super.controlType,
-    super.parentContainerId,
-    super.columnId,
-    super.columnIndex,
-    this.label,
-    this.hintText,
-    this.defaultValue,
+  const FormBuilderItem({
+    required this.id,
+    required this.controlType,
+    this.parentContainerId,
+    this.columnId,
+    this.columnIndex,
+    this.properties,
   });
 
-  @override
-  List<Object?> get props => [id, controlType, parentContainerId, columnId, columnIndex, label, hintText, defaultValue];
-
-  @override
-  bool get stringify => true;
-
-  @override
-  FormElementTypeEnum get formElementType => FormElementTypeEnum.input;
-
-  @override
-  FormBuilderInputItem copyWithBaseFields({required String id, String? parentContainerId, String? columnId, int? columnIndex}) {
+  FormBuilderItem copyWithBaseFields({required String id, String? parentContainerId, String? columnId, int? columnIndex}) {
     return copyWith(id: id, parentContainerId: parentContainerId, columnId: columnId, columnIndex: columnIndex);
   }
 
   @override
+  List<Object?> get props => [id, controlType, parentContainerId, columnId, columnIndex];
+
   MetaSidebarScaffoldFieldsToShow get metaSidebarScaffoldFieldsToShow => switch (controlType) {
     ControlTypesEnum.textField || ControlTypesEnum.numberField => (
       showDefaultValue: true,
@@ -94,6 +50,22 @@ final class FormBuilderInputItem extends FormBuilderItem {
       showHintText: false,
       showRequired: true,
     ),
+    ControlTypesEnum.columns => (
+      showDefaultValue: false,
+      showDefaultValueTrueFalse: false,
+      showLabel: false,
+      showHeading: false,
+      showHintText: false,
+      showRequired: false,
+    ),
+    ControlTypesEnum.heading => (
+      showDefaultValue: false,
+      showDefaultValueTrueFalse: false,
+      showLabel: false,
+      showHeading: true,
+      showHintText: false,
+      showRequired: false,
+    ),
     _ => (
       showDefaultValue: false,
       showDefaultValueTrueFalse: false,
@@ -103,78 +75,80 @@ final class FormBuilderInputItem extends FormBuilderItem {
       showRequired: false,
     ),
   };
+
+  FormElementTypeEnum get formElementType => switch (controlType) {
+    ControlTypesEnum.textField => FormElementTypeEnum.simple,
+    ControlTypesEnum.numberField => FormElementTypeEnum.simple,
+    ControlTypesEnum.checkbox => FormElementTypeEnum.simple,
+    ControlTypesEnum.columns => FormElementTypeEnum.column,
+    ControlTypesEnum.heading => FormElementTypeEnum.simple,
+    _ => throw UnsupportedError('Unsupported form element type'),
+  };
+
+  FormBuilderItemPropertiesTextField get getPropertiesAsTextField => properties as FormBuilderItemPropertiesTextField;
+
+  FormBuilderItemPropertiesNumberField get getPropertiesAsNumberField => properties as FormBuilderItemPropertiesNumberField;
+
+  FormBuilderItemPropertiesCheckboxField get getPropertiesAsCheckboxField => properties as FormBuilderItemPropertiesCheckboxField;
+
+  FormBuilderItemPropertiesColumns get getPropertiesAsColumns => properties as FormBuilderItemPropertiesColumns;
+
+  FormBuilderItemPropertiesHeader get getPropertiesAsHeader => properties as FormBuilderItemPropertiesHeader;
+}
+
+abstract class FormBuilderItemProperties extends Equatable {}
+
+@CopyWith()
+final class FormBuilderItemPropertiesTextField extends FormBuilderItemProperties {
+  final String? label;
+  final String? hintText;
+  final String? defaultValue;
+  final bool? required;
+
+  FormBuilderItemPropertiesTextField({this.label, this.hintText, this.defaultValue, this.required});
+
+  @override
+  List<Object?> get props => [label, hintText, defaultValue, required];
 }
 
 @CopyWith()
-final class FormBuilderColumnsItem extends FormBuilderItem {
+final class FormBuilderItemPropertiesNumberField extends FormBuilderItemProperties {
+  final String? label;
+  final String? hintText;
+  final String? defaultValue;
+  final bool? required;
+
+  FormBuilderItemPropertiesNumberField({this.label, this.hintText, this.defaultValue, this.required});
+
+  @override
+  List<Object?> get props => [label, hintText, defaultValue, required];
+}
+
+@CopyWith()
+final class FormBuilderItemPropertiesCheckboxField extends FormBuilderItemProperties {
+  final String? label;
+  final bool? defaultValue;
+  final bool? required;
+
+  FormBuilderItemPropertiesCheckboxField({this.label, this.defaultValue, this.required});
+
+  @override
+  List<Object?> get props => [label, defaultValue, required];
+}
+
+@CopyWith()
+final class FormBuilderItemPropertiesColumns extends FormBuilderItemProperties {
   final Map<String, List<FormBuilderItem>> columns;
-  const FormBuilderColumnsItem({
-    required super.id,
-    required super.controlType,
-    required this.columns,
-    super.parentContainerId,
-    super.columnId,
-    super.columnIndex,
-  });
 
+  FormBuilderItemPropertiesColumns({required this.columns});
   @override
-  List<Object?> get props => [id, controlType, formElementType, columns, parentContainerId, columnId, columnIndex];
-
-  @override
-  bool get stringify => true;
-
-  @override
-  FormElementTypeEnum get formElementType => FormElementTypeEnum.layout;
-
-  @override
-  FormBuilderColumnsItem copyWithBaseFields({required String id, String? parentContainerId, String? columnId, int? columnIndex}) {
-    return copyWith(id: id, parentContainerId: parentContainerId, columnId: columnId, columnIndex: columnIndex);
-  }
-
-  @override
-  MetaSidebarScaffoldFieldsToShow get metaSidebarScaffoldFieldsToShow => (
-    showDefaultValue: false,
-    showDefaultValueTrueFalse: false,
-    showLabel: false,
-    showHeading: false,
-    showHintText: false,
-    showRequired: false,
-  );
+  List<Object?> get props => [columns];
 }
 
-@CopyWith()
-final class FormBuilderHeadingItem extends FormBuilderItem {
-  final String heading;
-  const FormBuilderHeadingItem({
-    required super.id,
-    required super.controlType,
-    super.parentContainerId,
-    super.columnId,
-    super.columnIndex,
-    required this.heading,
-  });
+final class FormBuilderItemPropertiesHeader extends FormBuilderItemProperties {
+  final String? header;
+  FormBuilderItemPropertiesHeader({this.header});
 
   @override
-  List<Object?> get props => [id, controlType, formElementType, heading, parentContainerId, columnId, columnIndex];
-
-  @override
-  bool get stringify => true;
-
-  @override
-  FormElementTypeEnum get formElementType => FormElementTypeEnum.layout;
-
-  @override
-  FormBuilderHeadingItem copyWithBaseFields({required String id, String? parentContainerId, String? columnId, int? columnIndex}) {
-    return copyWith(id: id, parentContainerId: parentContainerId, columnId: columnId, columnIndex: columnIndex);
-  }
-
-  @override
-  MetaSidebarScaffoldFieldsToShow get metaSidebarScaffoldFieldsToShow => (
-    showDefaultValue: false,
-    showDefaultValueTrueFalse: false,
-    showLabel: false,
-    showHeading: true,
-    showHintText: false,
-    showRequired: false,
-  );
+  List<Object?> get props => [header];
 }

@@ -1,1 +1,1 @@
-enum FormElementTypeEnum { input, layout }
+enum FormElementTypeEnum { simple, column }

@@ -7,7 +7,9 @@ part of 'form_builder_state.dart';
 // **************************************************************************
 
 abstract class _$FormBuilderStateCWProxy {
-  FormBuilderState items(List<FormBuilderItem> items);
+  FormBuilderState items(
+    List<FormBuilderItem<FormBuilderItemProperties>> items,
+  );
 
   FormBuilderState showDataZones(bool showDataZones);
 
@@ -18,7 +20,10 @@ abstract class _$FormBuilderStateCWProxy {
   /// ```dart
   /// FormBuilderState(...).copyWith(id: 12, name: "My name")
   /// ```
-  FormBuilderState call({List<FormBuilderItem> items, bool showDataZones});
+  FormBuilderState call({
+    List<FormBuilderItem<FormBuilderItemProperties>> items,
+    bool showDataZones,
+  });
 }
 
 /// Callable proxy for `copyWith` functionality.
@@ -29,7 +34,9 @@ class _$FormBuilderStateCWProxyImpl implements _$FormBuilderStateCWProxy {
   final FormBuilderState _value;
 
   @override
-  FormBuilderState items(List<FormBuilderItem> items) => call(items: items);
+  FormBuilderState items(
+    List<FormBuilderItem<FormBuilderItemProperties>> items,
+  ) => call(items: items);
 
   @override
   FormBuilderState showDataZones(bool showDataZones) =>
@@ -51,7 +58,7 @@ class _$FormBuilderStateCWProxyImpl implements _$FormBuilderStateCWProxy {
       items: items == const $CopyWithPlaceholder() || items == null
           ? _value.items
           // ignore: cast_nullable_to_non_nullable
-          : items as List<FormBuilderItem>,
+          : items as List<FormBuilderItem<FormBuilderItemProperties>>,
       showDataZones:
           showDataZones == const $CopyWithPlaceholder() || showDataZones == null
           ? _value.showDataZones

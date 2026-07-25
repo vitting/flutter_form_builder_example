@@ -6,97 +6,82 @@ part of 'form_builder_item.dart';
 // CopyWithGenerator
 // **************************************************************************
 
-abstract class _$FormBuilderInputItemCWProxy {
-  FormBuilderInputItem id(String id);
+abstract class _$FormBuilderItemCWProxy<T extends FormBuilderItemProperties> {
+  FormBuilderItem<T> id(String id);
 
-  FormBuilderInputItem controlType(ControlTypesEnum controlType);
+  FormBuilderItem<T> controlType(ControlTypesEnum controlType);
 
-  FormBuilderInputItem parentContainerId(String? parentContainerId);
+  FormBuilderItem<T> parentContainerId(String? parentContainerId);
 
-  FormBuilderInputItem columnId(String? columnId);
+  FormBuilderItem<T> columnId(String? columnId);
 
-  FormBuilderInputItem columnIndex(int? columnIndex);
+  FormBuilderItem<T> columnIndex(int? columnIndex);
 
-  FormBuilderInputItem label(String? label);
-
-  FormBuilderInputItem hintText(String? hintText);
-
-  FormBuilderInputItem defaultValue(String? defaultValue);
+  FormBuilderItem<T> properties(T? properties);
 
   /// Creates a new instance with the provided field values.
-  /// Passing `null` to a nullable field nullifies it, while `null` for a non-nullable field is ignored. To update a single field use `FormBuilderInputItem(...).copyWith.fieldName(value)`.
+  /// Passing `null` to a nullable field nullifies it, while `null` for a non-nullable field is ignored. To update a single field use `FormBuilderItem<T>(...).copyWith.fieldName(value)`.
   ///
   /// Example:
   /// ```dart
-  /// FormBuilderInputItem(...).copyWith(id: 12, name: "My name")
+  /// FormBuilderItem<T>(...).copyWith(id: 12, name: "My name")
   /// ```
-  FormBuilderInputItem call({
+  FormBuilderItem<T> call({
     String id,
     ControlTypesEnum controlType,
     String? parentContainerId,
     String? columnId,
     int? columnIndex,
-    String? label,
-    String? hintText,
-    String? defaultValue,
+    T? properties,
   });
 }
 
 /// Callable proxy for `copyWith` functionality.
-/// Use as `instanceOfFormBuilderInputItem.copyWith(...)` or call `instanceOfFormBuilderInputItem.copyWith.fieldName(value)` for a single field.
-class _$FormBuilderInputItemCWProxyImpl
-    implements _$FormBuilderInputItemCWProxy {
-  const _$FormBuilderInputItemCWProxyImpl(this._value);
+/// Use as `instanceOfFormBuilderItem.copyWith(...)` or call `instanceOfFormBuilderItem.copyWith.fieldName(value)` for a single field.
+class _$FormBuilderItemCWProxyImpl<T extends FormBuilderItemProperties>
+    implements _$FormBuilderItemCWProxy<T> {
+  const _$FormBuilderItemCWProxyImpl(this._value);
 
-  final FormBuilderInputItem _value;
-
-  @override
-  FormBuilderInputItem id(String id) => call(id: id);
+  final FormBuilderItem<T> _value;
 
   @override
-  FormBuilderInputItem controlType(ControlTypesEnum controlType) =>
+  FormBuilderItem<T> id(String id) => call(id: id);
+
+  @override
+  FormBuilderItem<T> controlType(ControlTypesEnum controlType) =>
       call(controlType: controlType);
 
   @override
-  FormBuilderInputItem parentContainerId(String? parentContainerId) =>
+  FormBuilderItem<T> parentContainerId(String? parentContainerId) =>
       call(parentContainerId: parentContainerId);
 
   @override
-  FormBuilderInputItem columnId(String? columnId) => call(columnId: columnId);
+  FormBuilderItem<T> columnId(String? columnId) => call(columnId: columnId);
 
   @override
-  FormBuilderInputItem columnIndex(int? columnIndex) =>
+  FormBuilderItem<T> columnIndex(int? columnIndex) =>
       call(columnIndex: columnIndex);
 
   @override
-  FormBuilderInputItem label(String? label) => call(label: label);
-
-  @override
-  FormBuilderInputItem hintText(String? hintText) => call(hintText: hintText);
-
-  @override
-  FormBuilderInputItem defaultValue(String? defaultValue) =>
-      call(defaultValue: defaultValue);
+  FormBuilderItem<T> properties(T? properties) => call(properties: properties);
 
   @override
   /// Creates a new instance with the provided field values.
-  /// Passing `null` to a nullable field nullifies it, while `null` for a non-nullable field is ignored. To update a single field use `FormBuilderInputItem(...).copyWith.fieldName(value)`.
+  /// Passing `null` to a nullable field nullifies it, while `null` for a non-nullable field is ignored. To update a single field use `FormBuilderItem<T>(...).copyWith.fieldName(value)`.
   ///
   /// Example:
   /// ```dart
-  /// FormBuilderInputItem(...).copyWith(id: 12, name: "My name")
+  /// FormBuilderItem<T>(...).copyWith(id: 12, name: "My name")
   /// ```
-  FormBuilderInputItem call({
+  FormBuilderItem<T> call({
     Object? id = const $CopyWithPlaceholder(),
     Object? controlType = const $CopyWithPlaceholder(),
     Object? parentContainerId = const $CopyWithPlaceholder(),
     Object? columnId = const $CopyWithPlaceholder(),
     Object? columnIndex = const $CopyWithPlaceholder(),
-    Object? label = const $CopyWithPlaceholder(),
-    Object? hintText = const $CopyWithPlaceholder(),
-    Object? defaultValue = const $CopyWithPlaceholder(),
+    Object? properties = const $CopyWithPlaceholder(),
   }) {
-    return FormBuilderInputItem(
+    return FormBuilderItem<T>(
       id: id == const $CopyWithPlaceholder() || id == null
           ? _value.id
           // ignore: cast_nullable_to_non_nullable
@@ -118,6 +103,85 @@ class _$FormBuilderInputItemCWProxyImpl
           ? _value.columnIndex
           // ignore: cast_nullable_to_non_nullable
           : columnIndex as int?,
+      properties: properties == const $CopyWithPlaceholder()
+          ? _value.properties
+          // ignore: cast_nullable_to_non_nullable
+          : properties as T?,
+    );
+  }
+}
+
+extension $FormBuilderItemCopyWith<T extends FormBuilderItemProperties>
+    on FormBuilderItem<T> {
+  /// Returns a callable class used to build a new instance with modified fields.
+  /// Example: `instanceOfFormBuilderItem.copyWith(...)` or `instanceOfFormBuilderItem.copyWith.fieldName(...)`.
+  // ignore: library_private_types_in_public_api
+  _$FormBuilderItemCWProxy<T> get copyWith =>
+      _$FormBuilderItemCWProxyImpl<T>(this);
+}
+
+abstract class _$FormBuilderItemPropertiesTextFieldCWProxy {
+  FormBuilderItemPropertiesTextField label(String? label);
+
+  FormBuilderItemPropertiesTextField hintText(String? hintText);
+
+  FormBuilderItemPropertiesTextField defaultValue(String? defaultValue);
+
+  FormBuilderItemPropertiesTextField required(bool? required);
+
+  /// Creates a new instance with the provided field values.
+  /// Passing `null` to a nullable field nullifies it, while `null` for a non-nullable field is ignored. To update a single field use `FormBuilderItemPropertiesTextField(...).copyWith.fieldName(value)`.
+  ///
+  /// Example:
+  /// ```dart
+  /// FormBuilderItemPropertiesTextField(...).copyWith(id: 12, name: "My name")
+  /// ```
+  FormBuilderItemPropertiesTextField call({
+    String? label,
+    String? hintText,
+    String? defaultValue,
+    bool? required,
+  });
+}
+
+/// Callable proxy for `copyWith` functionality.
+/// Use as `instanceOfFormBuilderItemPropertiesTextField.copyWith(...)` or call `instanceOfFormBuilderItemPropertiesTextField.copyWith.fieldName(value)` for a single field.
+class _$FormBuilderItemPropertiesTextFieldCWProxyImpl
+    implements _$FormBuilderItemPropertiesTextFieldCWProxy {
+  const _$FormBuilderItemPropertiesTextFieldCWProxyImpl(this._value);
+
+  final FormBuilderItemPropertiesTextField _value;
+
+  @override
+  FormBuilderItemPropertiesTextField label(String? label) => call(label: label);
+
+  @override
+  FormBuilderItemPropertiesTextField hintText(String? hintText) =>
+      call(hintText: hintText);
+
+  @override
+  FormBuilderItemPropertiesTextField defaultValue(String? defaultValue) =>
+      call(defaultValue: defaultValue);
+
+  @override
+  FormBuilderItemPropertiesTextField required(bool? required) =>
+      call(required: required);
+
+  @override
+  /// Creates a new instance with the provided field values.
+  /// Passing `null` to a nullable field nullifies it, while `null` for a non-nullable field is ignored. To update a single field use `FormBuilderItemPropertiesTextField(...).copyWith.fieldName(value)`.
+  ///
+  /// Example:
+  /// ```dart
+  /// FormBuilderItemPropertiesTextField(...).copyWith(id: 12, name: "My name")
+  /// ```
+  FormBuilderItemPropertiesTextField call({
+    Object? label = const $CopyWithPlaceholder(),
+    Object? hintText = const $CopyWithPlaceholder(),
+    Object? defaultValue = const $CopyWithPlaceholder(),
+    Object? required = const $CopyWithPlaceholder(),
+  }) {
+    return FormBuilderItemPropertiesTextField(
       label: label == const $CopyWithPlaceholder()
           ? _value.label
           // ignore: cast_nullable_to_non_nullable
@@ -130,241 +194,254 @@ class _$FormBuilderInputItemCWProxyImpl
           ? _value.defaultValue
           // ignore: cast_nullable_to_non_nullable
           : defaultValue as String?,
+      required: required == const $CopyWithPlaceholder()
+          ? _value.required
+          // ignore: cast_nullable_to_non_nullable
+          : required as bool?,
     );
   }
 }
 
-extension $FormBuilderInputItemCopyWith on FormBuilderInputItem {
+extension $FormBuilderItemPropertiesTextFieldCopyWith
+    on FormBuilderItemPropertiesTextField {
   /// Returns a callable class used to build a new instance with modified fields.
-  /// Example: `instanceOfFormBuilderInputItem.copyWith(...)` or `instanceOfFormBuilderInputItem.copyWith.fieldName(...)`.
+  /// Example: `instanceOfFormBuilderItemPropertiesTextField.copyWith(...)` or `instanceOfFormBuilderItemPropertiesTextField.copyWith.fieldName(...)`.
   // ignore: library_private_types_in_public_api
-  _$FormBuilderInputItemCWProxy get copyWith =>
-      _$FormBuilderInputItemCWProxyImpl(this);
+  _$FormBuilderItemPropertiesTextFieldCWProxy get copyWith =>
+      _$FormBuilderItemPropertiesTextFieldCWProxyImpl(this);
 }
 
-abstract class _$FormBuilderColumnsItemCWProxy {
-  FormBuilderColumnsItem id(String id);
+abstract class _$FormBuilderItemPropertiesNumberFieldCWProxy {
+  FormBuilderItemPropertiesNumberField label(String? label);
 
-  FormBuilderColumnsItem controlType(ControlTypesEnum controlType);
+  FormBuilderItemPropertiesNumberField hintText(String? hintText);
 
-  FormBuilderColumnsItem columns(Map<String, List<FormBuilderItem>> columns);
+  FormBuilderItemPropertiesNumberField defaultValue(String? defaultValue);
 
-  FormBuilderColumnsItem parentContainerId(String? parentContainerId);
-
-  FormBuilderColumnsItem columnId(String? columnId);
-
-  FormBuilderColumnsItem columnIndex(int? columnIndex);
+  FormBuilderItemPropertiesNumberField required(bool? required);
 
   /// Creates a new instance with the provided field values.
-  /// Passing `null` to a nullable field nullifies it, while `null` for a non-nullable field is ignored. To update a single field use `FormBuilderColumnsItem(...).copyWith.fieldName(value)`.
+  /// Passing `null` to a nullable field nullifies it, while `null` for a non-nullable field is ignored. To update a single field use `FormBuilderItemPropertiesNumberField(...).copyWith.fieldName(value)`.
   ///
   /// Example:
   /// ```dart
-  /// FormBuilderColumnsItem(...).copyWith(id: 12, name: "My name")
+  /// FormBuilderItemPropertiesNumberField(...).copyWith(id: 12, name: "My name")
   /// ```
-  FormBuilderColumnsItem call({
-    String id,
-    ControlTypesEnum controlType,
-    Map<String, List<FormBuilderItem>> columns,
-    String? parentContainerId,
-    String? columnId,
-    int? columnIndex,
+  FormBuilderItemPropertiesNumberField call({
+    String? label,
+    String? hintText,
+    String? defaultValue,
+    bool? required,
   });
 }
 
 /// Callable proxy for `copyWith` functionality.
-/// Use as `instanceOfFormBuilderColumnsItem.copyWith(...)` or call `instanceOfFormBuilderColumnsItem.copyWith.fieldName(value)` for a single field.
-class _$FormBuilderColumnsItemCWProxyImpl
-    implements _$FormBuilderColumnsItemCWProxy {
-  const _$FormBuilderColumnsItemCWProxyImpl(this._value);
+/// Use as `instanceOfFormBuilderItemPropertiesNumberField.copyWith(...)` or call `instanceOfFormBuilderItemPropertiesNumberField.copyWith.fieldName(value)` for a single field.
+class _$FormBuilderItemPropertiesNumberFieldCWProxyImpl
+    implements _$FormBuilderItemPropertiesNumberFieldCWProxy {
+  const _$FormBuilderItemPropertiesNumberFieldCWProxyImpl(this._value);
 
-  final FormBuilderColumnsItem _value;
-
-  @override
-  FormBuilderColumnsItem id(String id) => call(id: id);
+  final FormBuilderItemPropertiesNumberField _value;
 
   @override
-  FormBuilderColumnsItem controlType(ControlTypesEnum controlType) =>
-      call(controlType: controlType);
+  FormBuilderItemPropertiesNumberField label(String? label) =>
+      call(label: label);
 
   @override
-  FormBuilderColumnsItem columns(Map<String, List<FormBuilderItem>> columns) =>
-      call(columns: columns);
+  FormBuilderItemPropertiesNumberField hintText(String? hintText) =>
+      call(hintText: hintText);
 
   @override
-  FormBuilderColumnsItem parentContainerId(String? parentContainerId) =>
-      call(parentContainerId: parentContainerId);
+  FormBuilderItemPropertiesNumberField defaultValue(String? defaultValue) =>
+      call(defaultValue: defaultValue);
 
   @override
-  FormBuilderColumnsItem columnId(String? columnId) => call(columnId: columnId);
-
-  @override
-  FormBuilderColumnsItem columnIndex(int? columnIndex) =>
-      call(columnIndex: columnIndex);
+  FormBuilderItemPropertiesNumberField required(bool? required) =>
+      call(required: required);
 
   @override
   /// Creates a new instance with the provided field values.
-  /// Passing `null` to a nullable field nullifies it, while `null` for a non-nullable field is ignored. To update a single field use `FormBuilderColumnsItem(...).copyWith.fieldName(value)`.
+  /// Passing `null` to a nullable field nullifies it, while `null` for a non-nullable field is ignored. To update a single field use `FormBuilderItemPropertiesNumberField(...).copyWith.fieldName(value)`.
   ///
   /// Example:
   /// ```dart
-  /// FormBuilderColumnsItem(...).copyWith(id: 12, name: "My name")
+  /// FormBuilderItemPropertiesNumberField(...).copyWith(id: 12, name: "My name")
   /// ```
-  FormBuilderColumnsItem call({
-    Object? id = const $CopyWithPlaceholder(),
-    Object? controlType = const $CopyWithPlaceholder(),
-    Object? columns = const $CopyWithPlaceholder(),
-    Object? parentContainerId = const $CopyWithPlaceholder(),
-    Object? columnId = const $CopyWithPlaceholder(),
-    Object? columnIndex = const $CopyWithPlaceholder(),
+  FormBuilderItemPropertiesNumberField call({
+    Object? label = const $CopyWithPlaceholder(),
+    Object? hintText = const $CopyWithPlaceholder(),
+    Object? defaultValue = const $CopyWithPlaceholder(),
+    Object? required = const $CopyWithPlaceholder(),
   }) {
-    return FormBuilderColumnsItem(
-      id: id == const $CopyWithPlaceholder() || id == null
-          ? _value.id
+    return FormBuilderItemPropertiesNumberField(
+      label: label == const $CopyWithPlaceholder()
+          ? _value.label
           // ignore: cast_nullable_to_non_nullable
-          : id as String,
-      controlType:
-          controlType == const $CopyWithPlaceholder() || controlType == null
-          ? _value.controlType
+          : label as String?,
+      hintText: hintText == const $CopyWithPlaceholder()
+          ? _value.hintText
           // ignore: cast_nullable_to_non_nullable
-          : controlType as ControlTypesEnum,
+          : hintText as String?,
+      defaultValue: defaultValue == const $CopyWithPlaceholder()
+          ? _value.defaultValue
+          // ignore: cast_nullable_to_non_nullable
+          : defaultValue as String?,
+      required: required == const $CopyWithPlaceholder()
+          ? _value.required
+          // ignore: cast_nullable_to_non_nullable
+          : required as bool?,
+    );
+  }
+}
+
+extension $FormBuilderItemPropertiesNumberFieldCopyWith
+    on FormBuilderItemPropertiesNumberField {
+  /// Returns a callable class used to build a new instance with modified fields.
+  /// Example: `instanceOfFormBuilderItemPropertiesNumberField.copyWith(...)` or `instanceOfFormBuilderItemPropertiesNumberField.copyWith.fieldName(...)`.
+  // ignore: library_private_types_in_public_api
+  _$FormBuilderItemPropertiesNumberFieldCWProxy get copyWith =>
+      _$FormBuilderItemPropertiesNumberFieldCWProxyImpl(this);
+}
+
+abstract class _$FormBuilderItemPropertiesCheckboxFieldCWProxy {
+  FormBuilderItemPropertiesCheckboxField label(String? label);
+
+  FormBuilderItemPropertiesCheckboxField defaultValue(bool? defaultValue);
+
+  FormBuilderItemPropertiesCheckboxField required(bool? required);
+
+  /// Creates a new instance with the provided field values.
+  /// Passing `null` to a nullable field nullifies it, while `null` for a non-nullable field is ignored. To update a single field use `FormBuilderItemPropertiesCheckboxField(...).copyWith.fieldName(value)`.
+  ///
+  /// Example:
+  /// ```dart
+  /// FormBuilderItemPropertiesCheckboxField(...).copyWith(id: 12, name: "My name")
+  /// ```
+  FormBuilderItemPropertiesCheckboxField call({
+    String? label,
+    bool? defaultValue,
+    bool? required,
+  });
+}
+
+/// Callable proxy for `copyWith` functionality.
+/// Use as `instanceOfFormBuilderItemPropertiesCheckboxField.copyWith(...)` or call `instanceOfFormBuilderItemPropertiesCheckboxField.copyWith.fieldName(value)` for a single field.
+class _$FormBuilderItemPropertiesCheckboxFieldCWProxyImpl
+    implements _$FormBuilderItemPropertiesCheckboxFieldCWProxy {
+  const _$FormBuilderItemPropertiesCheckboxFieldCWProxyImpl(this._value);
+
+  final FormBuilderItemPropertiesCheckboxField _value;
+
+  @override
+  FormBuilderItemPropertiesCheckboxField label(String? label) =>
+      call(label: label);
+
+  @override
+  FormBuilderItemPropertiesCheckboxField defaultValue(bool? defaultValue) =>
+      call(defaultValue: defaultValue);
+
+  @override
+  FormBuilderItemPropertiesCheckboxField required(bool? required) =>
+      call(required: required);
+
+  @override
+  /// Creates a new instance with the provided field values.
+  /// Passing `null` to a nullable field nullifies it, while `null` for a non-nullable field is ignored. To update a single field use `FormBuilderItemPropertiesCheckboxField(...).copyWith.fieldName(value)`.
+  ///
+  /// Example:
+  /// ```dart
+  /// FormBuilderItemPropertiesCheckboxField(...).copyWith(id: 12, name: "My name")
+  /// ```
+  FormBuilderItemPropertiesCheckboxField call({
+    Object? label = const $CopyWithPlaceholder(),
+    Object? defaultValue = const $CopyWithPlaceholder(),
+    Object? required = const $CopyWithPlaceholder(),
+  }) {
+    return FormBuilderItemPropertiesCheckboxField(
+      label: label == const $CopyWithPlaceholder()
+          ? _value.label
+          // ignore: cast_nullable_to_non_nullable
+          : label as String?,
+      defaultValue: defaultValue == const $CopyWithPlaceholder()
+          ? _value.defaultValue
+          // ignore: cast_nullable_to_non_nullable
+          : defaultValue as bool?,
+      required: required == const $CopyWithPlaceholder()
+          ? _value.required
+          // ignore: cast_nullable_to_non_nullable
+          : required as bool?,
+    );
+  }
+}
+
+extension $FormBuilderItemPropertiesCheckboxFieldCopyWith
+    on FormBuilderItemPropertiesCheckboxField {
+  /// Returns a callable class used to build a new instance with modified fields.
+  /// Example: `instanceOfFormBuilderItemPropertiesCheckboxField.copyWith(...)` or `instanceOfFormBuilderItemPropertiesCheckboxField.copyWith.fieldName(...)`.
+  // ignore: library_private_types_in_public_api
+  _$FormBuilderItemPropertiesCheckboxFieldCWProxy get copyWith =>
+      _$FormBuilderItemPropertiesCheckboxFieldCWProxyImpl(this);
+}
+
+abstract class _$FormBuilderItemPropertiesColumnsCWProxy {
+  FormBuilderItemPropertiesColumns columns(
+    Map<String, List<FormBuilderItem<FormBuilderItemProperties>>> columns,
+  );
+
+  /// Creates a new instance with the provided field values.
+  /// Passing `null` to a nullable field nullifies it, while `null` for a non-nullable field is ignored. To update a single field use `FormBuilderItemPropertiesColumns(...).copyWith.fieldName(value)`.
+  ///
+  /// Example:
+  /// ```dart
+  /// FormBuilderItemPropertiesColumns(...).copyWith(id: 12, name: "My name")
+  /// ```
+  FormBuilderItemPropertiesColumns call({
+    Map<String, List<FormBuilderItem<FormBuilderItemProperties>>> columns,
+  });
+}
+
+/// Callable proxy for `copyWith` functionality.
+/// Use as `instanceOfFormBuilderItemPropertiesColumns.copyWith(...)` or call `instanceOfFormBuilderItemPropertiesColumns.copyWith.fieldName(value)` for a single field.
+class _$FormBuilderItemPropertiesColumnsCWProxyImpl
+    implements _$FormBuilderItemPropertiesColumnsCWProxy {
+  const _$FormBuilderItemPropertiesColumnsCWProxyImpl(this._value);
+
+  final FormBuilderItemPropertiesColumns _value;
+
+  @override
+  FormBuilderItemPropertiesColumns columns(
+    Map<String, List<FormBuilderItem<FormBuilderItemProperties>>> columns,
+  ) => call(columns: columns);
+
+  @override
+  /// Creates a new instance with the provided field values.
+  /// Passing `null` to a nullable field nullifies it, while `null` for a non-nullable field is ignored. To update a single field use `FormBuilderItemPropertiesColumns(...).copyWith.fieldName(value)`.
+  ///
+  /// Example:
+  /// ```dart
+  /// FormBuilderItemPropertiesColumns(...).copyWith(id: 12, name: "My name")
+  /// ```
+  FormBuilderItemPropertiesColumns call({
+    Object? columns = const $CopyWithPlaceholder(),
+  }) {
+    return FormBuilderItemPropertiesColumns(
       columns: columns == const $CopyWithPlaceholder() || columns == null
           ? _value.columns
           // ignore: cast_nullable_to_non_nullable
-          : columns as Map<String, List<FormBuilderItem>>,
-      parentContainerId: parentContainerId == const $CopyWithPlaceholder()
-          ? _value.parentContainerId
-          // ignore: cast_nullable_to_non_nullable
-          : parentContainerId as String?,
-      columnId: columnId == const $CopyWithPlaceholder()
-          ? _value.columnId
-          // ignore: cast_nullable_to_non_nullable
-          : columnId as String?,
-      columnIndex: columnIndex == const $CopyWithPlaceholder()
-          ? _value.columnIndex
-          // ignore: cast_nullable_to_non_nullable
-          : columnIndex as int?,
+          : columns
+                as Map<
+                  String,
+                  List<FormBuilderItem<FormBuilderItemProperties>>
+                >,
     );
   }
 }
 
-extension $FormBuilderColumnsItemCopyWith on FormBuilderColumnsItem {
+extension $FormBuilderItemPropertiesColumnsCopyWith
+    on FormBuilderItemPropertiesColumns {
   /// Returns a callable class used to build a new instance with modified fields.
-  /// Example: `instanceOfFormBuilderColumnsItem.copyWith(...)` or `instanceOfFormBuilderColumnsItem.copyWith.fieldName(...)`.
+  /// Example: `instanceOfFormBuilderItemPropertiesColumns.copyWith(...)` or `instanceOfFormBuilderItemPropertiesColumns.copyWith.fieldName(...)`.
   // ignore: library_private_types_in_public_api
-  _$FormBuilderColumnsItemCWProxy get copyWith =>
-      _$FormBuilderColumnsItemCWProxyImpl(this);
-}
-
-abstract class _$FormBuilderHeadingItemCWProxy {
-  FormBuilderHeadingItem id(String id);
-
-  FormBuilderHeadingItem controlType(ControlTypesEnum controlType);
-
-  FormBuilderHeadingItem parentContainerId(String? parentContainerId);
-
-  FormBuilderHeadingItem columnId(String? columnId);
-
-  FormBuilderHeadingItem columnIndex(int? columnIndex);
-
-  FormBuilderHeadingItem heading(String heading);
-
-  /// Creates a new instance with the provided field values.
-  /// Passing `null` to a nullable field nullifies it, while `null` for a non-nullable field is ignored. To update a single field use `FormBuilderHeadingItem(...).copyWith.fieldName(value)`.
-  ///
-  /// Example:
-  /// ```dart
-  /// FormBuilderHeadingItem(...).copyWith(id: 12, name: "My name")
-  /// ```
-  FormBuilderHeadingItem call({
-    String id,
-    ControlTypesEnum controlType,
-    String? parentContainerId,
-    String? columnId,
-    int? columnIndex,
-    String heading,
-  });
-}
-
-/// Callable proxy for `copyWith` functionality.
-/// Use as `instanceOfFormBuilderHeadingItem.copyWith(...)` or call `instanceOfFormBuilderHeadingItem.copyWith.fieldName(value)` for a single field.
-class _$FormBuilderHeadingItemCWProxyImpl
-    implements _$FormBuilderHeadingItemCWProxy {
-  const _$FormBuilderHeadingItemCWProxyImpl(this._value);
-
-  final FormBuilderHeadingItem _value;
-
-  @override
-  FormBuilderHeadingItem id(String id) => call(id: id);
-
-  @override
-  FormBuilderHeadingItem controlType(ControlTypesEnum controlType) =>
-      call(controlType: controlType);
-
-  @override
-  FormBuilderHeadingItem parentContainerId(String? parentContainerId) =>
-      call(parentContainerId: parentContainerId);
-
-  @override
-  FormBuilderHeadingItem columnId(String? columnId) => call(columnId: columnId);
-
-  @override
-  FormBuilderHeadingItem columnIndex(int? columnIndex) =>
-      call(columnIndex: columnIndex);
-
-  @override
-  FormBuilderHeadingItem heading(String heading) => call(heading: heading);
-
-  @override
-  /// Creates a new instance with the provided field values.
-  /// Passing `null` to a nullable field nullifies it, while `null` for a non-nullable field is ignored. To update a single field use `FormBuilderHeadingItem(...).copyWith.fieldName(value)`.
-  ///
-  /// Example:
-  /// ```dart
-  /// FormBuilderHeadingItem(...).copyWith(id: 12, name: "My name")
-  /// ```
-  FormBuilderHeadingItem call({
-    Object? id = const $CopyWithPlaceholder(),
-    Object? controlType = const $CopyWithPlaceholder(),
-    Object? parentContainerId = const $CopyWithPlaceholder(),
-    Object? columnId = const $CopyWithPlaceholder(),
-    Object? columnIndex = const $CopyWithPlaceholder(),
-    Object? heading = const $CopyWithPlaceholder(),
-  }) {
-    return FormBuilderHeadingItem(
-      id: id == const $CopyWithPlaceholder() || id == null
-          ? _value.id
-          // ignore: cast_nullable_to_non_nullable
-          : id as String,
-      controlType:
-          controlType == const $CopyWithPlaceholder() || controlType == null
-          ? _value.controlType
-          // ignore: cast_nullable_to_non_nullable
-          : controlType as ControlTypesEnum,
-      parentContainerId: parentContainerId == const $CopyWithPlaceholder()
-          ? _value.parentContainerId
-          // ignore: cast_nullable_to_non_nullable
-          : parentContainerId as String?,
-      columnId: columnId == const $CopyWithPlaceholder()
-          ? _value.columnId
-          // ignore: cast_nullable_to_non_nullable
-          : columnId as String?,
-      columnIndex: columnIndex == const $CopyWithPlaceholder()
-          ? _value.columnIndex
-          // ignore: cast_nullable_to_non_nullable
-          : columnIndex as int?,
-      heading: heading == const $CopyWithPlaceholder() || heading == null
-          ? _value.heading
-          // ignore: cast_nullable_to_non_nullable
-          : heading as String,
-    );
-  }
-}
-
-extension $FormBuilderHeadingItemCopyWith on FormBuilderHeadingItem {
-  /// Returns a callable class used to build a new instance with modified fields.
-  /// Example: `instanceOfFormBuilderHeadingItem.copyWith(...)` or `instanceOfFormBuilderHeadingItem.copyWith.fieldName(...)`.
-  // ignore: library_private_types_in_public_api
-  _$FormBuilderHeadingItemCWProxy get copyWith =>
-      _$FormBuilderHeadingItemCWProxyImpl(this);
+  _$FormBuilderItemPropertiesColumnsCWProxy get copyWith =>
+      _$FormBuilderItemPropertiesColumnsCWProxyImpl(this);
 }

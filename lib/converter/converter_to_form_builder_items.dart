@@ -13,34 +13,63 @@ class ConverterToFormBuilderItems {
     );
   }
 
-  static FormBuilderColumnsItem _convertColumnsItem(FormApiItemModel formApiItem) {
+  static FormBuilderItem _convertColumnsItem(FormApiItemModel formApiItem) {
     final columns = formApiItem.additionalProperties?.columns ?? {};
     final convertedColumns = columns.map((columnId, columnItems) {
       final convertedColumnItems = convert(columnItems);
       return MapEntry(columnId, convertedColumnItems.toList());
     });
-    return FormBuilderColumnsItem(id: formApiItem.id, controlType: formApiItem.controlType, columns: convertedColumns);
+    return FormBuilderItem(
+      id: formApiItem.id,
+      controlType: formApiItem.controlType,
+      properties: FormBuilderItemPropertiesColumns(columns: convertedColumns),
+    );
   }
 
-  static FormBuilderInputItem _convertInputItem(FormApiItemModel formApiItem) {
-    return FormBuilderInputItem(
+  static FormBuilderItem _convertInputItem(FormApiItemModel formApiItem) {
+    return FormBuilderItem(
       id: formApiItem.id,
       controlType: formApiItem.controlType,
       parentContainerId: formApiItem.parentContainerId,
       columnId: formApiItem.columnId,
       columnIndex: formApiItem.columnIndex,
-      label: formApiItem.additionalProperties?.label,
+      properties: _getGenericPropertiesForControlType(formApiItem),
     );
   }
 
-  static FormBuilderHeadingItem _convertHeadingItem(FormApiItemModel formApiItem) {
-    return FormBuilderHeadingItem(
+  static FormBuilderItem _convertHeadingItem(FormApiItemModel formApiItem) {
+    return FormBuilderItem(
       id: formApiItem.id,
       controlType: formApiItem.controlType,
       parentContainerId: formApiItem.parentContainerId,
       columnId: formApiItem.columnId,
       columnIndex: formApiItem.columnIndex,
-      heading: formApiItem.additionalProperties?.label ?? '',
+      properties: FormBuilderItemPropertiesHeader(header: formApiItem.additionalProperties?.label ?? ''),
     );
+  }
+
+  static FormBuilderItemProperties _getGenericPropertiesForControlType(FormApiItemModel formApiItem) {
+    switch (formApiItem.controlType) {
+      case ControlTypesEnum.textField:
+        return FormBuilderItemPropertiesTextField(
+          label: formApiItem.additionalProperties?.label ?? '',
+          defaultValue: formApiItem.additionalProperties?.defaultValue,
+          required: formApiItem.additionalProperties?.required ?? false,
+        );
+      case ControlTypesEnum.numberField:
+        return FormBuilderItemPropertiesNumberField(
+          label: formApiItem.additionalProperties?.label ?? '',
+          defaultValue: formApiItem.additionalProperties?.defaultValue,
+          required: formApiItem.additionalProperties?.required ?? false,
+        );
+      case ControlTypesEnum.checkbox:
+        return FormBuilderItemPropertiesCheckboxField(
+          label: formApiItem.additionalProperties?.label ?? '',
+          defaultValue: formApiItem.additionalProperties?.defaultValueTrueFalse ?? false,
+          required: formApiItem.additionalProperties?.required ?? false,
+        );
+      default:
+        throw Exception('Unsupported control type: $formApiItem.controlType');
+    }
   }
 }

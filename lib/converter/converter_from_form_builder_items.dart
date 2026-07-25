@@ -1,3 +1,4 @@
+import 'package:flutter_form_builder_example/enums/control_types_enum.dart';
 import 'package:flutter_form_builder_example/models/form_api_model/form_api_item_additional_properties_model.dart';
 import 'package:flutter_form_builder_example/models/form_api_model/form_api_item_model.dart';
 import 'package:flutter_form_builder_example/models/form_api_model/form_api_model.dart';
@@ -11,17 +12,19 @@ class ConverterFromFormBuilderItems {
 
   static Iterable<FormApiItemModel> _convertFormBuilderItemsToFormApiItems(Iterable<FormBuilderItem> formBuilderItems) {
     return formBuilderItems.map(
-      (formBuilderItem) => switch (formBuilderItem) {
-        FormBuilderColumnsItem columnsItem => _convertColumnsItem(columnsItem),
-        FormBuilderHeadingItem headingItem => _convertHeadingItem(headingItem),
-        FormBuilderInputItem inputItem => _convertInputItem(inputItem),
+      (formBuilderItem) => switch (formBuilderItem.controlType) {
+        ControlTypesEnum.columns => _convertColumnsItem(formBuilderItem),
+        ControlTypesEnum.heading => _convertHeadingItem(formBuilderItem),
+        ControlTypesEnum.textField ||
+        ControlTypesEnum.numberField ||
+        ControlTypesEnum.checkbox => _convertInputItem(formBuilderItem),
         _ => throw Exception('Unsupported FormBuilderItem type: ${formBuilderItem.runtimeType}'),
       },
     );
   }
 
-  static FormApiItemModel _convertColumnsItem(FormBuilderColumnsItem columnsItem) {
-    final convertedColumns = columnsItem.columns.map((columnId, columnItems) {
+  static FormApiItemModel _convertColumnsItem(FormBuilderItem columnsItem) {
+    final convertedColumns = (columnsItem.properties as FormBuilderItemPropertiesColumns).columns.map((columnId, columnItems) {
       final convertedColumnItems = _convertFormBuilderItemsToFormApiItems(columnItems);
       return MapEntry(columnId, convertedColumnItems.toList());
     });
@@ -32,7 +35,7 @@ class ConverterFromFormBuilderItems {
     );
   }
 
-  static FormApiItemModel _convertInputItem(FormBuilderInputItem inputItem) {
+  static FormApiItemModel _convertInputItem(FormBuilderItem inputItem) {
     return FormApiItemModel(
       id: inputItem.id,
       controlType: inputItem.controlType,
@@ -42,14 +45,16 @@ class ConverterFromFormBuilderItems {
     );
   }
 
-  static FormApiItemModel _convertHeadingItem(FormBuilderHeadingItem headingItem) {
+  static FormApiItemModel _convertHeadingItem(FormBuilderItem headingItem) {
     return FormApiItemModel(
       id: headingItem.id,
       controlType: headingItem.controlType,
       parentContainerId: headingItem.parentContainerId,
       columnId: headingItem.columnId,
       columnIndex: headingItem.columnIndex,
-      additionalProperties: FormApiItemAdditionalPropertiesModel(label: headingItem.heading),
+      additionalProperties: FormApiItemAdditionalPropertiesModel(
+        label: (headingItem.properties as FormBuilderItemPropertiesHeader).header,
+      ),
     );
   }
 }

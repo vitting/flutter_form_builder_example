@@ -11,7 +11,7 @@ class MenuCheckboxControl extends StatelessWidget {
   Widget build(BuildContext context) {
     return DragControl(
       controlType: ControlTypesEnum.checkbox,
-      formElementType: FormElementTypeEnum.input,
+      formElementType: FormElementTypeEnum.simple,
       child: FormCheckbox(label: 'Checkbox'),
     );
   }

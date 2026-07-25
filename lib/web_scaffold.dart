@@ -36,7 +36,7 @@ class WebScaffold extends StatelessWidget {
       child: MenuTextFieldControl(
         label: 'TextField',
         controlType: ControlTypesEnum.textField,
-        formElementType: FormElementTypeEnum.input,
+        formElementType: FormElementTypeEnum.simple,
       ),
     ),
     MenuItemModel(
@@ -45,7 +45,7 @@ class WebScaffold extends StatelessWidget {
       child: MenuTextFieldControl(
         label: 'NumberField',
         controlType: ControlTypesEnum.numberField,
-        formElementType: FormElementTypeEnum.input,
+        formElementType: FormElementTypeEnum.simple,
       ),
     ),
     MenuItemModel(icon: Symbols.check_box, label: 'Checkbox', child: MenuCheckboxControl()),

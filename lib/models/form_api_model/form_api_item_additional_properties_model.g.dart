@@ -11,7 +11,7 @@ _$FormApiItemAdditionalPropertiesModelFromJson(Map<String, dynamic> json) =>
     FormApiItemAdditionalPropertiesModel(
       label: json['label'] as String?,
       required: json['required'] as bool?,
-      placeholder: json['placeholder'] as String?,
+      hintText: json['hintText'] as String?,
       defaultValue: json['defaultValue'] as String?,
       columns: (json['columns'] as Map<String, dynamic>?)?.map(
         (k, e) => MapEntry(
@@ -21,6 +21,7 @@ _$FormApiItemAdditionalPropertiesModelFromJson(Map<String, dynamic> json) =>
           ),
         ),
       ),
+      defaultValueTrueFalse: json['defaultValueTrueFalse'] as bool?,
     );
 
 Map<String, dynamic> _$FormApiItemAdditionalPropertiesModelToJson(
@@ -28,8 +29,9 @@ Map<String, dynamic> _$FormApiItemAdditionalPropertiesModelToJson(
 ) => <String, dynamic>{
   'label': instance.label,
   'required': instance.required,
-  'placeholder': instance.placeholder,
+  'hintText': instance.hintText,
   'defaultValue': instance.defaultValue,
+  'defaultValueTrueFalse': instance.defaultValueTrueFalse,
   'columns': instance.columns?.map(
     (k, e) => MapEntry(k, e.map((e) => e.toJson()).toList()),
   ),

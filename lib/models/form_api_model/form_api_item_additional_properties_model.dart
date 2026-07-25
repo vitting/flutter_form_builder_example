@@ -8,11 +8,19 @@ part 'form_api_item_additional_properties_model.g.dart';
 class FormApiItemAdditionalPropertiesModel extends Equatable {
   final String? label;
   final bool? required;
-  final String? placeholder;
+  final String? hintText;
   final String? defaultValue;
+  final bool? defaultValueTrueFalse;
   final Map<String, Iterable<FormApiItemModel>>? columns;
 
-  const FormApiItemAdditionalPropertiesModel({this.label, this.required, this.placeholder, this.defaultValue, this.columns});
+  const FormApiItemAdditionalPropertiesModel({
+    this.label,
+    this.required,
+    this.hintText,
+    this.defaultValue,
+    this.columns,
+    this.defaultValueTrueFalse,
+  });
 
   factory FormApiItemAdditionalPropertiesModel.fromJson(Map<String, dynamic> json) =>
       _$FormApiItemAdditionalPropertiesModelFromJson(json);
@@ -20,7 +28,7 @@ class FormApiItemAdditionalPropertiesModel extends Equatable {
   Map<String, dynamic> toJson() => _$FormApiItemAdditionalPropertiesModelToJson(this);
 
   @override
-  List<Object?> get props => [label, required, placeholder, defaultValue, columns];
+  List<Object?> get props => [label, required, hintText, defaultValue, columns, defaultValueTrueFalse];
 
   @override
   bool get stringify => true;

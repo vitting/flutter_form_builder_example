@@ -62,37 +62,37 @@ class _FormBuilderState extends State<FormBuilder> {
   Widget _generateInput(FormBuilderItem item, int index) {
     switch (item.controlType) {
       case ControlTypesEnum.textField:
-        final inputItem = item.getAsType<FormBuilderInputItem>();
+        final properties = item.getPropertiesAsTextField;
         return FormControlManageContainer(
           item: item,
           dragHandlerReOrderListIndex: index,
           onSelected: _onSelectedItem,
-          child: FormTextField(label: inputItem.label ?? '', isFormRenderControl: true, isEnabled: false),
+          child: FormTextField(label: properties.label ?? '', isFormRenderControl: true, isEnabled: false),
         );
 
       case ControlTypesEnum.numberField:
-        final inputItem = item.getAsType<FormBuilderInputItem>();
+        final properties = item.getPropertiesAsNumberField;
         return FormControlManageContainer(
           item: item,
           dragHandlerReOrderListIndex: index,
           onSelected: _onSelectedItem,
-          child: FormTextField(label: inputItem.label ?? '', isFormRenderControl: true, isEnabled: false),
+          child: FormTextField(label: properties.label ?? '', isFormRenderControl: true, isEnabled: false),
         );
       case ControlTypesEnum.checkbox:
-        final inputItem = item.getAsType<FormBuilderInputItem>();
+        final properties = item.getPropertiesAsCheckboxField;
         return FormControlManageContainer(
           item: item,
           dragHandlerReOrderListIndex: index,
           onSelected: _onSelectedItem,
-          child: FormCheckbox(label: inputItem.label ?? '', isFormRenderControl: true, isEnabled: false),
+          child: FormCheckbox(label: properties.label ?? '', isFormRenderControl: true, isEnabled: false),
         );
       case ControlTypesEnum.heading:
-        final headerItem = item.getAsType<FormBuilderHeadingItem>();
+        final properties = item.getPropertiesAsHeader;
         return FormControlManageContainer(
           item: item,
           dragHandlerReOrderListIndex: index,
           onSelected: _onSelectedItem,
-          child: FormHeading(text: headerItem.heading),
+          child: FormHeading(text: properties.header ?? ''),
         );
       default:
         return SizedBox.shrink();
@@ -100,20 +100,22 @@ class _FormBuilderState extends State<FormBuilder> {
   }
 
   Widget _getControl(FormBuilderItem item, int index, {bool showDataZones = false}) {
-    return switch (item) {
-      FormBuilderInputItem() => _generateInput(item, index),
-      FormBuilderHeadingItem() => _generateInput(item, index),
-      FormBuilderColumnsItem() => FormBuilderColumns(
+    return switch (item.controlType) {
+      ControlTypesEnum.textField ||
+      ControlTypesEnum.numberField ||
+      ControlTypesEnum.checkbox ||
+      ControlTypesEnum.heading => _generateInput(item, index),
+      ControlTypesEnum.columns => FormBuilderColumns(
         index: index,
         showDataZones: showDataZones,
         parentContainerItem: item,
         onSelected: _onSelectedItem,
         buildFormControls: (columnId) {
-          final columnItems = item.columns[columnId] ?? [];
+          final columnItems = (item.properties as FormBuilderItemPropertiesColumns).columns[columnId] ?? [];
           return _buildFormControls(context, items: columnItems, showDataZones: showDataZones);
         },
       ),
-      FormBuilderItem() => throw UnimplementedError(),
+      _ => throw UnimplementedError(),
     };
   }
 

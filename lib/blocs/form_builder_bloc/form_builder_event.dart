@@ -25,8 +25,8 @@ final class AddSimpleFormBuilderItemEvent<T> extends FormBuilderEvent {
   List<Object?> get props => [item, parentId];
 }
 
-final class AddSimpleFormBuilderItemIntoColumnEvent<T> extends FormBuilderEvent {
-  final T item;
+final class AddSimpleFormBuilderItemIntoColumnEvent extends FormBuilderEvent {
+  final FormBuilderItem item;
   final String? parentId;
   final String parentContainerId;
   final String columnId;
@@ -45,7 +45,7 @@ final class AddSimpleFormBuilderItemIntoColumnEvent<T> extends FormBuilderEvent 
 }
 
 final class AddFormBuilderLayoutColumnItemEvent extends FormBuilderEvent {
-  final FormBuilderColumnsItem item;
+  final FormBuilderItem item;
   final String? parentId;
   final String? parentContainerId;
   final String? columnId;

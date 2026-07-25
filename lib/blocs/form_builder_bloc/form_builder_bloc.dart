@@ -6,6 +6,8 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_form_builder_example/blocs/form_builder_bloc/form_builder_state.dart';
 import 'package:flutter_form_builder_example/converter/converter_to_form_builder_items.dart';
 import 'package:flutter_form_builder_example/converter/form_api_example.dart';
+import 'package:flutter_form_builder_example/enums/control_types_enum.dart';
+import 'package:flutter_form_builder_example/enums/form_element_type_enum.dart';
 import 'package:flutter_form_builder_example/meta_sidebar/meta_sidebar_results_model.dart';
 import 'package:flutter_form_builder_example/models/form_builder_item.dart';
 import 'package:flutter_form_builder_example/repositories/form_render_builder_repository.dart';
@@ -38,14 +40,14 @@ class FormBuilderBloc extends Bloc<FormBuilderEvent, FormBuilderState> {
   }
 
   FutureOr<void> _onAddFormBuilderItemEventEvent(AddFormBuilderItemEvent event, Emitter<FormBuilderState> emit) {
-    switch (event.item) {
-      case final FormBuilderInputItem item:
-        _addSimpleFormBuilderItem<FormBuilderInputItem>(event, item);
+    switch (event.item.formElementType) {
+      case FormElementTypeEnum.simple:
+        _addSimpleFormBuilderItem(event);
         break;
-      case final FormBuilderColumnsItem item:
+      case FormElementTypeEnum.column:
         add(
           AddFormBuilderLayoutColumnItemEvent(
-            item: item,
+            item: event.item,
             parentId: event.parentId,
             parentContainerId: event.parentContainerId,
             columnId: event.columnId,
@@ -53,18 +55,15 @@ class FormBuilderBloc extends Bloc<FormBuilderEvent, FormBuilderState> {
           ),
         );
         break;
-      case final FormBuilderHeadingItem item:
-        _addSimpleFormBuilderItem<FormBuilderHeadingItem>(event, item);
-        break;
     }
   }
 
-  void _addSimpleFormBuilderItem<T>(AddFormBuilderItemEvent event, T item) {
+  void _addSimpleFormBuilderItem(AddFormBuilderItemEvent event) {
     // Add input item to column if parentContainerId and columnId are provided, otherwise add to root
     if (_checkIfParametersForColumnIsValid(event.parentContainerId, event.columnId)) {
       add(
-        AddSimpleFormBuilderItemIntoColumnEvent<T>(
-          item: item,
+        AddSimpleFormBuilderItemIntoColumnEvent(
+          item: event.item,
           parentId: event.parentId,
           parentContainerId: event.parentContainerId!,
           columnId: event.columnId!,
@@ -72,7 +71,7 @@ class FormBuilderBloc extends Bloc<FormBuilderEvent, FormBuilderState> {
         ),
       );
     } else {
-      add(AddSimpleFormBuilderItemEvent<T>(item: item, parentId: event.parentId));
+      add(AddSimpleFormBuilderItemEvent(item: event.item, parentId: event.parentId));
     }
   }
 
@@ -126,8 +125,11 @@ class FormBuilderBloc extends Bloc<FormBuilderEvent, FormBuilderState> {
     debugPrint(
       'AddFormBuilderLayoutItemEvent: controlType: ${event.item.controlType}, parentId: ${event.parentId}, parentContainerId: ${event.parentContainerId}, columnId: ${event.columnId}',
     );
-    final FormBuilderColumnsItem itemAsColumn = event.item;
-    final FormBuilderColumnsItem item = itemAsColumn.copyWith(id: Uuid().v4(), columns: {'column1': [], 'column2': []});
+
+    final FormBuilderItem item = event.item.copyWith(
+      id: Uuid().v4(),
+      properties: FormBuilderItemPropertiesColumns(columns: {'column1': [], 'column2': []}),
+    );
 
     if (event.parentId == null || event.parentId!.isEmpty) {
       final updatedItems = List<FormBuilderItem>.from(state.items)..insert(0, item);
@@ -160,13 +162,20 @@ class FormBuilderBloc extends Bloc<FormBuilderEvent, FormBuilderState> {
 
       final parentContainerIndex = _findParentIndex(items, event.parentContainerId!);
       if (parentContainerIndex != -1) {
-        final parentContainerItem = items[parentContainerIndex] as FormBuilderColumnsItem;
-        final columnItems = List<FormBuilderItem>.from(parentContainerItem.columns[event.columnId!] ?? const []);
+        final parentContainerItem = items[parentContainerIndex];
+        final columnItems = List<FormBuilderItem>.from(
+          (parentContainerItem.properties as FormBuilderItemPropertiesColumns).columns[event.columnId!] ?? const [],
+        );
 
         columnItems.removeWhere((item) => item.id == event.itemId);
 
         final updatedParentContainerItem = parentContainerItem.copyWith(
-          columns: {...parentContainerItem.columns, event.columnId!: columnItems},
+          properties: FormBuilderItemPropertiesColumns(
+            columns: {
+              ...((parentContainerItem.properties as FormBuilderItemPropertiesColumns).columns),
+              event.columnId!: columnItems,
+            },
+          ),
         );
         items[parentContainerIndex] = updatedParentContainerItem;
 
@@ -193,14 +202,21 @@ class FormBuilderBloc extends Bloc<FormBuilderEvent, FormBuilderState> {
     if (_checkIfParametersForColumnIsValid(event.item.parentContainerId, event.item.columnId)) {
       final parentContainerIndex = _findParentIndex(items, event.item.parentContainerId!);
       if (parentContainerIndex != -1) {
-        final parentContainerItem = items[parentContainerIndex] as FormBuilderColumnsItem;
-        final columnItems = List<FormBuilderItem>.from(parentContainerItem.columns[event.item.columnId!] ?? const []);
+        final parentContainerItem = items[parentContainerIndex];
+        final columnItems = List<FormBuilderItem>.from(
+          (parentContainerItem.properties as FormBuilderItemPropertiesColumns).columns[event.item.columnId!] ?? const [],
+        );
 
         final itemToMove = columnItems.removeAt(event.oldIndex);
         columnItems.insert(event.newIndex, itemToMove);
 
         final updatedParentContainerItem = parentContainerItem.copyWith(
-          columns: {...parentContainerItem.columns, event.item.columnId!: columnItems},
+          properties: FormBuilderItemPropertiesColumns(
+            columns: {
+              ...((parentContainerItem.properties as FormBuilderItemPropertiesColumns).columns),
+              event.item.columnId!: columnItems,
+            },
+          ),
         );
         items[parentContainerIndex] = updatedParentContainerItem;
 
@@ -221,10 +237,17 @@ class FormBuilderBloc extends Bloc<FormBuilderEvent, FormBuilderState> {
   }
 
   FormBuilderItem _addMetaDataToItem(FormBuilderItem item) {
-    return switch (item) {
-      FormBuilderInputItem() => item.copyWith(label: _generateLabelForItem(item)),
-      FormBuilderColumnsItem() => item,
-      FormBuilderHeadingItem() => item.copyWith(heading: _generateLabelForItem(item)),
+    return switch (item.controlType) {
+      ControlTypesEnum.textField => item.copyWith(
+        properties: FormBuilderItemPropertiesTextField(label: _generateLabelForItem(item)),
+      ),
+      ControlTypesEnum.numberField => item.copyWith(
+        properties: FormBuilderItemPropertiesTextField(label: _generateLabelForItem(item)),
+      ),
+      ControlTypesEnum.checkbox => item.copyWith(
+        properties: FormBuilderItemPropertiesCheckboxField(label: _generateLabelForItem(item)),
+      ),
+      ControlTypesEnum.heading => item.copyWith(properties: FormBuilderItemPropertiesHeader(header: _generateLabelForItem(item))),
       _ => throw UnsupportedError('Unsupported form element type'),
     };
   }
@@ -238,19 +261,43 @@ class FormBuilderBloc extends Bloc<FormBuilderEvent, FormBuilderState> {
 
   FormBuilderItem _updateItemValuesBasedOnType(MetaSidebarResultsModel values) {
     FormBuilderItem item = values.item;
-    switch (values.item) {
-      case FormBuilderInputItem inputItem:
-        item = inputItem.copyWith(
-          label: values.label ?? inputItem.label,
-          hintText: values.hintText ?? inputItem.hintText,
-          defaultValue: values.defaultValue ?? inputItem.defaultValue,
+    switch (values.item.controlType) {
+      case ControlTypesEnum.textField:
+        item = item.copyWith(
+          properties: FormBuilderItemPropertiesTextField(
+            label: values.label ?? (item.properties as FormBuilderItemPropertiesTextField).label,
+            hintText: values.hintText ?? (item.properties as FormBuilderItemPropertiesTextField).hintText,
+            defaultValue: values.defaultValue ?? (item.properties as FormBuilderItemPropertiesTextField).defaultValue,
+            required: values.required ?? (item.properties as FormBuilderItemPropertiesTextField).required,
+          ),
         );
         break;
-      case FormBuilderHeadingItem headingItem:
-        item = headingItem.copyWith(heading: values.heading ?? headingItem.heading);
+      case ControlTypesEnum.numberField:
+        item = item.copyWith(
+          properties: FormBuilderItemPropertiesTextField(
+            label: values.label ?? (item.properties as FormBuilderItemPropertiesTextField).label,
+            hintText: values.hintText ?? (item.properties as FormBuilderItemPropertiesTextField).hintText,
+            defaultValue: values.defaultValue ?? (item.properties as FormBuilderItemPropertiesTextField).defaultValue,
+            required: values.required ?? (item.properties as FormBuilderItemPropertiesTextField).required,
+          ),
+        );
         break;
-      case FormBuilderColumnsItem columnsItem:
-        // Columns item does not have label, hintText, defaultValue, or heading, so we don't need to update anything for this type
+      case ControlTypesEnum.checkbox:
+        item = item.copyWith(
+          properties: FormBuilderItemPropertiesCheckboxField(
+            label: values.label ?? (item.properties as FormBuilderItemPropertiesCheckboxField).label,
+            defaultValue:
+                values.defaultValueTrueFalse ?? (item.properties as FormBuilderItemPropertiesCheckboxField).defaultValue,
+            required: values.required ?? (item.properties as FormBuilderItemPropertiesCheckboxField).required,
+          ),
+        );
+        break;
+      case ControlTypesEnum.heading:
+        item = item.copyWith(
+          properties: FormBuilderItemPropertiesHeader(
+            header: values.heading ?? (item.properties as FormBuilderItemPropertiesHeader).header,
+          ),
+        );
         break;
       default:
         throw UnsupportedError('Unsupported form element type');
@@ -260,10 +307,10 @@ class FormBuilderBloc extends Bloc<FormBuilderEvent, FormBuilderState> {
   }
 
   String _generateLabelForItem(FormBuilderItem item) {
-    return switch (item) {
-      FormBuilderInputItem() => 'Input',
-      FormBuilderColumnsItem() => 'Columns',
-      FormBuilderHeadingItem() => 'Heading',
+    return switch (item.controlType) {
+      ControlTypesEnum.textField || ControlTypesEnum.numberField || ControlTypesEnum.checkbox => 'Input',
+      ControlTypesEnum.columns => 'Columns',
+      ControlTypesEnum.heading => 'Heading',
       _ => throw UnsupportedError('Unsupported form element type'),
     };
   }
@@ -286,9 +333,11 @@ class FormBuilderBloc extends Bloc<FormBuilderEvent, FormBuilderState> {
     }
 
     // Get the Column item
-    final parentContainerItem = items[columnItemIndex] as FormBuilderColumnsItem;
+    final parentContainerItem = items[columnItemIndex];
     // Get the list of items in the specified column
-    List<FormBuilderItem> columnItems = List<FormBuilderItem>.from(parentContainerItem.columns[columnId] ?? const []);
+    List<FormBuilderItem> columnItems = List<FormBuilderItem>.from(
+      (parentContainerItem.properties as FormBuilderItemPropertiesColumns).columns[columnId] ?? const [],
+    );
     columnItems = _insertItemIntoList(items: columnItems, parentId: parentId ?? '', newItem: newItemToAdd);
 
     // columnItems.add(newItemToAdd);
@@ -296,7 +345,9 @@ class FormBuilderBloc extends Bloc<FormBuilderEvent, FormBuilderState> {
     // Create a new instance of the parent container item with the updated column items
     // columnId is the key of the column in the columns map, and columnItems is the updated list of items for that column
     final updatedParentContainerItem = parentContainerItem.copyWith(
-      columns: {...parentContainerItem.columns, columnId: columnItems},
+      properties: FormBuilderItemPropertiesColumns(
+        columns: {...((parentContainerItem.properties as FormBuilderItemPropertiesColumns).columns), columnId: columnItems},
+      ),
     );
     localItems[columnItemIndex] = updatedParentContainerItem;
 

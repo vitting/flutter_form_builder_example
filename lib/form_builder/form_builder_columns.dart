@@ -4,7 +4,7 @@ import 'package:flutter_form_builder_example/form_builder/form_control_manage_co
 import 'package:flutter_form_builder_example/models/form_builder_item.dart';
 
 class FormBuilderColumns extends StatelessWidget {
-  final FormBuilderColumnsItem parentContainerItem;
+  final FormBuilderItem parentContainerItem;
   final Widget Function(String columnId) buildFormControls;
   final bool showDataZones;
   final int index;
@@ -19,14 +19,14 @@ class FormBuilderColumns extends StatelessWidget {
     this.onSelected,
   });
 
-  List<Widget> _generateColumns(FormBuilderColumnsItem item) {
+  List<Widget> _generateColumns(FormBuilderItem item) {
     final List<Widget> columns = [];
     int index = 0;
 
-    for (final column in item.columns.entries) {
+    for (final column in (item.properties as FormBuilderItemPropertiesColumns).columns.entries) {
       final formControls = buildFormControls(column.key);
       index++;
-      bool isColumnLast = index == item.columns.length;
+      bool isColumnLast = index == (item.properties as FormBuilderItemPropertiesColumns).columns.length;
 
       columns.add(
         Expanded(
