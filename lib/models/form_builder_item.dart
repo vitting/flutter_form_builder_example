@@ -168,7 +168,7 @@ final class FormBuilderHeadingItem extends FormBuilderItem {
     showDefaultValue: false,
     showDefaultValueTrueFalse: false,
     showLabel: false,
-    showHeading: false,
+    showHeading: true,
     showHintText: false,
     showRequired: false,
   );

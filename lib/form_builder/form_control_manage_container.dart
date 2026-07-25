@@ -32,6 +32,7 @@ class _FormControlManageContainerState extends State<FormControlManageContainer>
   @override
   Widget build(BuildContext context) {
     return MouseRegion(
+      cursor: SystemMouseCursors.click,
       onEnter: (event) {
         setState(() {
           isHovered = true;
@@ -54,60 +55,63 @@ class _FormControlManageContainerState extends State<FormControlManageContainer>
                         widget.onSelected?.call(formControlManageContainerController.currentActiveControl);
                       }
                     : null,
-                child: Container(
-                  width: double.infinity,
-                  padding: EdgeInsets.all(8),
-                  child: Row(
-                    children: [
-                      AnimatedCrossFade(
-                        duration: Duration(milliseconds: 200),
-                        crossFadeState: state.showReorder ? CrossFadeState.showFirst : CrossFadeState.showSecond,
-                        firstChild: ReorderableDragStartListener(
-                          index: widget.dragHandlerReOrderListIndex,
-                          child: Icon(Icons.drag_indicator, color: Colors.grey),
-                        ),
-
-                        secondChild: SizedBox.shrink(),
-                      ),
-                      Expanded(
-                        child: Container(
-                          padding: EdgeInsets.all(8),
-                          decoration: BoxDecoration(
-                            border: isHovered && state.showReorder == false
-                                ? Border.all(color: Colors.grey)
-                                : _isCurrentControlActive && state.showReorder == false
-                                ? Border.all(color: Colors.blue)
-                                : Border.all(color: Colors.transparent),
-                            borderRadius: BorderRadius.circular(8),
-                            color: isHovered && state.showReorder == false ? Colors.grey.shade300 : Colors.transparent,
+                child: Tooltip(
+                  message: state.showId ? '' : 'Control ID: ${widget.item.id}',
+                  child: Container(
+                    width: double.infinity,
+                    padding: EdgeInsets.all(8),
+                    child: Row(
+                      children: [
+                        AnimatedCrossFade(
+                          duration: Duration(milliseconds: 200),
+                          crossFadeState: state.showReorder ? CrossFadeState.showFirst : CrossFadeState.showSecond,
+                          firstChild: ReorderableDragStartListener(
+                            index: widget.dragHandlerReOrderListIndex,
+                            child: Icon(Icons.drag_indicator, color: Colors.grey),
                           ),
 
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              if (state.showId)
-                                Container(
-                                  margin: EdgeInsets.only(bottom: 8),
-                                  padding: EdgeInsets.symmetric(horizontal: 4, vertical: 2),
-                                  decoration: BoxDecoration(
-                                    borderRadius: BorderRadius.circular(4),
-                                    color: _isCurrentControlActive ? Colors.blue.shade800 : Colors.grey.shade200,
-                                  ),
-                                  child: Text(
-                                    widget.item.id,
-                                    style: TextStyle(
-                                      fontSize: 12,
-                                      fontWeight: FontWeight.bold,
-                                      color: _isCurrentControlActive ? Colors.white : Colors.black,
+                          secondChild: SizedBox.shrink(),
+                        ),
+                        Expanded(
+                          child: Container(
+                            padding: EdgeInsets.all(8),
+                            decoration: BoxDecoration(
+                              border: isHovered && state.showReorder == false
+                                  ? Border.all(color: Colors.grey)
+                                  : _isCurrentControlActive && state.showReorder == false
+                                  ? Border.all(color: Colors.blue)
+                                  : Border.all(color: Colors.transparent),
+                              borderRadius: BorderRadius.circular(8),
+                              color: isHovered && state.showReorder == false ? Colors.grey.shade300 : Colors.transparent,
+                            ),
+
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                if (state.showId)
+                                  Container(
+                                    margin: EdgeInsets.only(bottom: 8),
+                                    padding: EdgeInsets.symmetric(horizontal: 4, vertical: 2),
+                                    decoration: BoxDecoration(
+                                      borderRadius: BorderRadius.circular(4),
+                                      color: _isCurrentControlActive ? Colors.blue.shade800 : Colors.grey.shade200,
+                                    ),
+                                    child: Text(
+                                      widget.item.id,
+                                      style: TextStyle(
+                                        fontSize: 12,
+                                        fontWeight: FontWeight.bold,
+                                        color: _isCurrentControlActive ? Colors.white : Colors.black,
+                                      ),
                                     ),
                                   ),
-                                ),
-                              widget.child,
-                            ],
+                                widget.child,
+                              ],
+                            ),
                           ),
                         ),
-                      ),
-                    ],
+                      ],
+                    ),
                   ),
                 ),
               );
