@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_form_builder_example/blocs/form_builder_bloc/form_builder_bloc.dart';
 import 'package:flutter_form_builder_example/blocs/form_builder_bloc/form_builder_state.dart';
-import 'package:flutter_form_builder_example/blocs/form_builder_reorder_cubit/form_builder_reorder_cubit.dart';
+import 'package:flutter_form_builder_example/blocs/form_builder_control_manage_container_cubit/form_builder_control_manage_container_cubit.dart';
 import 'package:flutter_form_builder_example/converter/converter_from_form_builder_items.dart';
 import 'package:flutter_form_builder_example/converter/form_api_example.dart';
 import 'package:flutter_form_builder_example/drop_zone/drop_zone.dart';
@@ -10,6 +10,7 @@ import 'package:flutter_form_builder_example/enums/control_types_enum.dart';
 import 'package:flutter_form_builder_example/form_builder/form_control_manage_container.dart';
 import 'package:flutter_form_builder_example/form_builder/form_builder_columns.dart';
 import 'package:flutter_form_builder_example/form_builder/reorder_button.dart';
+import 'package:flutter_form_builder_example/form_builder/show_id_button.dart';
 import 'package:flutter_form_builder_example/form_controls/form_checkbox.dart';
 import 'package:flutter_form_builder_example/form_controls/form_heading.dart';
 import 'package:flutter_form_builder_example/form_controls/form_text_field.dart';
@@ -91,6 +92,7 @@ class _FormBuilderState extends State<FormBuilder> {
         return FormControlManageContainer(
           item: item,
           dragHandlerReOrderListIndex: index,
+          onSelected: _onSelectedItem,
           child: FormHeading(text: headerItem.text),
         );
       default:
@@ -166,6 +168,7 @@ class _FormBuilderState extends State<FormBuilder> {
               if (showJson) SizedBox(height: 600, child: JsonWidget(json: json ?? {"test": "Hello", "test2": "Hello2"})),
               Wrap(
                 // mainAxisAlignment: MainAxisAlignment.end,
+                crossAxisAlignment: WrapCrossAlignment.center,
                 children: [
                   ElevatedButton(
                     onPressed: () {
@@ -199,6 +202,11 @@ class _FormBuilderState extends State<FormBuilder> {
                   ReorderButton(
                     onPressed: () {
                       BlocProvider.of<FormBuilderReorderCubit>(context).toggleReorderMode();
+                    },
+                  ),
+                  ShowIdButton(
+                    onPressed: () {
+                      BlocProvider.of<FormBuilderReorderCubit>(context).toggleShowId();
                     },
                   ),
                 ],

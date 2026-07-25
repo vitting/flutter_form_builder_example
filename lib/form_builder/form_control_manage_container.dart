@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_form_builder_example/blocs/form_builder_reorder_cubit/form_builder_reorder_cubit.dart';
+import 'package:flutter_form_builder_example/blocs/form_builder_control_manage_container_cubit/form_builder_control_manage_container_cubit.dart';
+import 'package:flutter_form_builder_example/blocs/form_builder_control_manage_container_cubit/form_builder_control_manage_container_state.dart';
 import 'package:flutter_form_builder_example/form_builder/form_control_manage_container_controller.dart';
 import 'package:flutter_form_builder_example/models/form_builder_item.dart';
 
@@ -25,6 +26,9 @@ class FormControlManageContainer extends StatefulWidget {
 
 class _FormControlManageContainerState extends State<FormControlManageContainer> {
   bool isHovered = false;
+
+  bool get _isCurrentControlActive => formControlManageContainerController.currentActiveControl == widget.item;
+
   @override
   Widget build(BuildContext context) {
     return MouseRegion(
@@ -41,10 +45,10 @@ class _FormControlManageContainerState extends State<FormControlManageContainer>
       child: ListenableBuilder(
         listenable: formControlManageContainerController,
         builder: (context, _) {
-          return BlocBuilder<FormBuilderReorderCubit, bool>(
+          return BlocBuilder<FormBuilderReorderCubit, FormBuilderControlManageContainerState>(
             builder: (context, state) {
               return GestureDetector(
-                onTap: state == false
+                onTap: state.showReorder == false
                     ? () {
                         formControlManageContainerController.setCurrentActiveControlId(widget.item);
                         widget.onSelected?.call(formControlManageContainerController.currentActiveControl);
@@ -57,7 +61,7 @@ class _FormControlManageContainerState extends State<FormControlManageContainer>
                     children: [
                       AnimatedCrossFade(
                         duration: Duration(milliseconds: 200),
-                        crossFadeState: state ? CrossFadeState.showFirst : CrossFadeState.showSecond,
+                        crossFadeState: state.showReorder ? CrossFadeState.showFirst : CrossFadeState.showSecond,
                         firstChild: ReorderableDragStartListener(
                           index: widget.dragHandlerReOrderListIndex,
                           child: Icon(Icons.drag_indicator, color: Colors.grey),
@@ -69,16 +73,38 @@ class _FormControlManageContainerState extends State<FormControlManageContainer>
                         child: Container(
                           padding: EdgeInsets.all(8),
                           decoration: BoxDecoration(
-                            border: isHovered && state == false
+                            border: isHovered && state.showReorder == false
                                 ? Border.all(color: Colors.grey)
-                                : formControlManageContainerController.currentActiveControl == widget.item && state == false
+                                : _isCurrentControlActive && state.showReorder == false
                                 ? Border.all(color: Colors.blue)
                                 : Border.all(color: Colors.transparent),
                             borderRadius: BorderRadius.circular(8),
-                            color: isHovered && state == false ? Colors.grey.shade300 : Colors.transparent,
+                            color: isHovered && state.showReorder == false ? Colors.grey.shade300 : Colors.transparent,
                           ),
 
-                          child: widget.child,
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              if (state.showId)
+                                Container(
+                                  margin: EdgeInsets.only(bottom: 8),
+                                  padding: EdgeInsets.symmetric(horizontal: 4, vertical: 2),
+                                  decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(4),
+                                    color: _isCurrentControlActive ? Colors.blue.shade800 : Colors.grey.shade200,
+                                  ),
+                                  child: Text(
+                                    widget.item.id,
+                                    style: TextStyle(
+                                      fontSize: 12,
+                                      fontWeight: FontWeight.bold,
+                                      color: _isCurrentControlActive ? Colors.white : Colors.black,
+                                    ),
+                                  ),
+                                ),
+                              widget.child,
+                            ],
+                          ),
                         ),
                       ),
                     ],
