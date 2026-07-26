@@ -41,27 +41,24 @@ final class FormBuilderItem<T extends FormBuilderItemProperties> extends Equatab
 
   MetaSidebarResultsModel get propertiesAsMetaSidebarScaffoldResultsModel => switch (controlType) {
     ControlTypesEnum.textField => MetaSidebarResultsModel(
-      item: this,
       label: getPropertiesAsTextField.label,
       hintText: getPropertiesAsTextField.hintText,
       defaultValue: getPropertiesAsTextField.defaultValue,
       required: getPropertiesAsTextField.required,
     ),
     ControlTypesEnum.numberField => MetaSidebarResultsModel(
-      item: this,
       label: getPropertiesAsNumberField.label,
       hintText: getPropertiesAsNumberField.hintText,
       defaultValue: getPropertiesAsNumberField.defaultValue,
       required: getPropertiesAsNumberField.required,
     ),
     ControlTypesEnum.checkbox => MetaSidebarResultsModel(
-      item: this,
       label: getPropertiesAsCheckboxField.label,
       defaultValueTrueFalse: getPropertiesAsCheckboxField.defaultValue,
       required: getPropertiesAsCheckboxField.required,
     ),
-    ControlTypesEnum.columns => MetaSidebarResultsModel(item: this),
-    ControlTypesEnum.heading => MetaSidebarResultsModel(item: this, heading: getPropertiesAsHeader.heading),
+    ControlTypesEnum.columns => MetaSidebarResultsModel(),
+    ControlTypesEnum.heading => MetaSidebarResultsModel(heading: getPropertiesAsHeader.heading),
     _ => throw UnsupportedError(
       'propertiesAsMetaSidebarScaffoldResultsModel: Unsupported form item control type for meta sidebar scaffold results model: $controlType',
     ),
@@ -109,6 +106,53 @@ final class FormBuilderItem<T extends FormBuilderItemProperties> extends Equatab
       showRequired: false,
     ),
   };
+
+  FormBuilderItem updateItemPropertiesBasedOnType(MetaSidebarResultsModel values) {
+    FormBuilderItem item = this;
+    switch (item.controlType) {
+      case ControlTypesEnum.textField:
+        item = item.copyWith(
+          properties: FormBuilderItemPropertiesTextField(
+            label: values.label ?? (item.properties as FormBuilderItemPropertiesTextField).label,
+            hintText: values.hintText ?? (item.properties as FormBuilderItemPropertiesTextField).hintText,
+            defaultValue: values.defaultValue ?? (item.properties as FormBuilderItemPropertiesTextField).defaultValue,
+            required: values.required ?? (item.properties as FormBuilderItemPropertiesTextField).required,
+          ),
+        );
+        break;
+      case ControlTypesEnum.numberField:
+        item = item.copyWith(
+          properties: FormBuilderItemPropertiesNumberField(
+            label: values.label ?? (item.properties as FormBuilderItemPropertiesNumberField).label,
+            hintText: values.hintText ?? (item.properties as FormBuilderItemPropertiesNumberField).hintText,
+            defaultValue: values.defaultValue ?? (item.properties as FormBuilderItemPropertiesNumberField).defaultValue,
+            required: values.required ?? (item.properties as FormBuilderItemPropertiesNumberField).required,
+          ),
+        );
+        break;
+      case ControlTypesEnum.checkbox:
+        item = item.copyWith(
+          properties: FormBuilderItemPropertiesCheckboxField(
+            label: values.label ?? (item.properties as FormBuilderItemPropertiesCheckboxField).label,
+            defaultValue:
+                values.defaultValueTrueFalse ?? (item.properties as FormBuilderItemPropertiesCheckboxField).defaultValue,
+            required: values.required ?? (item.properties as FormBuilderItemPropertiesCheckboxField).required,
+          ),
+        );
+        break;
+      case ControlTypesEnum.heading:
+        item = item.copyWith(
+          properties: FormBuilderItemPropertiesHeader(
+            heading: values.heading ?? (item.properties as FormBuilderItemPropertiesHeader).heading,
+          ),
+        );
+        break;
+      default:
+        throw UnsupportedError('_updateItemValuesBasedOnType: Unsupported form control type: ${item.controlType}');
+    }
+
+    return item;
+  }
 
   String get previewLabelForItem {
     return switch (controlType) {

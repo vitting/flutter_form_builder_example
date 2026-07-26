@@ -8,7 +8,6 @@ import 'package:flutter_form_builder_example/converter/converter_to_form_builder
 import 'package:flutter_form_builder_example/converter/form_api_example.dart';
 import 'package:flutter_form_builder_example/enums/control_types_enum.dart';
 import 'package:flutter_form_builder_example/enums/form_element_type_enum.dart';
-import 'package:flutter_form_builder_example/meta_sidebar/meta_sidebar_results_model.dart';
 import 'package:flutter_form_builder_example/models/form_builder_item/form_builder_item.dart';
 import 'package:flutter_form_builder_example/models/form_builder_item/form_builder_item_properties.dart';
 import 'package:flutter_form_builder_example/repositories/form_render_builder_repository.dart';
@@ -254,10 +253,11 @@ class FormBuilderBloc extends Bloc<FormBuilderEvent, FormBuilderState> {
   }
 
   FutureOr<void> _onUpdateFormItemValuesEvent(UpdateFormItemValuesEvent event, Emitter<FormBuilderState> emit) {
+    debugPrint(
+      'UpdateFormItemValuesEvent: controlType: ${event.item.controlType}, itemId: ${event.item.id}, values: ${event.item.properties}',
+    );
     final items = List<FormBuilderItem>.from(state.items);
-    final updatedItem = _updateItemValuesBasedOnType(event.values);
-
-    final updatedItems = _updateItemInTree(items: items, updatedItem: updatedItem);
+    final updatedItems = _updateItemInTree(items: items, updatedItem: event.item);
     emit(state.copyWith(items: updatedItems));
   }
 
@@ -280,53 +280,6 @@ class FormBuilderBloc extends Bloc<FormBuilderEvent, FormBuilderState> {
 
       return item.copyWith(properties: FormBuilderItemPropertiesColumns(columns: updatedColumns));
     }).toList();
-  }
-
-  FormBuilderItem _updateItemValuesBasedOnType(MetaSidebarResultsModel values) {
-    FormBuilderItem item = values.item.copyWith();
-    switch (values.item.controlType) {
-      case ControlTypesEnum.textField:
-        item = item.copyWith(
-          properties: FormBuilderItemPropertiesTextField(
-            label: values.label ?? (item.properties as FormBuilderItemPropertiesTextField).label,
-            hintText: values.hintText ?? (item.properties as FormBuilderItemPropertiesTextField).hintText,
-            defaultValue: values.defaultValue ?? (item.properties as FormBuilderItemPropertiesTextField).defaultValue,
-            required: values.required ?? (item.properties as FormBuilderItemPropertiesTextField).required,
-          ),
-        );
-        break;
-      case ControlTypesEnum.numberField:
-        item = item.copyWith(
-          properties: FormBuilderItemPropertiesNumberField(
-            label: values.label ?? (item.properties as FormBuilderItemPropertiesNumberField).label,
-            hintText: values.hintText ?? (item.properties as FormBuilderItemPropertiesNumberField).hintText,
-            defaultValue: values.defaultValue ?? (item.properties as FormBuilderItemPropertiesNumberField).defaultValue,
-            required: values.required ?? (item.properties as FormBuilderItemPropertiesNumberField).required,
-          ),
-        );
-        break;
-      case ControlTypesEnum.checkbox:
-        item = item.copyWith(
-          properties: FormBuilderItemPropertiesCheckboxField(
-            label: values.label ?? (item.properties as FormBuilderItemPropertiesCheckboxField).label,
-            defaultValue:
-                values.defaultValueTrueFalse ?? (item.properties as FormBuilderItemPropertiesCheckboxField).defaultValue,
-            required: values.required ?? (item.properties as FormBuilderItemPropertiesCheckboxField).required,
-          ),
-        );
-        break;
-      case ControlTypesEnum.heading:
-        item = item.copyWith(
-          properties: FormBuilderItemPropertiesHeader(
-            heading: values.heading ?? (item.properties as FormBuilderItemPropertiesHeader).heading,
-          ),
-        );
-        break;
-      default:
-        throw UnsupportedError('_updateItemValuesBasedOnType: Unsupported form control type: ${values.item.controlType}');
-    }
-
-    return item;
   }
 
   List<FormBuilderItem> _addItemToColumn({

@@ -49,6 +49,7 @@ class _FormBuilderState extends State<FormBuilder> {
 
     await metaSidebarController.show(
       MetaSidebarScaffold(
+        key: ValueKey(item.id),
         item: item,
         onDelete: (item) {
           _onDeleteItem(context, item);
