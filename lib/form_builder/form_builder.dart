@@ -41,7 +41,6 @@ class _FormBuilderState extends State<FormBuilder> {
   }
 
   void _onSelectedItem(FormBuilderItem? item) async {
-    debugPrint('Selected Item: ${item?.id ?? 'None'}');
     if (item == null) {
       metaSidebarController.close();
       return;
@@ -69,7 +68,12 @@ class _FormBuilderState extends State<FormBuilder> {
           item: item,
           dragHandlerReOrderListIndex: index,
           onSelected: _onSelectedItem,
-          child: FormTextField(label: properties.label ?? '', isFormRenderControl: true, isEnabled: false),
+          child: FormTextField(
+            label: properties.label ?? '',
+            isFormRenderControl: true,
+            isEnabled: false,
+            isRequired: properties.required ?? false,
+          ),
         );
 
       case ControlTypesEnum.numberField:
@@ -78,7 +82,12 @@ class _FormBuilderState extends State<FormBuilder> {
           item: item,
           dragHandlerReOrderListIndex: index,
           onSelected: _onSelectedItem,
-          child: FormTextField(label: properties.label ?? '', isFormRenderControl: true, isEnabled: false),
+          child: FormTextField(
+            label: properties.label ?? '',
+            isFormRenderControl: true,
+            isEnabled: false,
+            isRequired: properties.required ?? false,
+          ),
         );
       case ControlTypesEnum.checkbox:
         final properties = item.getPropertiesAsCheckboxField;

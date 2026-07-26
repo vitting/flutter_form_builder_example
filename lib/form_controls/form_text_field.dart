@@ -7,6 +7,7 @@ class FormTextField extends StatefulWidget {
   final String? initialValue;
   final void Function(String value)? onChanged;
   final TextEditingController? controller;
+  final bool isRequired;
   const FormTextField({
     super.key,
     required this.label,
@@ -15,6 +16,7 @@ class FormTextField extends StatefulWidget {
     this.onChanged,
     this.controller,
     this.initialValue,
+    this.isRequired = false,
   });
 
   @override
@@ -62,7 +64,7 @@ class _FormTextFieldState extends State<FormTextField> {
         decoration: InputDecoration(
           floatingLabelBehavior: widget.isFormRenderControl ? FloatingLabelBehavior.always : FloatingLabelBehavior.auto,
           labelStyle: TextStyle(color: widget.isFormRenderControl ? Colors.black : Colors.white),
-          labelText: widget.label,
+          labelText: widget.label + (widget.isRequired ? ' *' : ''),
           border: OutlineInputBorder(
             borderRadius: BorderRadius.circular(8),
             borderSide: BorderSide(color: widget.isFormRenderControl ? Colors.black : Colors.white, width: 1),

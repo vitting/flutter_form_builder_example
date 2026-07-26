@@ -152,12 +152,7 @@ class FormBuilderBloc extends Bloc<FormBuilderEvent, FormBuilderState> {
   }
 
   FutureOr<void> _onRemoveFormBuilderItemEvent(RemoveFormBuilderItemEvent event, Emitter<FormBuilderState> emit) {
-    debugPrint(
-      '***************RemoveFormBuilderItemEvent: itemId: ${event.itemId} parentContainerId: ${event.parentContainerId} columnId: ${event.columnId}',
-    );
-
     if (_checkIfParametersForColumnIsValid(event.parentContainerId, event.columnId)) {
-      debugPrint('*******Removing item from column: parentContainerId: ${event.parentContainerId}, columnId: ${event.columnId}');
       final items = List<FormBuilderItem>.from(state.items);
 
       final parentContainerIndex = _findParentIndex(items, event.parentContainerId!);
@@ -253,9 +248,6 @@ class FormBuilderBloc extends Bloc<FormBuilderEvent, FormBuilderState> {
   }
 
   FutureOr<void> _onUpdateFormItemValuesEvent(UpdateFormItemValuesEvent event, Emitter<FormBuilderState> emit) {
-    debugPrint(
-      'UpdateFormItemValuesEvent: controlType: ${event.item.controlType}, itemId: ${event.item.id}, values: ${event.item.properties}',
-    );
     final items = List<FormBuilderItem>.from(state.items);
     final updatedItems = _updateItemInTree(items: items, updatedItem: event.item);
     emit(state.copyWith(items: updatedItems));
