@@ -9,7 +9,8 @@ import 'package:flutter_form_builder_example/converter/form_api_example.dart';
 import 'package:flutter_form_builder_example/enums/control_types_enum.dart';
 import 'package:flutter_form_builder_example/enums/form_element_type_enum.dart';
 import 'package:flutter_form_builder_example/meta_sidebar/meta_sidebar_results_model.dart';
-import 'package:flutter_form_builder_example/models/form_builder_item.dart';
+import 'package:flutter_form_builder_example/models/form_builder_item/form_builder_item.dart';
+import 'package:flutter_form_builder_example/models/form_builder_item/form_builder_item_properties.dart';
 import 'package:flutter_form_builder_example/repositories/form_render_builder_repository.dart';
 import 'package:uuid/uuid.dart';
 
@@ -239,28 +240,50 @@ class FormBuilderBloc extends Bloc<FormBuilderEvent, FormBuilderState> {
   FormBuilderItem _addMetaDataToItem(FormBuilderItem item) {
     return switch (item.controlType) {
       ControlTypesEnum.textField => item.copyWith(
-        properties: FormBuilderItemPropertiesTextField(label: _generateLabelForItem(item)),
+        properties: FormBuilderItemPropertiesTextField(label: item.previewLabelForItem),
       ),
       ControlTypesEnum.numberField => item.copyWith(
-        properties: FormBuilderItemPropertiesTextField(label: _generateLabelForItem(item)),
+        properties: FormBuilderItemPropertiesNumberField(label: item.previewLabelForItem),
       ),
       ControlTypesEnum.checkbox => item.copyWith(
-        properties: FormBuilderItemPropertiesCheckboxField(label: _generateLabelForItem(item)),
+        properties: FormBuilderItemPropertiesCheckboxField(label: item.previewLabelForItem),
       ),
-      ControlTypesEnum.heading => item.copyWith(properties: FormBuilderItemPropertiesHeader(header: _generateLabelForItem(item))),
-      _ => throw UnsupportedError('Unsupported form element type'),
+      ControlTypesEnum.heading => item.copyWith(properties: FormBuilderItemPropertiesHeader(heading: item.previewLabelForItem)),
+      _ => throw UnsupportedError('_addMetaDataToItem: Unsupported form control type: ${item.controlType}'),
     };
   }
 
   FutureOr<void> _onUpdateFormItemValuesEvent(UpdateFormItemValuesEvent event, Emitter<FormBuilderState> emit) {
+    final items = List<FormBuilderItem>.from(state.items);
     final updatedItem = _updateItemValuesBasedOnType(event.values);
 
-    final updatedItems = state.items.map((item) => item.id == updatedItem.id ? updatedItem : item).toList();
+    final updatedItems = _updateItemInTree(items: items, updatedItem: updatedItem);
     emit(state.copyWith(items: updatedItems));
   }
 
+  List<FormBuilderItem> _updateItemInTree({required List<FormBuilderItem> items, required FormBuilderItem updatedItem}) {
+    return items.map((item) {
+      if (item.id == updatedItem.id) {
+        return updatedItem;
+      }
+
+      if (item.controlType != ControlTypesEnum.columns || item.properties is! FormBuilderItemPropertiesColumns) {
+        return item;
+      }
+
+      final columns = (item.properties as FormBuilderItemPropertiesColumns).columns;
+      final updatedColumns = <String, List<FormBuilderItem>>{};
+
+      for (final entry in columns.entries) {
+        updatedColumns[entry.key] = _updateItemInTree(items: entry.value, updatedItem: updatedItem);
+      }
+
+      return item.copyWith(properties: FormBuilderItemPropertiesColumns(columns: updatedColumns));
+    }).toList();
+  }
+
   FormBuilderItem _updateItemValuesBasedOnType(MetaSidebarResultsModel values) {
-    FormBuilderItem item = values.item;
+    FormBuilderItem item = values.item.copyWith();
     switch (values.item.controlType) {
       case ControlTypesEnum.textField:
         item = item.copyWith(
@@ -274,11 +297,11 @@ class FormBuilderBloc extends Bloc<FormBuilderEvent, FormBuilderState> {
         break;
       case ControlTypesEnum.numberField:
         item = item.copyWith(
-          properties: FormBuilderItemPropertiesTextField(
-            label: values.label ?? (item.properties as FormBuilderItemPropertiesTextField).label,
-            hintText: values.hintText ?? (item.properties as FormBuilderItemPropertiesTextField).hintText,
-            defaultValue: values.defaultValue ?? (item.properties as FormBuilderItemPropertiesTextField).defaultValue,
-            required: values.required ?? (item.properties as FormBuilderItemPropertiesTextField).required,
+          properties: FormBuilderItemPropertiesNumberField(
+            label: values.label ?? (item.properties as FormBuilderItemPropertiesNumberField).label,
+            hintText: values.hintText ?? (item.properties as FormBuilderItemPropertiesNumberField).hintText,
+            defaultValue: values.defaultValue ?? (item.properties as FormBuilderItemPropertiesNumberField).defaultValue,
+            required: values.required ?? (item.properties as FormBuilderItemPropertiesNumberField).required,
           ),
         );
         break;
@@ -295,24 +318,15 @@ class FormBuilderBloc extends Bloc<FormBuilderEvent, FormBuilderState> {
       case ControlTypesEnum.heading:
         item = item.copyWith(
           properties: FormBuilderItemPropertiesHeader(
-            header: values.heading ?? (item.properties as FormBuilderItemPropertiesHeader).header,
+            heading: values.heading ?? (item.properties as FormBuilderItemPropertiesHeader).heading,
           ),
         );
         break;
       default:
-        throw UnsupportedError('Unsupported form element type');
+        throw UnsupportedError('_updateItemValuesBasedOnType: Unsupported form control type: ${values.item.controlType}');
     }
 
     return item;
-  }
-
-  String _generateLabelForItem(FormBuilderItem item) {
-    return switch (item.controlType) {
-      ControlTypesEnum.textField || ControlTypesEnum.numberField || ControlTypesEnum.checkbox => 'Input',
-      ControlTypesEnum.columns => 'Columns',
-      ControlTypesEnum.heading => 'Heading',
-      _ => throw UnsupportedError('Unsupported form element type'),
-    };
   }
 
   List<FormBuilderItem> _addItemToColumn({

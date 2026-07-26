@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_form_builder_example/blocs/form_builder_bloc/form_builder_bloc.dart';
 import 'package:flutter_form_builder_example/enums/control_types_enum.dart';
-import 'package:flutter_form_builder_example/models/form_builder_item.dart';
+import 'package:flutter_form_builder_example/models/form_builder_item/form_builder_item.dart';
 
 class DropZone extends StatefulWidget {
   final String? parentId;

@@ -2,7 +2,8 @@ import 'package:flutter_form_builder_example/enums/control_types_enum.dart';
 import 'package:flutter_form_builder_example/models/form_api_model/form_api_item_additional_properties_model.dart';
 import 'package:flutter_form_builder_example/models/form_api_model/form_api_item_model.dart';
 import 'package:flutter_form_builder_example/models/form_api_model/form_api_model.dart';
-import 'package:flutter_form_builder_example/models/form_builder_item.dart';
+import 'package:flutter_form_builder_example/models/form_builder_item/form_builder_item.dart';
+import 'package:flutter_form_builder_example/models/form_builder_item/form_builder_item_properties.dart';
 
 class ConverterFromFormBuilderItems {
   static FormApiModel convert(String id, String name, Iterable<FormBuilderItem> formBuilderItems) {
@@ -53,7 +54,7 @@ class ConverterFromFormBuilderItems {
       columnId: headingItem.columnId,
       columnIndex: headingItem.columnIndex,
       additionalProperties: FormApiItemAdditionalPropertiesModel(
-        label: (headingItem.properties as FormBuilderItemPropertiesHeader).header,
+        label: (headingItem.properties as FormBuilderItemPropertiesHeader).heading,
       ),
     );
   }

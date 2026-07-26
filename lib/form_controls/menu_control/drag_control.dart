@@ -6,7 +6,8 @@ import 'package:flutter_form_builder_example/enums/control_types_enum.dart';
 import 'package:flutter_form_builder_example/enums/form_element_type_enum.dart';
 import 'package:flutter_form_builder_example/form_controls/menu_control/drag_container.dart';
 import 'package:flutter_form_builder_example/get_it/injection.dart';
-import 'package:flutter_form_builder_example/models/form_builder_item.dart';
+import 'package:flutter_form_builder_example/models/form_builder_item/form_builder_item.dart';
+import 'package:flutter_form_builder_example/models/form_builder_item/form_builder_item_properties.dart';
 import 'package:flutter_form_builder_example/repositories/form_render_builder_repository.dart';
 
 class DragControl extends StatelessWidget {
@@ -25,7 +26,7 @@ class DragControl extends StatelessWidget {
     FormElementTypeEnum.column when controlType == ControlTypesEnum.heading => FormBuilderItem(
       id: '',
       controlType: controlType,
-      properties: FormBuilderItemPropertiesHeader(header: 'Heading'),
+      properties: FormBuilderItemPropertiesHeader(heading: 'Heading'),
     ),
     _ => throw UnsupportedError('Unsupported form element type'),
   };

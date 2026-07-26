@@ -2,7 +2,10 @@ import 'package:copy_with_extension/copy_with_extension.dart';
 import 'package:equatable/equatable.dart';
 import 'package:flutter_form_builder_example/enums/control_types_enum.dart';
 import 'package:flutter_form_builder_example/enums/form_element_type_enum.dart';
-import 'package:flutter_form_builder_example/meta_sidebar/meta_sidebar_scaffold.dart';
+import 'package:flutter_form_builder_example/meta_sidebar/meta_sidebar_controls_to_show_model.dart';
+import 'package:flutter_form_builder_example/meta_sidebar/meta_sidebar_results_model.dart';
+import 'package:flutter_form_builder_example/models/form_builder_item/form_builder_item_properties.dart';
+import 'package:string_extensions/string_extensions.dart';
 
 part 'form_builder_item.g.dart';
 
@@ -31,10 +34,41 @@ final class FormBuilderItem<T extends FormBuilderItemProperties> extends Equatab
   }
 
   @override
-  List<Object?> get props => [id, controlType, parentContainerId, columnId, columnIndex];
+  List<Object?> get props => [id, controlType, parentContainerId, columnId, columnIndex, properties];
 
-  MetaSidebarScaffoldFieldsToShow get metaSidebarScaffoldFieldsToShow => switch (controlType) {
-    ControlTypesEnum.textField || ControlTypesEnum.numberField => (
+  @override
+  bool get stringify => true;
+
+  MetaSidebarResultsModel get propertiesAsMetaSidebarScaffoldResultsModel => switch (controlType) {
+    ControlTypesEnum.textField => MetaSidebarResultsModel(
+      item: this,
+      label: getPropertiesAsTextField.label,
+      hintText: getPropertiesAsTextField.hintText,
+      defaultValue: getPropertiesAsTextField.defaultValue,
+      required: getPropertiesAsTextField.required,
+    ),
+    ControlTypesEnum.numberField => MetaSidebarResultsModel(
+      item: this,
+      label: getPropertiesAsNumberField.label,
+      hintText: getPropertiesAsNumberField.hintText,
+      defaultValue: getPropertiesAsNumberField.defaultValue,
+      required: getPropertiesAsNumberField.required,
+    ),
+    ControlTypesEnum.checkbox => MetaSidebarResultsModel(
+      item: this,
+      label: getPropertiesAsCheckboxField.label,
+      defaultValueTrueFalse: getPropertiesAsCheckboxField.defaultValue,
+      required: getPropertiesAsCheckboxField.required,
+    ),
+    ControlTypesEnum.columns => MetaSidebarResultsModel(item: this),
+    ControlTypesEnum.heading => MetaSidebarResultsModel(item: this, heading: getPropertiesAsHeader.heading),
+    _ => throw UnsupportedError(
+      'propertiesAsMetaSidebarScaffoldResultsModel: Unsupported form item control type for meta sidebar scaffold results model: $controlType',
+    ),
+  };
+
+  MetaSidebarControlsToShowModel get metaSidebarScaffoldFieldsToShow => switch (controlType) {
+    ControlTypesEnum.textField || ControlTypesEnum.numberField => MetaSidebarControlsToShowModel(
       showDefaultValue: true,
       showDefaultValueTrueFalse: false,
       showLabel: true,
@@ -42,7 +76,7 @@ final class FormBuilderItem<T extends FormBuilderItemProperties> extends Equatab
       showHintText: true,
       showRequired: true,
     ),
-    ControlTypesEnum.checkbox => (
+    ControlTypesEnum.checkbox => MetaSidebarControlsToShowModel(
       showDefaultValue: false,
       showDefaultValueTrueFalse: true,
       showLabel: true,
@@ -50,7 +84,7 @@ final class FormBuilderItem<T extends FormBuilderItemProperties> extends Equatab
       showHintText: false,
       showRequired: true,
     ),
-    ControlTypesEnum.columns => (
+    ControlTypesEnum.columns => MetaSidebarControlsToShowModel(
       showDefaultValue: false,
       showDefaultValueTrueFalse: false,
       showLabel: false,
@@ -58,7 +92,7 @@ final class FormBuilderItem<T extends FormBuilderItemProperties> extends Equatab
       showHintText: false,
       showRequired: false,
     ),
-    ControlTypesEnum.heading => (
+    ControlTypesEnum.heading => MetaSidebarControlsToShowModel(
       showDefaultValue: false,
       showDefaultValueTrueFalse: false,
       showLabel: false,
@@ -66,7 +100,7 @@ final class FormBuilderItem<T extends FormBuilderItemProperties> extends Equatab
       showHintText: false,
       showRequired: false,
     ),
-    _ => (
+    _ => MetaSidebarControlsToShowModel(
       showDefaultValue: false,
       showDefaultValueTrueFalse: false,
       showLabel: false,
@@ -75,6 +109,15 @@ final class FormBuilderItem<T extends FormBuilderItemProperties> extends Equatab
       showRequired: false,
     ),
   };
+
+  String get previewLabelForItem {
+    return switch (controlType) {
+      ControlTypesEnum.textField || ControlTypesEnum.numberField || ControlTypesEnum.checkbox => 'Input',
+      ControlTypesEnum.columns => 'Columns',
+      ControlTypesEnum.heading => 'Heading',
+      _ => throw UnsupportedError('Unsupported form item control type: $controlType'),
+    };
+  }
 
   FormElementTypeEnum get formElementType => switch (controlType) {
     ControlTypesEnum.textField => FormElementTypeEnum.simple,
@@ -85,6 +128,8 @@ final class FormBuilderItem<T extends FormBuilderItemProperties> extends Equatab
     _ => throw UnsupportedError('Unsupported form element type'),
   };
 
+  String get controlTypeAsString => controlType.name.toTitleCase();
+
   FormBuilderItemPropertiesTextField get getPropertiesAsTextField => properties as FormBuilderItemPropertiesTextField;
 
   FormBuilderItemPropertiesNumberField get getPropertiesAsNumberField => properties as FormBuilderItemPropertiesNumberField;
@@ -94,61 +139,4 @@ final class FormBuilderItem<T extends FormBuilderItemProperties> extends Equatab
   FormBuilderItemPropertiesColumns get getPropertiesAsColumns => properties as FormBuilderItemPropertiesColumns;
 
   FormBuilderItemPropertiesHeader get getPropertiesAsHeader => properties as FormBuilderItemPropertiesHeader;
-}
-
-abstract class FormBuilderItemProperties extends Equatable {}
-
-@CopyWith()
-final class FormBuilderItemPropertiesTextField extends FormBuilderItemProperties {
-  final String? label;
-  final String? hintText;
-  final String? defaultValue;
-  final bool? required;
-
-  FormBuilderItemPropertiesTextField({this.label, this.hintText, this.defaultValue, this.required});
-
-  @override
-  List<Object?> get props => [label, hintText, defaultValue, required];
-}
-
-@CopyWith()
-final class FormBuilderItemPropertiesNumberField extends FormBuilderItemProperties {
-  final String? label;
-  final String? hintText;
-  final String? defaultValue;
-  final bool? required;
-
-  FormBuilderItemPropertiesNumberField({this.label, this.hintText, this.defaultValue, this.required});
-
-  @override
-  List<Object?> get props => [label, hintText, defaultValue, required];
-}
-
-@CopyWith()
-final class FormBuilderItemPropertiesCheckboxField extends FormBuilderItemProperties {
-  final String? label;
-  final bool? defaultValue;
-  final bool? required;
-
-  FormBuilderItemPropertiesCheckboxField({this.label, this.defaultValue, this.required});
-
-  @override
-  List<Object?> get props => [label, defaultValue, required];
-}
-
-@CopyWith()
-final class FormBuilderItemPropertiesColumns extends FormBuilderItemProperties {
-  final Map<String, List<FormBuilderItem>> columns;
-
-  FormBuilderItemPropertiesColumns({required this.columns});
-  @override
-  List<Object?> get props => [columns];
-}
-
-final class FormBuilderItemPropertiesHeader extends FormBuilderItemProperties {
-  final String? header;
-  FormBuilderItemPropertiesHeader({this.header});
-
-  @override
-  List<Object?> get props => [header];
 }

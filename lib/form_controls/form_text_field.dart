@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
 
-class FormTextField extends StatelessWidget {
+class FormTextField extends StatefulWidget {
   final String label;
   final bool isFormRenderControl;
   final bool isEnabled;
+  final String? initialValue;
   final void Function(String value)? onChanged;
   final TextEditingController? controller;
   const FormTextField({
@@ -13,27 +14,62 @@ class FormTextField extends StatelessWidget {
     this.isEnabled = false,
     this.onChanged,
     this.controller,
+    this.initialValue,
   });
+
+  @override
+  State<FormTextField> createState() => _FormTextFieldState();
+}
+
+class _FormTextFieldState extends State<FormTextField> {
+  late final TextEditingController _controller;
+
+  @override
+  void initState() {
+    super.initState();
+    if (widget.controller != null) {
+      _controller = widget.controller!;
+    } else {
+      _controller = TextEditingController(text: widget.initialValue ?? '');
+    }
+  }
+
+  @override
+  void dispose() {
+    if (widget.controller == null) {
+      _controller.dispose();
+    }
+
+    super.dispose();
+  }
+
+  @override
+  void didUpdateWidget(covariant FormTextField oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if (widget.initialValue != oldWidget.initialValue) {
+      _controller.text = widget.initialValue ?? '';
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
     return Material(
       color: const Color.fromARGB(0, 82, 80, 80),
       child: TextField(
-        controller: controller,
-        onChanged: onChanged,
-        enabled: isEnabled,
+        controller: _controller,
+        onChanged: widget.onChanged,
+        enabled: widget.isEnabled,
         decoration: InputDecoration(
-          floatingLabelBehavior: isFormRenderControl ? FloatingLabelBehavior.always : FloatingLabelBehavior.auto,
-          labelStyle: TextStyle(color: isFormRenderControl ? Colors.black : Colors.white),
-          labelText: label,
+          floatingLabelBehavior: widget.isFormRenderControl ? FloatingLabelBehavior.always : FloatingLabelBehavior.auto,
+          labelStyle: TextStyle(color: widget.isFormRenderControl ? Colors.black : Colors.white),
+          labelText: widget.label,
           border: OutlineInputBorder(
             borderRadius: BorderRadius.circular(8),
-            borderSide: BorderSide(color: isFormRenderControl ? Colors.black : Colors.white, width: 1),
+            borderSide: BorderSide(color: widget.isFormRenderControl ? Colors.black : Colors.white, width: 1),
           ),
           disabledBorder: OutlineInputBorder(
             borderRadius: BorderRadius.circular(8),
-            borderSide: BorderSide(color: isFormRenderControl ? Colors.black : Colors.white, width: 1),
+            borderSide: BorderSide(color: widget.isFormRenderControl ? Colors.black : Colors.white, width: 1),
           ),
         ),
       ),

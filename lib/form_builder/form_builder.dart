@@ -15,7 +15,8 @@ import 'package:flutter_form_builder_example/form_controls/form_checkbox.dart';
 import 'package:flutter_form_builder_example/form_controls/form_heading.dart';
 import 'package:flutter_form_builder_example/form_controls/form_text_field.dart';
 import 'package:flutter_form_builder_example/meta_sidebar/meta_sidebar_scaffold.dart';
-import 'package:flutter_form_builder_example/models/form_builder_item.dart';
+import 'package:flutter_form_builder_example/models/form_builder_item/form_builder_item.dart';
+import 'package:flutter_form_builder_example/models/form_builder_item/form_builder_item_properties.dart';
 import 'package:flutter_form_builder_example/web_scaffold.dart';
 import 'package:flutter_json/flutter_json.dart';
 
@@ -53,7 +54,7 @@ class _FormBuilderState extends State<FormBuilder> {
           _onDeleteItem(context, item);
         },
       ),
-      title: 'Selected Item',
+      title: item.controlTypeAsString,
     );
 
     formControlManageContainerController.setCurrentActiveControlId(null);
@@ -92,7 +93,7 @@ class _FormBuilderState extends State<FormBuilder> {
           item: item,
           dragHandlerReOrderListIndex: index,
           onSelected: _onSelectedItem,
-          child: FormHeading(text: properties.header ?? ''),
+          child: FormHeading(text: properties.heading ?? ''),
         );
       default:
         return SizedBox.shrink();

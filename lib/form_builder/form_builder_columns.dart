@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_form_builder_example/drop_zone/drop_zone.dart';
 import 'package:flutter_form_builder_example/form_builder/form_control_manage_container.dart';
-import 'package:flutter_form_builder_example/models/form_builder_item.dart';
+import 'package:flutter_form_builder_example/models/form_builder_item/form_builder_item.dart';
+import 'package:flutter_form_builder_example/models/form_builder_item/form_builder_item_properties.dart';
 
 class FormBuilderColumns extends StatelessWidget {
   final FormBuilderItem parentContainerItem;
