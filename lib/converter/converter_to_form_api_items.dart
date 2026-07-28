@@ -5,7 +5,7 @@ import 'package:flutter_form_builder_example/models/form_api_model/form_api_mode
 import 'package:flutter_form_builder_example/models/form_builder_item/form_builder_item.dart';
 import 'package:flutter_form_builder_example/models/form_builder_item/form_builder_item_properties.dart';
 
-class ConverterFromFormBuilderItems {
+class ConverterToFormApiItems {
   static FormApiModel convert(String id, String name, Iterable<FormBuilderItem> formBuilderItems) {
     final formApiItems = _convertFormBuilderItemsToFormApiItems(formBuilderItems);
     return FormApiModel(id: id, name: name, fields: formApiItems);
@@ -43,6 +43,7 @@ class ConverterFromFormBuilderItems {
       parentContainerId: inputItem.parentContainerId,
       columnId: inputItem.columnId,
       columnIndex: inputItem.columnIndex,
+      additionalProperties: inputItem.getAdditionalPropertiesForControlType,
     );
   }
 

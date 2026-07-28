@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_form_builder_example/form_builder/form_builder.dart';
-import 'package:flutter_form_builder_example/web_scaffold.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -22,15 +21,7 @@ class _HomePageState extends State<HomePage> {
         ),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            ElevatedButton(
-              onPressed: () async {
-                await metaSidebarController.show(Text('Hello'));
-              },
-              child: Text('Show Meta Sidebar'),
-            ),
-            Expanded(child: FormBuilder()),
-          ],
+          children: [Expanded(child: FormBuilder())],
         ),
       ),
     );

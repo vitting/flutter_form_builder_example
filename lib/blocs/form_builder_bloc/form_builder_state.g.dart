@@ -13,6 +13,10 @@ abstract class _$FormBuilderStateCWProxy {
 
   FormBuilderState showDataZones(bool showDataZones);
 
+  FormBuilderState showProgressIndicator(bool showProgressIndicator);
+
+  FormBuilderState formApiModel(FormApiModel? formApiModel);
+
   /// Creates a new instance with the provided field values.
   /// Passing `null` to a nullable field nullifies it, while `null` for a non-nullable field is ignored. To update a single field use `FormBuilderState(...).copyWith.fieldName(value)`.
   ///
@@ -23,6 +27,8 @@ abstract class _$FormBuilderStateCWProxy {
   FormBuilderState call({
     List<FormBuilderItem<FormBuilderItemProperties>> items,
     bool showDataZones,
+    bool showProgressIndicator,
+    FormApiModel? formApiModel,
   });
 }
 
@@ -43,6 +49,14 @@ class _$FormBuilderStateCWProxyImpl implements _$FormBuilderStateCWProxy {
       call(showDataZones: showDataZones);
 
   @override
+  FormBuilderState showProgressIndicator(bool showProgressIndicator) =>
+      call(showProgressIndicator: showProgressIndicator);
+
+  @override
+  FormBuilderState formApiModel(FormApiModel? formApiModel) =>
+      call(formApiModel: formApiModel);
+
+  @override
   /// Creates a new instance with the provided field values.
   /// Passing `null` to a nullable field nullifies it, while `null` for a non-nullable field is ignored. To update a single field use `FormBuilderState(...).copyWith.fieldName(value)`.
   ///
@@ -53,6 +67,8 @@ class _$FormBuilderStateCWProxyImpl implements _$FormBuilderStateCWProxy {
   FormBuilderState call({
     Object? items = const $CopyWithPlaceholder(),
     Object? showDataZones = const $CopyWithPlaceholder(),
+    Object? showProgressIndicator = const $CopyWithPlaceholder(),
+    Object? formApiModel = const $CopyWithPlaceholder(),
   }) {
     return FormBuilderState(
       items: items == const $CopyWithPlaceholder() || items == null
@@ -64,6 +80,16 @@ class _$FormBuilderStateCWProxyImpl implements _$FormBuilderStateCWProxy {
           ? _value.showDataZones
           // ignore: cast_nullable_to_non_nullable
           : showDataZones as bool,
+      showProgressIndicator:
+          showProgressIndicator == const $CopyWithPlaceholder() ||
+              showProgressIndicator == null
+          ? _value.showProgressIndicator
+          // ignore: cast_nullable_to_non_nullable
+          : showProgressIndicator as bool,
+      formApiModel: formApiModel == const $CopyWithPlaceholder()
+          ? _value.formApiModel
+          // ignore: cast_nullable_to_non_nullable
+          : formApiModel as FormApiModel?,
     );
   }
 }

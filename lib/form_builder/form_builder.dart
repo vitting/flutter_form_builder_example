@@ -3,7 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_form_builder_example/blocs/form_builder_bloc/form_builder_bloc.dart';
 import 'package:flutter_form_builder_example/blocs/form_builder_bloc/form_builder_state.dart';
 import 'package:flutter_form_builder_example/blocs/form_builder_control_manage_container_cubit/form_builder_control_manage_container_cubit.dart';
-import 'package:flutter_form_builder_example/converter/converter_from_form_builder_items.dart';
+import 'package:flutter_form_builder_example/converter/converter_to_form_api_items.dart';
 import 'package:flutter_form_builder_example/converter/form_api_example.dart';
 import 'package:flutter_form_builder_example/drop_zone/drop_zone.dart';
 import 'package:flutter_form_builder_example/enums/control_types_enum.dart';
@@ -171,17 +171,37 @@ class _FormBuilderState extends State<FormBuilder> {
     return BlocBuilder<FormBuilderBloc, FormBuilderState>(
       builder: (context, state) {
         final items = state.items;
+        if (state.formApiModel != null) {
+          json = state.formApiModel?.toJson();
+        }
+
         debugPrint('***************FormBuilderState items: }');
 
         return SingleChildScrollView(
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              if (showJson) SizedBox(height: 600, child: JsonWidget(json: json ?? {"test": "Hello", "test2": "Hello2"})),
+              if (showJson) ...[
+                Padding(padding: const EdgeInsets.only(top: 8, left: 8), child: Text('Form id: ${state.formApiModel?.id} ')),
+                Padding(padding: const EdgeInsets.only(left: 8), child: Text('Form name: ${state.formApiModel?.name} ')),
+                SizedBox(height: 600, child: JsonWidget(json: json ?? {"test": "Hello", "test2": "Hello2"})),
+              ],
               Wrap(
                 // mainAxisAlignment: MainAxisAlignment.end,
                 crossAxisAlignment: WrapCrossAlignment.center,
                 children: [
+                  ElevatedButton(
+                    onPressed: () {
+                      BlocProvider.of<FormBuilderBloc>(context).add(SaveFormEvent());
+                    },
+                    child: Text('Save Current Form'),
+                  ),
+                  ElevatedButton(
+                    onPressed: () {
+                      BlocProvider.of<FormBuilderBloc>(context).add(LoadFormEvent());
+                    },
+                    child: Text('Load Current Form'),
+                  ),
                   ElevatedButton(
                     onPressed: () {
                       BlocProvider.of<FormBuilderBloc>(context).add(FetchFormApiModelEvent());
@@ -189,6 +209,7 @@ class _FormBuilderState extends State<FormBuilder> {
                     },
                     child: Text('Load JSON Example'),
                   ),
+
                   ElevatedButton(
                     onPressed: () {
                       setState(() {
@@ -199,7 +220,7 @@ class _FormBuilderState extends State<FormBuilder> {
                   ),
                   ElevatedButton(
                     onPressed: () {
-                      final result = ConverterFromFormBuilderItems.convert(
+                      final result = ConverterToFormApiItems.convert(
                         '8620301b-0e90-4a3e-acd6-7873866b7f9d',
                         'Test Form',
                         state.items,
@@ -211,6 +232,10 @@ class _FormBuilderState extends State<FormBuilder> {
                     },
                     child: Text('Convert to FormApiModel'),
                   ),
+                ],
+              ),
+              Wrap(
+                children: [
                   ReorderButton(
                     onPressed: () {
                       BlocProvider.of<FormBuilderReorderCubit>(context).toggleReorderMode();
@@ -223,6 +248,7 @@ class _FormBuilderState extends State<FormBuilder> {
                   ),
                 ],
               ),
+              Divider(),
               DropZone(showExpaned: items.isEmpty, isVisible: items.isEmpty || state.showDataZones),
               _buildFormControls(context, items: items, showDataZones: state.showDataZones),
             ],

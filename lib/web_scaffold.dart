@@ -15,6 +15,7 @@ import 'package:flutter_form_builder_example/meta_sidebar/meta_sidebar_controlle
 import 'package:flutter_form_builder_example/models/menu_item_header_model.dart';
 import 'package:flutter_form_builder_example/models/menu_item_model.dart';
 import 'package:flutter_form_builder_example/models/menu_model.dart';
+import 'package:flutter_form_builder_example/repositories/form_builder_repository.dart';
 import 'package:flutter_form_builder_example/repositories/form_render_builder_repository.dart';
 import 'package:flutter_form_builder_example/sidebar/sidebar.dart';
 import 'package:flutter_form_builder_example/sidebar/sidebar_controller.dart';
@@ -59,7 +60,7 @@ class WebScaffold extends StatelessWidget {
     return MultiBlocProvider(
       providers: [
         BlocProvider(create: (context) => FormBuilderReorderCubit()),
-        BlocProvider(create: (context) => FormBuilderBloc(getIt<FormRenderBuilderRepository>())),
+        BlocProvider(create: (context) => FormBuilderBloc(getIt<FormRenderBuilderRepository>(), getIt<FormBuilderRepository>())),
       ],
       child: Scaffold(
         body: Column(

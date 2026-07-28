@@ -4,21 +4,24 @@ import 'package:equatable/equatable.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_form_builder_example/blocs/form_builder_bloc/form_builder_state.dart';
+import 'package:flutter_form_builder_example/converter/converter_to_form_api_items.dart';
 import 'package:flutter_form_builder_example/converter/converter_to_form_builder_items.dart';
-import 'package:flutter_form_builder_example/converter/form_api_example.dart';
 import 'package:flutter_form_builder_example/enums/control_types_enum.dart';
 import 'package:flutter_form_builder_example/enums/form_element_type_enum.dart';
 import 'package:flutter_form_builder_example/models/form_builder_item/form_builder_item.dart';
 import 'package:flutter_form_builder_example/models/form_builder_item/form_builder_item_properties.dart';
+import 'package:flutter_form_builder_example/repositories/form_builder_repository.dart';
 import 'package:flutter_form_builder_example/repositories/form_render_builder_repository.dart';
+
 import 'package:uuid/uuid.dart';
 
 part 'form_builder_event.dart';
 
 class FormBuilderBloc extends Bloc<FormBuilderEvent, FormBuilderState> {
   final FormRenderBuilderRepository _formRenderBuilderRepository;
+  final FormBuilderRepository _formBuilderRepository;
   late final StreamSubscription<bool> _formRenderBuilderRepositoryStream;
-  FormBuilderBloc(this._formRenderBuilderRepository) : super(FormBuilderState(items: [])) {
+  FormBuilderBloc(this._formRenderBuilderRepository, this._formBuilderRepository) : super(FormBuilderState(items: [])) {
     on<AddFormBuilderItemEvent>(_onAddFormBuilderItemEventEvent);
     on<AddSimpleFormBuilderItemEvent>(_onAddSimpleFormBuilderItemEvent);
     on<AddSimpleFormBuilderItemIntoColumnEvent>(_onAddSimpleFormBuilderItemIntoColumnEvent);
@@ -29,6 +32,8 @@ class FormBuilderBloc extends Bloc<FormBuilderEvent, FormBuilderState> {
     on<ReorderFormBuilderItemEvent>(_onReorderFormBuilderItemEvent);
     on<FetchFormApiModelEvent>(_onFetchFormApiModelEvent);
     on<UpdateFormItemValuesEvent>(_onUpdateFormItemValuesEvent);
+    on<LoadFormEvent>(_onLoadFormEvent);
+    on<SaveFormEvent>(_onSaveFormEvent);
 
     _formRenderBuilderRepositoryStream = _formRenderBuilderRepository.dataStream.listen((showDataZones) {
       if (showDataZones) {
@@ -174,21 +179,21 @@ class FormBuilderBloc extends Bloc<FormBuilderEvent, FormBuilderState> {
         );
         items[parentContainerIndex] = updatedParentContainerItem;
 
-        emit(state.copyWith(items: items, showDataZones: false));
+        emit(state.copyWith(items: items, showDataZones: false, showProgressIndicator: false));
       }
     } else {
       final updatedItems = List<FormBuilderItem>.from(state.items)..removeWhere((item) => item.id == event.itemId);
 
-      emit(state.copyWith(items: updatedItems, showDataZones: false));
+      emit(state.copyWith(items: updatedItems, showDataZones: false, showProgressIndicator: false));
     }
   }
 
   FutureOr<void> _onShowFormBuilderDataZonesEvent(ShowFormBuilderDataZonesEvent event, Emitter<FormBuilderState> emit) {
-    emit(state.copyWith(showDataZones: true));
+    emit(state.copyWith(showDataZones: true, showProgressIndicator: false));
   }
 
   FutureOr<void> _onHideFormBuilderDataZonesEvent(HideFormBuilderDataZonesEvent event, Emitter<FormBuilderState> emit) {
-    emit(state.copyWith(showDataZones: false));
+    emit(state.copyWith(showDataZones: false, showProgressIndicator: false));
   }
 
   FutureOr<void> _onReorderFormBuilderItemEvent(ReorderFormBuilderItemEvent event, Emitter<FormBuilderState> emit) {
@@ -215,20 +220,54 @@ class FormBuilderBloc extends Bloc<FormBuilderEvent, FormBuilderState> {
         );
         items[parentContainerIndex] = updatedParentContainerItem;
 
-        emit(state.copyWith(items: items));
+        emit(state.copyWith(items: items, showDataZones: false, showProgressIndicator: false));
       }
     } else {
       final itemToMove = items.removeAt(event.oldIndex);
       items.insert(event.newIndex, itemToMove);
 
-      emit(state.copyWith(items: items));
+      emit(state.copyWith(items: items, showDataZones: false, showProgressIndicator: false));
     }
   }
 
-  FutureOr<void> _onFetchFormApiModelEvent(FetchFormApiModelEvent event, Emitter<FormBuilderState> emit) {
-    final result = ConverterToFormBuilderItems.convert(formApiExample.fields);
+  FutureOr<void> _onFetchFormApiModelEvent(FetchFormApiModelEvent event, Emitter<FormBuilderState> emit) async {
+    final data = await _formBuilderRepository.loadFormApiModelExample();
+    if (data != null) {
+      final result = ConverterToFormBuilderItems.convert(data.fields);
+      emit(FormBuilderState(items: result.toList(), showDataZones: false, showProgressIndicator: false));
+    }
+  }
 
-    emit(FormBuilderState(items: result.toList()));
+  FutureOr<void> _onUpdateFormItemValuesEvent(UpdateFormItemValuesEvent event, Emitter<FormBuilderState> emit) {
+    final items = List<FormBuilderItem>.from(state.items);
+    final updatedItems = _updateItemInTree(items: items, updatedItem: event.item);
+    emit(state.copyWith(items: updatedItems, showDataZones: false, showProgressIndicator: false));
+  }
+
+  FutureOr<void> _onLoadFormEvent(LoadFormEvent event, Emitter<FormBuilderState> emit) async {
+    emit(state.copyWith(showProgressIndicator: true));
+
+    final formApiModel = await _formBuilderRepository.loadFormApiModel();
+
+    if (formApiModel == null) {
+      emit(state.copyWith(showProgressIndicator: false));
+      return;
+    }
+
+    final result = ConverterToFormBuilderItems.convert(formApiModel.fields);
+
+    emit(
+      FormBuilderState(items: result.toList(), formApiModel: formApiModel, showDataZones: false, showProgressIndicator: false),
+    );
+  }
+
+  FutureOr<void> _onSaveFormEvent(SaveFormEvent event, Emitter<FormBuilderState> emit) async {
+    emit(state.copyWith(showProgressIndicator: true));
+    final formBuilderItems = state.items;
+    final formApiModel = ConverterToFormApiItems.convert('6e0843fd-c243-4f19-b96e-8ba66d0061bd', 'Form', formBuilderItems);
+    await _formBuilderRepository.saveFormApiModel(formApiModel);
+
+    emit(state.copyWith(formApiModel: formApiModel, showProgressIndicator: false));
   }
 
   FormBuilderItem _addMetaDataToItem(FormBuilderItem item) {
@@ -245,12 +284,6 @@ class FormBuilderBloc extends Bloc<FormBuilderEvent, FormBuilderState> {
       ControlTypesEnum.heading => item.copyWith(properties: FormBuilderItemPropertiesHeader(heading: item.previewLabelForItem)),
       _ => throw UnsupportedError('_addMetaDataToItem: Unsupported form control type: ${item.controlType}'),
     };
-  }
-
-  FutureOr<void> _onUpdateFormItemValuesEvent(UpdateFormItemValuesEvent event, Emitter<FormBuilderState> emit) {
-    final items = List<FormBuilderItem>.from(state.items);
-    final updatedItems = _updateItemInTree(items: items, updatedItem: event.item);
-    emit(state.copyWith(items: updatedItems));
   }
 
   List<FormBuilderItem> _updateItemInTree({required List<FormBuilderItem> items, required FormBuilderItem updatedItem}) {

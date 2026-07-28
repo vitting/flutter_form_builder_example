@@ -114,3 +114,17 @@ final class UpdateFormItemValuesEvent extends FormBuilderEvent {
   @override
   List<Object?> get props => [item];
 }
+
+final class SaveFormEvent extends FormBuilderEvent {
+  SaveFormEvent();
+
+  @override
+  List<Object?> get props => [];
+}
+
+final class LoadFormEvent extends FormBuilderEvent {
+  LoadFormEvent();
+
+  @override
+  List<Object?> get props => [];
+}

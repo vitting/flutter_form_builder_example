@@ -4,6 +4,7 @@ import 'package:flutter_form_builder_example/enums/control_types_enum.dart';
 import 'package:flutter_form_builder_example/enums/form_element_type_enum.dart';
 import 'package:flutter_form_builder_example/meta_sidebar/meta_sidebar_controls_to_show_model.dart';
 import 'package:flutter_form_builder_example/meta_sidebar/meta_sidebar_results_model.dart';
+import 'package:flutter_form_builder_example/models/form_api_model/form_api_item_additional_properties_model.dart';
 import 'package:flutter_form_builder_example/models/form_builder_item/form_builder_item_properties.dart';
 import 'package:string_extensions/string_extensions.dart';
 
@@ -183,4 +184,31 @@ final class FormBuilderItem<T extends FormBuilderItemProperties> extends Equatab
   FormBuilderItemPropertiesColumns get getPropertiesAsColumns => properties as FormBuilderItemPropertiesColumns;
 
   FormBuilderItemPropertiesHeader get getPropertiesAsHeader => properties as FormBuilderItemPropertiesHeader;
+
+  FormApiItemAdditionalPropertiesModel get getAdditionalPropertiesForControlType {
+    switch (controlType) {
+      case ControlTypesEnum.textField:
+        return FormApiItemAdditionalPropertiesModel(
+          label: (properties as FormBuilderItemPropertiesTextField).label,
+          defaultValue: (properties as FormBuilderItemPropertiesTextField).defaultValue,
+          required: (properties as FormBuilderItemPropertiesTextField).required,
+        );
+      case ControlTypesEnum.numberField:
+        return FormApiItemAdditionalPropertiesModel(
+          label: (properties as FormBuilderItemPropertiesNumberField).label,
+          defaultValue: (properties as FormBuilderItemPropertiesNumberField).defaultValue?.toString(),
+          required: (properties as FormBuilderItemPropertiesNumberField).required,
+        );
+      case ControlTypesEnum.checkbox:
+        return FormApiItemAdditionalPropertiesModel(
+          label: (properties as FormBuilderItemPropertiesCheckboxField).label,
+          defaultValueTrueFalse: (properties as FormBuilderItemPropertiesCheckboxField).defaultValue,
+          required: (properties as FormBuilderItemPropertiesCheckboxField).required,
+        );
+      default:
+        throw Exception(
+          'getAdditionalPropertiesForControlType: Unsupported control type for additional properties conversion: $controlType',
+        );
+    }
+  }
 }
