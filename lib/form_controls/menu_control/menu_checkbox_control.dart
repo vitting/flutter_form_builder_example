@@ -12,7 +12,7 @@ class MenuCheckboxControl extends StatelessWidget {
     return DragControl(
       controlType: ControlTypesEnum.checkbox,
       formElementType: FormElementTypeEnum.simple,
-      child: FormCheckbox(label: 'Checkbox'),
+      child: FormCheckbox(label: 'Checkbox', initialValue: true),
     );
   }
 }

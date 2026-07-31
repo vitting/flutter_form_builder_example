@@ -5,7 +5,8 @@ class NormalSidebar extends StatelessWidget {
   final VoidCallback onHeaderCloseTap;
   final Widget? content;
   final double sidebarWidth;
-  const NormalSidebar({super.key, required this.onHeaderCloseTap, this.content, required this.sidebarWidth});
+  final String? title;
+  const NormalSidebar({super.key, required this.onHeaderCloseTap, this.content, required this.sidebarWidth, this.title});
 
   @override
   Widget build(BuildContext context) {
@@ -14,7 +15,7 @@ class NormalSidebar extends StatelessWidget {
       color: Colors.white,
       child: Column(
         children: [
-          SidebarHeader(onClose: onHeaderCloseTap),
+          SidebarHeader(onClose: onHeaderCloseTap, title: title ?? 'Sidebar'),
           Expanded(child: SingleChildScrollView(child: content ?? SizedBox())),
         ],
       ),

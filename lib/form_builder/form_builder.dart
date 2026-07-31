@@ -9,6 +9,7 @@ import 'package:flutter_form_builder_example/drop_zone/drop_zone.dart';
 import 'package:flutter_form_builder_example/enums/control_types_enum.dart';
 import 'package:flutter_form_builder_example/form_builder/form_control_manage_container.dart';
 import 'package:flutter_form_builder_example/form_builder/form_builder_columns.dart';
+import 'package:flutter_form_builder_example/form_builder/preview_button.dart';
 import 'package:flutter_form_builder_example/form_builder/reorder_button.dart';
 import 'package:flutter_form_builder_example/form_builder/show_id_button.dart';
 import 'package:flutter_form_builder_example/form_controls/form_checkbox.dart';
@@ -19,6 +20,8 @@ import 'package:flutter_form_builder_example/meta_sidebar/meta_sidebar_controlle
 import 'package:flutter_form_builder_example/meta_sidebar/meta_sidebar_scaffold.dart';
 import 'package:flutter_form_builder_example/models/form_builder_item/form_builder_item.dart';
 import 'package:flutter_form_builder_example/models/form_builder_item/form_builder_item_properties.dart';
+import 'package:flutter_form_builder_example/preview_scaffold/preview_scaffold.dart';
+import 'package:flutter_form_builder_example/sidebar/sidebar_controller.dart';
 import 'package:flutter_json/flutter_json.dart';
 
 class FormBuilder extends StatefulWidget {
@@ -97,7 +100,13 @@ class _FormBuilderState extends State<FormBuilder> {
           item: item,
           dragHandlerReOrderListIndex: index,
           onSelected: _onSelectedItem,
-          child: FormCheckbox(label: properties.label ?? '', isFormRenderControl: true, isEnabled: false),
+          child: FormCheckbox(
+            label: properties.label ?? '',
+            isFormRenderControl: true,
+            isEnabled: false,
+            initialValue: properties.defaultValue ?? false,
+            isRequired: properties.required ?? false,
+          ),
         );
       case ControlTypesEnum.heading:
         final properties = item.getPropertiesAsHeader;
@@ -125,6 +134,7 @@ class _FormBuilderState extends State<FormBuilder> {
         onSelected: _onSelectedItem,
         buildFormControls: (columnId) {
           final columnItems = (item.properties as FormBuilderItemPropertiesColumns).columns[columnId] ?? [];
+
           return _buildFormControls(context, items: columnItems, showDataZones: showDataZones);
         },
       ),
@@ -141,6 +151,7 @@ class _FormBuilderState extends State<FormBuilder> {
       buildDefaultDragHandles: false,
       itemBuilder: (context, index) {
         final item = items[index];
+
         return Container(
           key: ValueKey(item.id),
           child: Column(
@@ -176,8 +187,6 @@ class _FormBuilderState extends State<FormBuilder> {
         if (state.formApiModel != null) {
           json = state.formApiModel?.toJson();
         }
-
-        debugPrint('***************FormBuilderState items: }');
 
         return SingleChildScrollView(
           child: Column(
@@ -246,6 +255,13 @@ class _FormBuilderState extends State<FormBuilder> {
                   ShowIdButton(
                     onPressed: () {
                       BlocProvider.of<FormBuilderReorderCubit>(context).toggleShowId();
+                    },
+                  ),
+                  PreviewButton(
+                    onPressed: () {
+                      final sidebarController = getIt<SidebarController>();
+
+                      sidebarController.show(PreviewScaffold(items: items), canBeResized: true, title: 'Preview');
                     },
                   ),
                 ],

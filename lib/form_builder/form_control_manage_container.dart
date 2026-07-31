@@ -57,9 +57,9 @@ class _FormControlManageContainerState extends State<FormControlManageContainer>
                     : null,
                 child: Tooltip(
                   message: state.showId ? '' : 'Control ID: ${widget.item.id}',
-                  child: Container(
+                  child: SizedBox(
                     width: double.infinity,
-                    padding: EdgeInsets.all(8),
+
                     child: Row(
                       children: [
                         AnimatedCrossFade(

@@ -9,15 +9,27 @@ class SidebarController extends ChangeNotifier {
   bool get showFullPageOverlay => _showFullPageOverlay;
   bool _canBeResized = false;
   bool get canBeResized => _canBeResized;
+  double _width = 400;
+  double get width => _width;
+  String? _title;
+  String? get title => _title;
 
   final OverlayPortalController sidebarOverlayController = OverlayPortalController();
   Widget? content;
   Completer<void>? _closeCompleter;
 
-  Future<void> show(Widget content, {bool canBeResized = false, bool showFullPageOverlay = true}) {
+  Future<void> show(
+    Widget content, {
+    bool canBeResized = false,
+    bool showFullPageOverlay = true,
+    double width = 400,
+    String? title,
+  }) {
     _closeCompleter = Completer<void>();
     _showFullPageOverlay = showFullPageOverlay;
     _isOpen = true;
+    _width = width;
+    _title = title;
     _canBeResized = canBeResized;
     this.content = content;
     sidebarOverlayController.show();
@@ -29,6 +41,9 @@ class SidebarController extends ChangeNotifier {
   void close() {
     _showFullPageOverlay = false;
     _isOpen = false;
+    _title = null;
+    _canBeResized = false;
+
     sidebarOverlayController.hide();
     notifyListeners();
 

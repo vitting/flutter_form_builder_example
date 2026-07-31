@@ -25,6 +25,8 @@ class _SidebarState extends State<Sidebar> {
               onClose: () => widget.controller.close(),
               content: widget.controller.content,
               canBeResized: widget.controller.canBeResized,
+              width: widget.controller.width,
+              title: widget.controller.title,
             ),
           ],
         );

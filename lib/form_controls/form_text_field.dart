@@ -57,21 +57,24 @@ class _FormTextFieldState extends State<FormTextField> {
   Widget build(BuildContext context) {
     return Material(
       color: const Color.fromARGB(0, 82, 80, 80),
-      child: TextField(
-        controller: _controller,
-        onChanged: widget.onChanged,
-        enabled: widget.isEnabled,
-        decoration: InputDecoration(
-          floatingLabelBehavior: widget.isFormRenderControl ? FloatingLabelBehavior.always : FloatingLabelBehavior.auto,
-          labelStyle: TextStyle(color: widget.isFormRenderControl ? Colors.black : Colors.white),
-          labelText: widget.label + (widget.isRequired ? ' *' : ''),
-          border: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(8),
-            borderSide: BorderSide(color: widget.isFormRenderControl ? Colors.black : Colors.white, width: 1),
-          ),
-          disabledBorder: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(8),
-            borderSide: BorderSide(color: widget.isFormRenderControl ? Colors.black : Colors.white, width: 1),
+      child: Padding(
+        padding: const EdgeInsets.symmetric(vertical: 8.0),
+        child: TextField(
+          controller: _controller,
+          onChanged: widget.onChanged,
+          enabled: widget.isEnabled,
+          decoration: InputDecoration(
+            floatingLabelBehavior: widget.isFormRenderControl ? FloatingLabelBehavior.always : FloatingLabelBehavior.auto,
+            labelStyle: TextStyle(color: widget.isFormRenderControl ? Colors.black : Colors.white),
+            labelText: widget.label + (widget.isRequired ? ' *' : ''),
+            border: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(8),
+              borderSide: BorderSide(color: widget.isFormRenderControl ? Colors.black : Colors.white, width: 1),
+            ),
+            disabledBorder: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(8),
+              borderSide: BorderSide(color: widget.isFormRenderControl ? Colors.black : Colors.white, width: 1),
+            ),
           ),
         ),
       ),

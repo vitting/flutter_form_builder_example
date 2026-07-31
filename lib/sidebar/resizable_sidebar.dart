@@ -6,8 +6,15 @@ class ResizableSidebar extends StatefulWidget {
   final double initialSidebarWidth;
   final VoidCallback onSidebarHeaderCloseTap;
   final Widget? content;
+  final String? title;
 
-  const ResizableSidebar({super.key, required this.initialSidebarWidth, required this.onSidebarHeaderCloseTap, this.content});
+  const ResizableSidebar({
+    super.key,
+    required this.initialSidebarWidth,
+    required this.onSidebarHeaderCloseTap,
+    this.content,
+    this.title,
+  });
 
   @override
   State<ResizableSidebar> createState() => _ResizableSidebarState();
@@ -60,7 +67,7 @@ class _ResizableSidebarState extends State<ResizableSidebar> {
                   color: Colors.white,
                   child: Column(
                     children: [
-                      SidebarHeader(onClose: widget.onSidebarHeaderCloseTap),
+                      SidebarHeader(onClose: widget.onSidebarHeaderCloseTap, title: widget.title ?? 'Sidebar'),
                       Expanded(child: SingleChildScrollView(child: widget.content ?? const SizedBox())),
                     ],
                   ),

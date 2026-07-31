@@ -15,7 +15,7 @@ class MenuHeadingControl extends StatelessWidget {
       child: Material(
         color: Colors.transparent,
         child: SizedBox(
-          height: 40,
+          height: 60,
 
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
