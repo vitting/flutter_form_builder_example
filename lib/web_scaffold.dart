@@ -22,9 +22,6 @@ import 'package:flutter_form_builder_example/sidebar/sidebar_controller.dart';
 import 'package:flutter_form_builder_example/topbar.dart';
 import 'package:material_symbols_icons/symbols.dart';
 
-final sidebarController = SidebarController();
-final metaSidebarController = MetaSidebarController();
-
 class WebScaffold extends StatelessWidget {
   final Widget content;
   const WebScaffold({super.key, required this.content});
@@ -71,9 +68,9 @@ class WebScaffold extends StatelessWidget {
                 children: [
                   Menu(menuItems: _menuItems),
                   Expanded(
-                    child: Sidebar(controller: sidebarController, child: content),
+                    child: Sidebar(controller: getIt<SidebarController>(), child: content),
                   ),
-                  MetaSidebar(controller: metaSidebarController),
+                  MetaSidebar(controller: getIt<MetaSidebarController>()),
                 ],
               ),
             ),

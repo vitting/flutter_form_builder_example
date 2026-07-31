@@ -14,10 +14,11 @@ import 'package:flutter_form_builder_example/form_builder/show_id_button.dart';
 import 'package:flutter_form_builder_example/form_controls/form_checkbox.dart';
 import 'package:flutter_form_builder_example/form_controls/form_heading.dart';
 import 'package:flutter_form_builder_example/form_controls/form_text_field.dart';
+import 'package:flutter_form_builder_example/get_it/injection.dart';
+import 'package:flutter_form_builder_example/meta_sidebar/meta_sidebar_controller.dart';
 import 'package:flutter_form_builder_example/meta_sidebar/meta_sidebar_scaffold.dart';
 import 'package:flutter_form_builder_example/models/form_builder_item/form_builder_item.dart';
 import 'package:flutter_form_builder_example/models/form_builder_item/form_builder_item_properties.dart';
-import 'package:flutter_form_builder_example/web_scaffold.dart';
 import 'package:flutter_json/flutter_json.dart';
 
 class FormBuilder extends StatefulWidget {
@@ -33,7 +34,7 @@ class _FormBuilderState extends State<FormBuilder> {
 
   void _onDeleteItem(BuildContext context, FormBuilderItem? item) {
     if (item == null) return;
-
+    final metaSidebarController = getIt<MetaSidebarController>();
     metaSidebarController.close();
     BlocProvider.of<FormBuilderBloc>(
       context,
@@ -41,6 +42,7 @@ class _FormBuilderState extends State<FormBuilder> {
   }
 
   void _onSelectedItem(FormBuilderItem? item) async {
+    final metaSidebarController = getIt<MetaSidebarController>();
     if (item == null) {
       metaSidebarController.close();
       return;

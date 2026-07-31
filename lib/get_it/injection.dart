@@ -1,6 +1,8 @@
+import 'package:flutter_form_builder_example/meta_sidebar/meta_sidebar_controller.dart';
 import 'package:flutter_form_builder_example/repositories/form_builder_repository.dart';
 import 'package:flutter_form_builder_example/repositories/form_render_builder_repository.dart';
 import 'package:flutter_form_builder_example/services/form_builder_service.dart';
+import 'package:flutter_form_builder_example/sidebar/sidebar_controller.dart';
 import 'package:get_it/get_it.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -16,4 +18,7 @@ void setupDependencies() {
   getIt.registerSingleton<FormBuilderService>(FormBuilderServiceImpl(getIt<SharedPreferencesAsync>()));
 
   getIt.registerSingleton<FormBuilderRepository>(FormBuilderRepositoryImpl(getIt<FormBuilderService>()));
+
+  getIt.registerSingleton<SidebarController>(SidebarController());
+  getIt.registerSingleton<MetaSidebarController>(MetaSidebarController());
 }
